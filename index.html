@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mon Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <section id="accueil">
+      <div class="container">
+        <nav>
+          <a class="logo">Portflio</a>
+          <ul id="sidemenu">
+            <li><a href="#accueil"  class="item-menu active" onclick="itemActive()">Accueil</a></li>
+            <li ><a href="#about" class="item-menu" onclick="itemActive()">À propos</a></li>
+            <li ><a href="#projets" class="item-menu" onclick="itemActive()">Projets</a></li>
+            <li ><a href="#contact" class="item-menu" onclick="itemActive()">Contactez Moi</a></li>
+            <i class='bx bx-plus' onclick="closeMenu()"></i>
+          </ul>
+          <i class='bx bx-menu' onclick="openMenu()"></i>
+
+        </nav>
+        <div class="bars-animations">
+          <div class="bar" style="--i: 6"></div>
+          <div class="bar" style="--i: 5"></div>
+          <div class="bar" style="--i: 4"></div>
+          <div class="bar" style="--i: 3"></div>
+          <div class="bar" style="--i: 2"></div>
+          <div class="bar" style="--i: 1"></div>
+        </div>
+        <div class="home">
+          <div class="home-info">
+            <h1>Mamadou CISSE</h1>
+            <h2>
+              Je suis un
+              <span style="--i: 5" data-text="Data Scientist"
+                >Data Scientist
+              </span>
+              <span style="--i: 4" data-text="Data Engineer"
+                >Data Engineer</span
+              >
+              <span style="--i: 3" data-text="Data Analyst">Data Analyst</span>
+              <span style="--i: 2" data-text="Data Architech"
+                >Data Architech</span
+              >
+              <span style="--i: 1" data-text="Dev AI et Cloud"
+                >Dev AI et Cloud</span
+              >
+              Junior
+            </h2>
+            <p>
+              Data Scientist Junior et Data Engineer, je transforme les données
+              en insights exploitables et développe des solutions
+              <br />intelligentes pour optimiser les performances des
+              entreprises.
+            </p>
+            <div class="btns-sci">
+              <a href="#" class="btn">Telecharger mon CV</a>
+              <div class="sci">
+                <a href=""><i class="bx bxl-github"></i></a>
+                <a href=""><i class="bx bxl-linkedin"></i></a>
+                <a href=""><i class="bx bxl-twitter"></i></a>
+                <a href=""><i class="bx bxl-facebook"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-----------------------A propos--------------------->
+
+    <section id="about">
+      <div class="container">
+        <div class="row">
+          <div class="about-col-1">
+            <img src="images/about.jpeg"  alt="" />
+          </div>
+          <div class="about-col-2">
+            <h2 class="sub-title">A propos de moi</h2>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+              Laboriosam culpa asperiores perspiciatis tenetur atque ipsum
+              minima rerum omnis possimus soluta, quo nulla accusamus commodi
+              aliquid maxime adipisci? Culpa, suscipit maiores.
+            </p>
+            <div class="tab-titles">
+              <p class="tab-links active-link" onclick="opentab('skills')">
+                Competences
+              </p>
+              <p class="tab-links" onclick="opentab('experience')">
+                Experiences
+              </p>
+              <p class="tab-links" onclick="opentab('education')">Educaction</p>
+            </div>
+            <div class="tab-contents active-tab" id="skills">
+              <ul>
+                <li><span>UI?UX</span> <br />DEV / DATA / CLOUD</li>
+                <li><span>UI?UX</span> <br />DEV / DATA / CLOUD</li>
+                <li><span>UI?UX</span> <br />DEV / DATA / CLOUD</li>
+              </ul>
+            </div>
+            <div class="tab-contents" id="experience">
+              <ul>
+                <li>
+                  <span>2021 - current</span> <br />UX/UI design training at ET
+                </li>
+                <li>
+                  <span>2019 - 2021</span> <br />UX/UI design training at ET
+                </li>
+                <li>
+                  <span>20216 - 2017</span> <br />UX/UI design training at ET
+                </li>
+              </ul>
+            </div>
+            <div class="tab-contents" id="education">
+              <ul>
+                <li><span>2021</span> <br />Master Data Science</li>
+                <li><span>2019</span> <br />Licence</li>
+                <li><span>20218</span> <br />BAC</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--    mes projets -->
+
+    <section id="projets">
+      <div class="container">
+        <h1 class="sub-title">Mes Projets</h1>
+        <div class="work-list">
+          <div class="work">
+            <img src="images/moi.jpeg" alt="" width="10%" />
+            <div class="layer">
+              <h3>Online Shoop App</h3>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
+                voluptatem dolore
+              </p>
+              <a href="#"><i class="bx bx-link-external"></i></a>
+            </div>
+          </div>
+          <div class="work">
+            <img src="images/moi.jpeg" alt="" width="10%" />
+            <div class="layer">
+              <h3>Online Shoop App</h3>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
+                voluptatem dolore
+              </p>
+              <a href="#"><i class="bx bx-link-external"></i></a>
+            </div>
+          </div>
+          <div class="work">
+            <img src="images/moi.jpeg" alt="" width="10%" />
+            <div class="layer">
+              <h3>Online Shoop App</h3>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
+                voluptatem dolore
+              </p>
+              <a href="#"><i class="bx bx-link-external"></i></a>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="btn">Voir plus</a>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="contact-left">
+            <h1 class="sub-title">Contactez Moi</h1>
+            <p><i class='bx bxs-paper-plane' ></i>mamadouciss224e@gmail.com</p>
+            <p><i class='bx bxs-phone'></i>07 44 86 82 11</p>
+            <div class="sci">
+              <a href=""><i class="bx bxl-github"></i></a>
+              <a href=""><i class="bx bxl-linkedin"></i></a>
+              <a href=""><i class="bx bxl-twitter"></i></a>
+              <a href=""><i class="bx bxl-facebook"></i></a>
+            </div>
+          </div>
+          <div class="contact-right">
+            <form name="submit-to-google-sheet">
+              <input type="text" name="Name" placeholder="Votre Nom" required>
+              <input type="email" name="Email" placeholder="Votre E-mail" required>
+              <textarea name="Message" rows="6" placeholder="Votre Message"></textarea>
+              <button type="submit" class="btn">Envoyer</button>
+            </form>
+            <span id="msg"></span>
+          </div>
+        </div>
+      </div>
+      <footer class="copyright">
+        <p>&copy; 2025 Cisse Mamadou. Tous droits réservés.</p>
+    </footer>
+    </section>
+    <script>
+      var tablinks = document.getElementsByClassName("tab-links");
+      var tabcontents = document.getElementsByClassName("tab-contents");
+      var itemenu =document.getElementsByClassName("item-menu");
+
+      function opentab(tabname) {
+        for (tablink of tablinks) {
+          tablink.classList.remove("active-link");
+        }
+        for (tabcontent of tabcontents) {
+          tabcontent.classList.remove("active-tab");
+        }
+        event.currentTarget.classList.add("active-link");
+        document.getElementById(tabname).classList.add("active-tab");
+      }
+
+      
+
+
+
+    </script>
+    <script>
+      var sidemenu=document.getElementById("sidemenu");
+      var itemenu =document.getElementsByClassName("item-menu");
+      function closeMenu(){
+        sidemenu.style.right="-200px";
+      }
+      function openMenu(){
+        console.log(sidemenu)
+        sidemenu.style.right="0";
+      }
+
+      function itemActive() {
+        for (itm of itemenu) {
+          itm.classList.remove("active");
+        }
+        event.currentTarget.classList.add("active");
+        closeMenu()
+      }
+    </script>
+    <script>
+      const scriptURL = 'https://script.google.com/macros/s/AKfycby-aEY-9yY79_ia4Yl1iaNrGeOgCQw6bzI2rvE7ypHtxLGl0-Ff3YwWFPpWU2q0oSD4/exec'
+      const form = document.forms['submit-to-google-sheet']
+      const msg=document.getElementById("msg");
+    
+      form.addEventListener('submit', e => {
+        e.preventDefault()
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+          .then(response =>{
+            msg.innerHTML="Message envoyé";
+            setTimeout(function () {
+              msg.innerHTML="";
+            },5000)
+            form.reset()
+          })
+          .catch(error => console.error('Error!', error.message))
+      })
+    </script>
+  </body>
+</html>
