@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mon Portfolio</title>
+    <link rel="icon" href="/logo.ico" />
+
+    <title>Mamadou Cissé</title>
     <link rel="stylesheet" href="style.css" />
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
@@ -28,28 +30,17 @@
     <section id="accueil">
       <div class="container">
         <nav>
-          <a class="logo">Portflio</a>
+          <a class="logo">Portflio </a>
           <ul id="sidemenu">
             <li>
               <a href="#accueil" class="item-menu active" onclick="itemActive()"
                 >Accueil</a
               >
             </li>
-            <li>
-              <a href="#about" class="item-menu" onclick="itemActive()"
-                >À propos</a
-              >
-            </li>
-            <li>
-              <a href="#projets" class="item-menu" onclick="itemActive()"
-                >Projets</a
-              >
-            </li>
-            <li>
-              <a href="#contact" class="item-menu" onclick="itemActive()"
-                >Contactez Moi</a
-              >
-            </li>
+            <li><a href="#about" class="item-menu" onclick="itemActive()">À propos</a></li>
+            <li><a href="#projets" class="item-menu" onclick="itemActive()">Projets</a></li>
+            <li><a href="#contact" class="item-menu" onclick="itemActive()">Contactez Moi</a></li>
+            <span id="lang" onclick="closeMenu()">Fr</span>
             <i class="bx bx-plus" onclick="closeMenu()"></i>
           </ul>
           <i class="bx bx-menu" onclick="openMenu()"></i>
@@ -64,9 +55,9 @@
         </div>
         <div class="home">
           <div class="home-info">
-            <h1>Mamadou CISSE</h1>
+            <h1 >Mamadou CISSE</h1>
             <h2>
-              Je suis un
+              <strong class="who">Je suis </strong>
               <span style="--i: 5" data-text="Data Scientist"
                 >Data Scientist
               </span>
@@ -80,21 +71,24 @@
               <span style="--i: 1" data-text="Dev AI et Cloud"
                 >Dev AI et Cloud</span
               >
-              Junior
+              <strong class="jr">Junior</strong>
+              
             </h2>
             <p>
-              Data Scientist Junior et Data Engineer, je transforme les données
-              en insights exploitables et développe des solutions
-              <br />intelligentes pour optimiser les performances des
-              entreprises.
+              Passionné de data science et de développement (web, mobile, bureau), <br>
+              je conçois des solutions innovantes alliant analyse de données, machine learning et <br>digitalisation pour répondre aux besoins des entreprises.
             </p>
             <div class="btns-sci">
               <a href="#" class="btn">Telecharger mon CV</a>
               <div class="sci">
-                <a href=""><i class="bx bxl-github"></i></a>
-                <a href=""><i class="bx bxl-linkedin"></i></a>
-                <a href=""><i class="bx bxl-twitter"></i></a>
-                <a href=""><i class="bx bxl-facebook"></i></a>
+                <a href="https://github.com/Ciscom224" target="_blank"><i class="bx bxl-github"></i></a>
+                <a href="#"><i class="bx bxl-linkedin"></i></a>
+                <a href="#"><i class='bx bxl-discord-alt'></i></a>
+                <a
+                  href="https://www.facebook.com/share/1A64LGBJGC/?mibextid=wwXIfr"
+                  target="_blank"
+                  ><i class="bx bxl-facebook"></i
+                ></a>
               </div>
             </div>
           </div>
@@ -110,47 +104,87 @@
             <img src="images/about.jpeg" alt="" />
           </div>
           <div class="about-col-2">
-            <h2 class="sub-title">A propos de moi</h2>
+            <h2 class="sub-title">À propos de moi</h2>
             <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-              Laboriosam culpa asperiores perspiciatis tenetur atque ipsum
-              minima rerum omnis possimus soluta, quo nulla accusamus commodi
-              aliquid maxime adipisci? Culpa, suscipit maiores.
+              Boursier d'État guinéen, j’ai poursuivi mes études au Maroc après le bac, obtenant un Master en Bio-informatique et Data Science. Actuellement en Master DataScale à l’Université Paris-Saclay, je me spécialise dans l’analyse et l’exploitation de données à grande échelle. Mon parcours, à la croisée de la biologie, de l’informatique et de la data, m’a permis de développer une forte capacité d’adaptation et un réel intérêt pour les projets innovants, tous domaines confondus.
             </p>
             <div class="tab-titles">
-              <p class="tab-links active-link" onclick="opentab('skills')">
-                Competences
+              <p
+                class="tab-links active-link skills-title"
+                onclick="opentab('skills')"
+              >
+                Compétences
               </p>
-              <p class="tab-links" onclick="opentab('experience')">
+              <p
+                class="tab-links experience-title"
+                onclick="opentab('experience')"
+              >
                 Experiences
               </p>
-              <p class="tab-links" onclick="opentab('education')">Educaction</p>
+              <p
+                class="tab-links education-title"
+                onclick="opentab('education')"
+              >
+                Éducation
+              </p>
             </div>
             <div class="tab-contents active-tab" id="skills">
               <ul>
-                <li><span>UI?UX</span> <br />DEV / DATA / CLOUD</li>
-                <li><span>UI?UX</span> <br />DEV / DATA / CLOUD</li>
-                <li><span>UI?UX</span> <br />DEV / DATA / CLOUD</li>
+                <li><span class="ski-title-1">BASE DE DONNÉES & SGBD</span> <br />Oracle | Mysql | PostgreSQL | MongoDB |
+                 
+              </li>
+                <li><span>BIG DATA</span> <br />Hadoop | Spark |</li>
+                <li><span>BI & ETL</span> <br />Talend-ETL | Power BI | Excel(VBA)</li>
+                <li><span class="ski-title-2">LANGAGES</span> <br />C | C++ | Java | Python | R | SQL</li>
+                <li><span>WEB</span> <br />Laravel | MERN | Vue Js | Bootstrap | TailwindCSS</li>
+                <li><span class="ski-title-3">MOBILE & BUREAU</span> <br />Flutter , Tauri</li>
               </ul>
             </div>
             <div class="tab-contents" id="experience">
               <ul>
                 <li>
-                  <span>2021 - current</span> <br />UX/UI design training at ET
+                  <span class="exp-title-1">JANVIER 2023 – JUIN 2023</span> <br /> <div class="exp-title-11"> Data Scientist Junior chez Office Chérifien des Phosphates (OCP), Maroc</div> 
+                  <em>
+                    <ul>
+                    <li class="exp-li-1">Extraction et prétraitement des données du data center.</li>
+                    <li class="exp-li-2">Analyse du pipeline de données.</li>
+                    <li class="exp-li-3">Implémentation et test de modèles (RF, LSTM, Prophet).</li>
+                    <li class="exp-li-4">Prédiction de la baisse de production d'énergie.</li>
+                    <li class="exp-li-5">Création de tableaux de bord pour la visualisation du résultat.</li>
+                  </ul>
+                </li></em>
+              
+                <li>
+                
+                  <span class="exp-title-2">MARS 2022 – AOUT 2022</span> <br /> <div class="exp-title-12">Analyste de Données Génétiques (NGS) au CHU de Tanger, Maroc  </div>
+                  <em>
+                    <ul>
+                      <li class="exp-li-21">Prétraitement et alignement de séquences ADN sur Matlab.</li>
+                      <li class="exp-li-22">Analyse statistique des résultats.</li>
+                    </ul>
+                  </em>
                 </li>
                 <li>
-                  <span>2019 - 2021</span> <br />UX/UI design training at ET
-                </li>
-                <li>
-                  <span>20216 - 2017</span> <br />UX/UI design training at ET
+                  <span class="exp-title-3">DÉCEMBRE 2021 – JUIN 2022</span> <br /><div class="exp-title-13"> Développeur Full Stack - AFRI Lab Marrakech,Maroc</div>
+                 <em>
+                  <ul>
+                    <li class="exp-li-31">Conception et développement d'une plateforme de gestion de laboratoire.</li>
+                    <li class="exp-li-32">Implémentation et tests unitaires.</li>
+                    <li class="exp-li-33">Mise en production sur le serveur interne.</li>
+                    <li class="exp-li-34">Résultat : digitalisation du labo et l’augmentation de la productivité des collaborateurs.</li>
+                  </ul>
+                 </em>
+                
                 </li>
               </ul>
             </div>
+            
             <div class="tab-contents" id="education">
               <ul>
-                <li><span>2021</span> <br />Master Data Science</li>
-                <li><span>2019</span> <br />Licence</li>
-                <li><span>20218</span> <br />BAC</li>
+                <li><span class="edu-1">Master en DATASCALE</span> <br /><div class="edu-11">Université Paris-Saclay, UVSQ (En cours)</div> </li>
+                <li><span class="edu-2">Master Bio-informatique et Data Science</span> <br /><div class="edu-21">Ecole Nationale des Sciences Appliquées de Tanger, Maroc(2023)</div> </li>
+                <li><span class="edu-3">Licence Maths et Informatique Appliquées</span> <br /> <div class="edu-31">Université Cadi Ayyad, Maroc (2021)</div></li>
+                <li><span>BAC</span> <br />Groupe Scolaire Alama Traoré (2018)</li>
               </ul>
             </div>
           </div>
@@ -164,40 +198,38 @@
         <h1 class="sub-title">Mes Projets</h1>
         <div class="work-list">
           <div class="work">
-            <img src="images/moi.jpeg" alt="" width="10%" />
+            <img src="images/p3.jpg" alt="" width="10%" />
             <div class="layer">
-              <h3>Online Shoop App</h3>
+              <h3>Profly</h3>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
-                voluptatem dolore
+                Profly est une application bureautique  dédiée aux enseignants, permettant une gestion fluide des étudiants et des cours, sans nécessiter de connexion internet. 
+                Son interface intuitive simplifie l'organisation pédagogique, où que vous soyez.
               </p>
-              <a href="#"><i class="bx bx-link-external"></i></a>
+              <a href="https://github.com/Ciscom224/profly" target="_blank"><i class="bx bx-link-external"></i></a>
             </div>
           </div>
           <div class="work">
-            <img src="images/moi.jpeg" alt="" width="10%" />
+            <img src="images/p2.jpg" alt="" width="10%" />
             <div class="layer">
-              <h3>Online Shoop App</h3>
+              <h3>Quiz Wiz</h3>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
-                voluptatem dolore
+                Plateforme de quiz multijoueurs en temps réel couvrant divers domaines tels que la cuisine, le football et la culture générale.
               </p>
-              <a href="#"><i class="bx bx-link-external"></i></a>
+              <a href="https://github.com/Ciscom224/aws_projet" target="_blank"><i class="bx bx-link-external"></i></a>
             </div>
           </div>
           <div class="work">
-            <img src="images/moi.jpeg" alt="" width="10%" />
+            <img src="images/p1.jpg" alt="" width="10%" />
             <div class="layer">
-              <h3>Online Shoop App</h3>
+              <h3>Face Presence</h3>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
-                voluptatem dolore
-              </p>
-              <a href="#"><i class="bx bx-link-external"></i></a>
+                L'application est conçue pour gérer les absences dans une salle à travers un système de reconnaissance faciale. 
+                Elle permet de générer des rapports détaillés sur les présences et absences des participants, puis de les partager par email.              </p>
+              <a href="https://github.com/Ciscom224/FaceApiProjet" target="_blank"><i class="bx bx-link-external"></i></a>
             </div>
           </div>
         </div>
-        <a href="#" class="btn">Voir plus</a>
+        <a href="https://github.com/Ciscom224?tab=repositories" class="btn" target="_blank">Voir plus</a>
       </div>
     </section>
 
@@ -205,31 +237,40 @@
       <div class="container">
         <div class="row">
           <div class="contact-left">
-            <h1 class="sub-title">Contactez Moi</h1>
+            <h1 class="sub-title contact-title">Contactez Moi</h1>
             <p><i class="bx bxs-paper-plane"></i>mamadouciss224e@gmail.com</p>
-            <p><i class="bx bxs-phone"></i>07 44 86 82 11</p>
+            <p><i class="bx bxs-phone"></i>07 XX XX XX XX</p>
             <div class="sci">
-              <a href=""><i class="bx bxl-github"></i></a>
+              <a href="https://github.com/Ciscom224"target="_blank" ><i class="bx bxl-github"></i></a>
               <a href=""><i class="bx bxl-linkedin"></i></a>
-              <a href=""><i class="bx bxl-twitter"></i></a>
-              <a href=""><i class="bx bxl-facebook"></i></a>
+              <a href=""><i class='bx bxl-discord-alt'></i></a>
+              <a href="https://www.facebook.com/share/1A64LGBJGC/?mibextid=wwXIfr"
+              target="_blank"><i class="bx bxl-facebook"></i></a>
             </div>
           </div>
           <div class="contact-right">
             <form name="submit-to-google-sheet">
-              <input type="text" name="Name" placeholder="Votre Nom" required />
+              <input
+                type="text"
+                name="Name"
+                class="name-placeholder"
+                placeholder="Votre Nom"
+                required
+              />
               <input
                 type="email"
                 name="Email"
+                class="email-placeholder"
                 placeholder="Votre E-mail"
                 required
               />
               <textarea
                 name="Message"
                 rows="6"
+                class="message-placeholder"
                 placeholder="Votre Message"
               ></textarea>
-              <button type="submit" class="btn">Envoyer</button>
+              <button type="submit" class="btn send-btn">Envoyer</button>
             </form>
             <span id="msg"></span>
           </div>
@@ -291,6 +332,171 @@
             form.reset();
           })
           .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
+    <script>
+      const translations = {
+        fr: {
+          accueil: "Accueil",
+          about: "À propos",
+          projets: "Projets",
+          contact: "Contactez-moi",
+          telecharger_cv: "Télécharger mon CV",
+          description: "    Passionné de data science et de développement (web, mobile, bureau),\n je conçois des solutions innovantes alliant analyse de données, machine learning et \n digitalisation pour répondre aux besoins des entreprises",
+          competences: "Compétences",
+          who :"Je suis ",
+          jr:"Junior",
+          db:"BASE DE DONNÉES & SGBD",
+          ///donnees pour competences
+          progLg:"Langages",
+          dev:"MOBILE & BUREAU",
+          experience: "Expérience",
+          /////////////////////////
+          exp1:"JANVIER 2023 – JUIN 2023",
+          exp11:"Data Scientist Junior chez Office Chérifien des Phosphates (OCP), Maroc",
+          exp2:"MARS 2022 – AOUT 2022",
+          exp22:"Analyste de Données Génétiques (NGS) au CHU de Tanger, Maroc  ",
+          exp3:"Décembre 2021 – Juin 2022",
+          exp33:"Développeur Full Stack - AFRI Lab Marrakech",
+          expLi1:"Extraction et prétraitement des données du data center.",
+          expLi2:"Analyse du pipeline de données.",
+          expLi3:"Implémentation et test de modèles (RF, LSTM, Prophet).",
+          expLi4:"Prédiction de la baisse de production d'énergie.",
+          expLi5:"Création de tableaux de bord pour la visualisation du résultat.",
+          expLi21:"Prétraitement et alignement de séquences ADN sur Matlab.",
+          expLi22:"Analyse statistique des résultats.",
+
+          expLi31:"Conception et développement d'une plateforme de gestion de laboratoire.",
+          expLi32:"Implémentation et tests unitaires.",
+          expLi33:"Mise en production sur le serveur interne.",
+          expLi34:"Résultat : digitalisation du labo et l’augmentation de la productivité des collaborateurs.",
+//////////////////////////////////////////////////
+          education: "Éducation",
+          edu1:"Master en DATASCALE",
+          edu11:"Université Paris-Saclay, UVSQ (En cours)",
+          edu2:"Master Bio-informatique et Data Science",
+          edu21:"Ecole Nationale des Sciences Appliquées de Tanger, Maroc(2023).",
+          edu3:"Licence Maths et Informatique Appliquées",
+          edu31:"Université Cadi Ayyad - FSSM, Maroc (2021)",
+          services: "Services",
+          contact_me: "Me Contacter",
+          envoyer: "Envoyer",
+          nom: "Votre Nom",
+          email: "Votre Email",
+          message: "Votre Message",
+        },
+        en: {
+          accueil: "Home",
+          about: "About",
+          projets: "Projects",
+          contact: "Contact Me",
+          telecharger_cv: "Download my CV",
+          description: "Passionate about data science and development (web, mobile, desktop),\n  I create innovative solutions combining data analysis, machine learning and \n digitalization to meet the needs of businesses",
+          competences: "Skills",
+          /// data pour experiences
+          experience: "Experience",
+          exp1:"January 2023 – June 2023",
+          exp11:"Junior Data Scientist  at Office Chérifien des Phosphates (OCP), Morocco",
+          exp2:"March 2022 – August 2022",
+          exp22:"Genetic Data Analyst (NGS) at CHU de Tanger, Morocco",
+          exp3:"December 2021 – June 2022",
+          exp33:"Full Stack Developer at AFRI Lab Marrakech, Morocco",
+          expLi1:"Extraction and preprocessing of data from the data center.",
+          expLi2:"Data pipeline analysis.",
+          expLi3:"Implementation and testing of models (RF, LSTM, Prophet).",
+          expLi4:"Prediction of energy production decline.",
+          expLi5:"Creation of dashboards for result visualization.",
+          expLi21:"Preprocessing and alignment of DNA sequences using Matlab.",
+          expLi22:"Statistical analysis of results.",
+
+          expLi31:"Design and development of a laboratory management platform.",
+          expLi32:"Implementation and unit testing.",
+          expLi33:"Deployment on internal server.",
+          expLi34:"Result: Digitalization of the lab and increased productivity of collaborators.",
+          /////////////////////////////////////////
+          education: "Education",
+          edu1:"Master's DATASCALE",
+          edu11:"Paris-Saclay University, UVSQ (current)",
+          edu2:"Master's in Bioinformatics and Data Science",
+          edu21:"National School of Applied Sciences of Tangier, Morocco (2023)",
+          edu3:"Bachelor's in Mathematics and Applied Computer Science",
+          edu31:"Cadi Ayyad University - FSSM, Morocco (2021)",
+          who :"I'm junior",
+          jr:"",
+          db:"DATABASE & SGBD",
+          progLg:"Programming Languages",
+          dev:"MOBILE & DESKTOP",
+          services: "Services",
+          contact_me: "Contact Me",
+          envoyer: "Send",
+          nom: "Your Name",
+          email: "Your Email",
+          message: "Your Message",
+        },
+      };
+
+      document.getElementById("lang").addEventListener("click", function () {
+        const currentLang = this.innerText === "Fr" ? "en" : "fr";
+        this.innerText = currentLang === "fr" ? "Fr" : "En";
+
+        document.querySelector("a[href='#accueil']").innerText =translations[currentLang].accueil;
+        document.querySelector("a[href='#about']").innerText =translations[currentLang].about;
+        document.querySelector("a[href='#projets']").innerText =translations[currentLang].projets;
+        document.querySelector("a[href='#contact']").innerText =translations[currentLang].contact;
+        document.querySelector(".btn").innerText =translations[currentLang].telecharger_cv;
+
+
+        document.querySelector(".home-info p").innerText =translations[currentLang].description;
+        document.querySelector(".skills-title").innerText =translations[currentLang].competences;
+        document.querySelector(".experience-title").innerText =translations[currentLang].experience;
+        /// section pour education
+        document.querySelector(".education-title").innerText =translations[currentLang].education;
+        document.querySelector(".edu-1").innerText =translations[currentLang].edu1.toUpperCase();
+        document.querySelector(".edu-11").innerText =translations[currentLang].edu11;
+        document.querySelector(".edu-2").innerText =translations[currentLang].edu2.toUpperCase();
+        document.querySelector(".edu-21").innerText =translations[currentLang].edu21;
+        document.querySelector(".edu-3").innerText =translations[currentLang].edu3.toUpperCase();
+        document.querySelector(".edu-31").innerText =translations[currentLang].edu31;
+
+
+
+
+
+
+        ///section pour les titres de competences
+        document.querySelector(".ski-title-1").innerText =translations[currentLang].db;
+        document.querySelector(".ski-title-2").innerText =translations[currentLang].progLg;
+        document.querySelector(".ski-title-3").innerText =translations[currentLang].dev;
+
+        /// section experiences
+        document.querySelector(".exp-title-11").innerText =translations[currentLang].exp11;
+        document.querySelector(".exp-title-1").innerText =translations[currentLang].exp1.toUpperCase();
+        document.querySelector(".exp-title-12").innerText =translations[currentLang].exp22;
+        document.querySelector(".exp-title-2").innerText =translations[currentLang].exp2.toUpperCase();
+        document.querySelector(".exp-title-13").innerText =translations[currentLang].exp33;
+        document.querySelector(".exp-title-3").innerText =translations[currentLang].exp3.toUpperCase();
+        document.querySelector(".exp-li-1").innerText =translations[currentLang].expLi1;
+        document.querySelector(".exp-li-2").innerText =translations[currentLang].expLi2;
+        document.querySelector(".exp-li-3").innerText =translations[currentLang].expLi3;
+        document.querySelector(".exp-li-4").innerText =translations[currentLang].expLi4;
+        document.querySelector(".exp-li-5").innerText =translations[currentLang].expLi5;
+        document.querySelector(".exp-li-21").innerText =translations[currentLang].expLi21;
+        document.querySelector(".exp-li-22").innerText =translations[currentLang].expLi22;
+        document.querySelector(".exp-li-31").innerText =translations[currentLang].expLi31;
+        document.querySelector(".exp-li-32").innerText =translations[currentLang].expLi32;
+        document.querySelector(".exp-li-33").innerText =translations[currentLang].expLi33;
+        document.querySelector(".exp-li-34").innerText =translations[currentLang].expLi34;
+
+
+
+        document.querySelector(".who").innerText =translations[currentLang].who;
+        document.querySelector(".jr").innerText =translations[currentLang].jr;
+        
+        document.querySelector(".sub-title contact-title").innerText =translations[currentLang].contact;
+        document.querySelector(".send-btn").innerText =translations[currentLang].envoyer;
+        document.querySelector(".name-placeholder").setAttribute("placeholder", translations[currentLang].nom);
+        document.querySelector(".email-placeholder").setAttribute("placeholder", translations[currentLang].email);
+        document.querySelector(".message-placeholder").setAttribute("placeholder", translations[currentLang].message);
       });
     </script>
   </body>
