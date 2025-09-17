@@ -437,7 +437,7 @@ nav ul li a:hover::after{
     width: 100%;
 
 }
-form input,form textarea{
+form input,input,form textarea{
     width: 100%;
     border: 0;
     outline: none;
@@ -491,6 +491,100 @@ nav .bx{
     background: var(--secondary-color);
     font-size: 17px;
 }
+
+
+
+
+#qrcode-section {
+  padding: 50px 0;
+  text-align: center;
+}
+
+#qrcode-section textarea {
+  width: 80%;
+  max-width: 500px;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+#qrcode {
+  margin: 20px auto;
+}
+
+#qrcode img {
+  border: 2px solid var(--primary-color);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--primary-color);
+}
+
+
+
+.switch-container {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  gap: 10px;
+}
+
+.switch-container input[type="radio"] {
+  display: none;
+}
+
+.switch-container label {
+  padding: 10px 20px;
+  border: 2px solid var(--primary-color, #ff8c00);
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary-color, #ff8c00);
+  transition: all 0.3s ease;
+}
+
+.switch-container input[type="radio"]:checked + label {
+  background: var(--primary-color, #ff8c00);
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
+}
+#vcardPreview{
+    background: var(--primary-color);
+}
+
+.switch-container {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  gap: 10px;
+}
+
+.switch-container input[type="radio"] {
+  display: none;
+}
+
+.switch-container label {
+  padding: 10px 20px;
+  border: 2px solid #ff8c00;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #ff8c00;
+  transition: all 0.3s ease;
+}
+
+.switch-container input[type="radio"]:checked + label {
+  background: #ff8c00;
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.6);
+}
+
+#qrcode {
+  margin-top: 20px;
+}
+
+
 @media only screen and (max-width:600px) {
     body{
         display: block;

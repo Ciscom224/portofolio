@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/logo.ico" />
+    <link rel="icon" href="images/logo.ico" />
 
     <title>Mamadou Cissé</title>
     <link rel="stylesheet" href="style.css" />
@@ -30,7 +30,7 @@
     <section id="accueil">
       <div class="container">
         <nav>
-          <a class="logo">Portflio </a>
+          <a class="logo">Mamadou Cissé </a>
           <ul id="sidemenu">
             <li>
               <a href="#accueil" class="item-menu active" onclick="itemActive()"
@@ -55,7 +55,7 @@
         </div>
         <div class="home">
           <div class="home-info">
-            <h1 >Mamadou CISSE</h1>
+            <h1 >Bienvenue ...</h1>
             <h2>
               <strong class="who"> Recherche Alternance </strong>
               <span style="--i: 5" data-text="Data Scientist"
@@ -226,6 +226,16 @@ semaine en formation
               <a href="https://github.com/Ciscom224/aws_projet" target="_blank"><i class="bx bx-link-external"></i></a>
             </div>
           </div>
+            <div class="work">
+            <img src="images/p4.jpg" alt="" width="10%" />
+            <div class="layer">
+              <h3>QR4You</h3>
+              
+              <p>
+                En un clic, créez, téléchargez et partagez vos QR Codes personnalisés pour rendre vos contenus accessibles partout.              </p>
+              <a href="https://github.com/Ciscom224/aws_projet" target="_blank"><i class="bx bx-link-external"></i></a>
+            </div>
+          </div>
           <div class="work">
             <img src="images/p1.jpg" alt="" width="10%" />
             <div class="layer">
@@ -241,6 +251,80 @@ semaine en formation
       </div>
     </section>
 
+
+    <section id="qrcode-section">
+  <div class="container">
+    <h1 class="sub-title">🔗 Générateur de QR Code</h1>
+    <p>Créez et téléchargez gratuitement vos QR codes (site web, PDF, carte de visite, etc.).</p>
+
+<!-- Switch Bouton -->
+<div class="switch-container">
+  <input type="radio" id="qrLink" name="qrType" value="url" checked onchange="showInput()" />
+  <label for="qrLink">🔗 Lien</label>
+
+  <input type="radio" id="qrVcard" name="qrType" value="vcard" onchange="showInput()" />
+  <label for="qrVcard">👤 vCard</label>
+</div>
+
+<!-- Zone URL -->
+<div id="urlInput">
+  <textarea id="qrData" placeholder="Exemple : https://monportfolio.com ou Mon texte..." rows="3"></textarea>
+</div>
+
+<div style="display: flex; gap: 20px; align-items: flex-start; font-family: Arial, sans-serif;">
+
+  <!-- Formulaire vCard -->
+  <div id="vcardInput" style="flex: 1; display: block;">
+    <input type="text" id="vName" placeholder="Nom" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br> 
+    <input type="text" id="vSurname" placeholder="Prénom" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br> 
+    <input type="email" id="vEmail" placeholder="Email" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br>
+    <input type="text" id="vEmail" placeholder="Profession" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br>
+    <input type="tel" id="vPhone" placeholder="Téléphone" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br>
+  </div>
+
+<div id="vcardPreview" style="
+  flex: 1;
+  max-width: 380px;
+  height: 220px;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  padding: 20px;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: 'Segoe UI', sans-serif;
+">
+
+  <!-- Nom et Prénom -->
+  <div>
+    <h2 id="previewName" style="margin: 0; font-size: 1.6em; color: #2c3e50;">Nom Prénom</h2>
+    <p style="margin: 0; font-size: 0.9em; color: #7f8c8d;">Titre / Fonction</p>
+  </div>
+
+  <!-- Infos de contact -->
+  <div style="margin-top: 15px;">
+    <p id="previewEmail" style="margin: 5px 0; display: flex; align-items: center; font-size: 0.95em;">
+      📧 <span style="margin-left: 8px;">Email</span>
+    </p>
+    <p id="previewPhone" style="margin: 5px 0; display: flex; align-items: center; font-size: 0.95em;">
+      📞 <span style="margin-left: 8px;">Téléphone</span>
+    </p>
+  </div>
+</div>
+
+</div>
+
+<!-- Bouton Générer -->
+<button class="btn" onclick="generateQR()">Générer QR Code</button>
+
+<!-- QR Code affiché -->
+<div id="qrcode"></div>
+
+<!-- Bouton téléchargement -->
+<button id="downloadBtn" class="btn" style="display:none;" onclick="downloadQR()">Télécharger le QR Code</button>
+
+</section>
     <section id="contact">
       <div class="container">
         <div class="row">
@@ -288,6 +372,10 @@ semaine en formation
         <p>&copy; 2025 Cisse Mamadou. Tous droits réservés.</p>
       </footer>
     </section>
+
+  <!-- ================== SECTION QR CODE ================== -->
+
+
     <script>
       var tablinks = document.getElementsByClassName("tab-links");
       var tabcontents = document.getElementsByClassName("tab-contents");
@@ -507,5 +595,87 @@ semaine en formation
         document.querySelector(".message-placeholder").setAttribute("placeholder", translations[currentLang].message);
       });
     </script>
+
+
+<script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
+<script>
+  let qrCode;
+
+function showInput() {
+  let type = document.querySelector('input[name="qrType"]:checked').value;
+  
+  if (type === "url") {
+    document.getElementById("urlInput").style.display = "block";
+    document.getElementById("vcardInput").style.display = "none";
+    document.getElementById("vcardPreview").style.display = "none";
+  } else if (type === "vcard") {
+    document.getElementById("urlInput").style.display = "none";
+    document.getElementById("vcardInput").style.display = "block";
+    document.getElementById("vcardPreview").style.display = "block";
+  }
+}
+
+  function generateQR() {
+    const type = document.getElementById("qrType").value;
+    let data = "";
+
+    if (type === "url") {
+      data = document.getElementById("qrData").value.trim();
+    } 
+    else if (type === "pdf") {
+      const file = document.getElementById("qrFile").files[0];
+      if (file) data = URL.createObjectURL(file);
+    } 
+    else if (type === "vcard") {
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const email = document.getElementById("email").value;
+      data = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
+    }
+
+    if (!data) {
+      alert("Veuillez entrer ou sélectionner des données !");
+      return;
+    }
+
+    document.getElementById("qrcode").innerHTML = "";
+    qrCode = new QRCodeStyling({
+      width: 200,
+      height: 200,
+      data: data,
+      dotsOptions: { color: "#000", type: "rounded" },
+      backgroundOptions: { color: "#fff" }
+    });
+    qrCode.append(document.getElementById("qrcode"));
+
+    document.getElementById("downloadBtn").style.display = "inline-block";
+  }
+
+  function downloadQR() {
+    if (qrCode) qrCode.download({ name: "qrcode", extension: "png" });
+  }
+
+  // Initialiser avec "URL"
+  showInput();
+</script>
+
+<script>
+  const nameInput = document.getElementById('vName');
+  const surnameInput = document.getElementById('vSurname');
+  const emailInput = document.getElementById('vEmail');
+  const phoneInput = document.getElementById('vPhone');
+
+  function updatePreview() {
+    const fullName = (nameInput.value + ' ' + surnameInput.value).trim() || 'Nom Prénom';
+    document.getElementById('previewName').textContent = fullName;
+    document.getElementById('previewEmail').textContent = emailInput.value || 'Email';
+    document.getElementById('previewPhone').textContent = phoneInput.value || 'Téléphone';
+  }
+
+  nameInput.addEventListener('input', updatePreview);
+  surnameInput.addEventListener('input', updatePreview);
+  emailInput.addEventListener('input', updatePreview);
+  phoneInput.addEventListener('input', updatePreview);
+</script>
   </body>
 </html>
