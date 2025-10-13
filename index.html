@@ -4,12 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="images/logo.ico" />
+  <link rel="icon" href="images/logo.ico"/>
 
   <title>Mamadou Cissé</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5RM8R10EME"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -227,7 +226,9 @@
             <p>
               En un clic, créez, téléchargez et partagez vos QR Codes personnalisés pour rendre vos contenus accessibles
               partout. </p>
-            <a href="https://github.com/Ciscom224/aws_projet" target="_blank"><i class="bx bx-link-external"></i></a>
+            <a href="" target="_blank" > <i onclick="()=>{
+              document.getElementById('qrcode-section').style.display = 'block';
+            }" class="bx bx-link-external"></i></a>
           </div>
         </div>
         <div class="work">
@@ -248,65 +249,26 @@
   </section>
 
 
-  <section id="qrcode-section">
+ <section id="qrcode-section" style="display: block;">
     <div class="container">
-      <h1 class="sub-title">🔗 Générateur de QR Code</h1>
-      <p>Créez et téléchargez gratuitement vos QR codes (site web, PDF, carte de visite, etc.).</p>
+      <h1 class="sub-title">🔗 QR4You</h1>
+      <p>Créez et téléchargez gratuitement vos QR codes (site web, carte de visite).</p>
 
       <!-- Switch Bouton -->
       <div class="switch-container">
-        <input type="radio" id="qrLink" name="qrType" value="url" checked onchange="showInput()" />
+        <input type="radio" id="qrLink" name="qrType" value="url" checked onchange="updateInputs('url')"/>
         <label for="qrLink">🔗 Lien</label>
 
-        <input type="radio" id="qrVcard" name="qrType" value="vcard" onchange="showInput()" />
+        <input type="radio" id="qrVcard" name="qrType" value="vcard" onchange="updateInputs('vcard')"/>
         <label for="qrVcard">👤 vCard</label>
       </div>
 
-      <!-- Zone URL -->
-      <div id="urlInput">
-        <textarea id="qrData" placeholder="Exemple : https://monportfolio.com ou Mon texte..." rows="3"></textarea>
-      </div>
-
-      <div style="display: flex; gap: 20px; align-items: flex-start; font-family: Arial, sans-serif;">
-
-        <!-- Formulaire vCard -->
-        <div id="vcardInput" style="flex: 1; display: block;">
-          <input type="text" id="vName" placeholder="Nom"><br>
-          <input type="text" id="vSurname" placeholder="Prénom"><br>
-          <input type="email" id="vEmail" placeholder="Email"><br>
-          <input type="text" id="vEmail" placeholder="Profession"><br>
-          <input type="tel" id="vPhone" placeholder="Téléphone"><br>
-        </div>
-        <div id="vcardPreview">
-
-          <!-- Nom et Prénom -->
-          <div>
-            <h2 id="previewName">Nom Prénom</h2>
-            <p >Titre / Fonction</p>
-          </div>
-
-          <!-- Infos de contact -->
-          <div >
-            <p id="previewEmail">
-              📧 <span >Email</span>
-            </p>
-            <p id="previewPhone">
-              📞 <span>Téléphone</span>
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Bouton Générer -->
-      <button class="btn" onclick="generateQR()">Générer QR Code</button>
-
+      <!-- Zone dynamique -->
+      <div id="qrInputs"></div>
       <!-- QR Code affiché -->
       <div id="qrcode"></div>
 
-      <!-- Bouton téléchargement -->
-      <button id="downloadBtn" style="display: none;" class="btn" onclick="downloadQR()">Télécharger le QR Code</button>
-
+    </div>
   </section>
   <section id="contact">
     <div class="container">
@@ -564,85 +526,7 @@
 
 
   <script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
-  <script>
-    let qrCode;
-
-    function showInput() {
-      let type = document.querySelector('input[name="qrType"]:checked').value;
-
-      if (type === "url") {
-        document.getElementById("urlInput").style.display = "block";
-        document.getElementById("vcardInput").style.display = "none";
-        document.getElementById("vcardPreview").style.display = "none";
-      } else if (type === "vcard") {
-        document.getElementById("urlInput").style.display = "none";
-        document.getElementById("vcardInput").style.display = "block";
-        document.getElementById("vcardPreview").style.display = "block";
-      }
-    }
-
-    function generateQR() {
-      const type = document.getElementById("qrType").value;
-      let data = "";
-
-      if (type === "url") {
-        data = document.getElementById("qrData").value.trim();
-      }
-      else if (type === "pdf") {
-        const file = document.getElementById("qrFile").files[0];
-        if (file) data = URL.createObjectURL(file);
-      }
-      else if (type === "vcard") {
-        const name = document.getElementById("name").value;
-        const phone = document.getElementById("phone").value;
-        const email = document.getElementById("email").value;
-        data = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
-      }
-
-      if (!data) {
-        alert("Veuillez entrer ou sélectionner des données !");
-        return;
-      }
-
-      document.getElementById("qrcode").innerHTML = "";
-      qrCode = new QRCodeStyling({
-        width: 200,
-        height: 200,
-        data: data,
-        dotsOptions: { color: "#000", type: "rounded" },
-        backgroundOptions: { color: "#fff" }
-      });
-      qrCode.append(document.getElementById("qrcode"));
-
-      document.getElementById("downloadBtn").style.display = "inline-block";
-    }
-
-    function downloadQR() {
-      if (qrCode) qrCode.download({ name: "qrcode", extension: "png" });
-    }
-
-    // Initialiser avec "URL"
-    showInput();
-  </script>
-
-  <script>
-    const nameInput = document.getElementById('vName');
-    const surnameInput = document.getElementById('vSurname');
-    const emailInput = document.getElementById('vEmail');
-    const phoneInput = document.getElementById('vPhone');
-
-    function updatePreview() {
-      const fullName = (nameInput.value + ' ' + surnameInput.value).trim() || 'Nom Prénom';
-      document.getElementById('previewName').textContent = fullName;
-      document.getElementById('previewEmail').textContent = emailInput.value || 'Email';
-      document.getElementById('previewPhone').textContent = phoneInput.value || 'Téléphone';
-    }
-
-    nameInput.addEventListener('input', updatePreview);
-    surnameInput.addEventListener('input', updatePreview);
-    emailInput.addEventListener('input', updatePreview);
-    phoneInput.addEventListener('input', updatePreview);
-  </script>
+  <script src="qrcode.js"></script>
 </body>
 
 </html>
