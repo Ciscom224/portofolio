@@ -111,40 +111,55 @@ const qrTypes = {
       const profEl = document.getElementById("vProf");
       const phoneEl = document.getElementById("vPhone");
 
-      if (!nameEl || !surnameEl || !emailEl || !phoneEl || !profEl) {
-        showToast("Veuillez remplir tous les champs.", "error");
-      } else {
-        const name = nameEl.value.trim();
-        const surname = surnameEl.value.trim();
-        const email = emailEl.value.trim();
-        const prof = profEl.value.trim();
-        const phone = phoneEl.value.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const phoneRegex = /^[0-9+\s-]{6,20}$/;
-
-        if (!name || !surname) {
-          showToast("Veuillez entrer le nom et le prénom.", "error");
-          return null;
-        }else if (!prof) {
-          showToast("Veuillez entrer votre Profession.", "error");
-        } 
-        else if (!email || (email && !emailRegex.test(email))) {
-          showToast("Veuillez entrer un email valide.", "error");
-          return null;
-        } else if (!phone || (phone && !phoneRegex.test(phone))) {
-          showToast("Veuillez entrer un numéro de téléphone valide.", "error");
-          return null;
-        } else {
-
-          return `BEGIN:VCARD
-              VERSION:3.0
-              FN:${name} ${surname}
-              TITLE:${prof}
-              EMAIL:${email}
-              TEL:${phone}
-              END:VCARD`;
-        }
+      // Vérification que les champs existent
+      if (!nameEl || !surnameEl || !emailEl || !profEl || !phoneEl) {
+        showToast("Formulaire introuvable ou incomplet.", "error");
+        return null;
       }
+
+      const name = nameEl.value.trim();
+      const surname = surnameEl.value.trim();
+      const email = emailEl.value.trim();
+      const prof = profEl.value.trim();
+      const phone = phoneEl.value.trim();
+
+      // Validation basique
+      if (!name || !surname) {
+        showToast("Veuillez entrer le nom et le prénom.", "error");
+        return null;
+      }
+
+      if (!prof) {
+        showToast("Veuillez entrer votre profession.", "error");
+        return null;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        showToast("Veuillez entrer un email valide.", "error");
+        return null;
+      }
+
+      const phoneRegex = /^[0-9+\s-]{6,20}$/;
+      if (!phone || !phoneRegex.test(phone)) {
+        showToast("Veuillez entrer un numéro de téléphone valide.", "error");
+        return null;
+      }
+
+      // ✅ Génération correcte de la vCard
+      const vcardData = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        `N:${surname};${name};;;`,
+        `FN:${name} ${surname}`,
+        `TITLE:${prof}`,
+        `EMAIL:${email}`,
+        `TEL:${phone}`,
+        "END:VCARD",
+      ].join("\n");
+
+      console.log("✅ vCard générée :\n", vcardData);
+      return vcardData;
     },
   },
 };
@@ -159,8 +174,6 @@ function updateInputs(type) {
 
 // --- Génération QR ---
 function generateQR(type) {
-  console.log(qrTypes[type].getData());
-
   const data = qrTypes[type].getData();
   if (!data) return;
 
@@ -209,7 +222,7 @@ function initVcardPreview() {
   const previewPhone = document.getElementById("previewPhone");
 
   // Rafraîchir en temps réel
-  [nameEl, surnameEl, emailEl, phoneEl,profEl].forEach((input) => {
+  [nameEl, surnameEl, emailEl, phoneEl, profEl].forEach((input) => {
     input.addEventListener("input", () => {
       previewName.textContent =
         (nameEl.value + " " + surnameEl.value).trim() || "Nom Prénom";
