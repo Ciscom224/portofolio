@@ -4,275 +4,238 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio de Mamadou Cissé. Profil hybride : Data Scientist, Data Engineer & Data Architect Junior. Expert GenAI, Big Data et Cloud.">
   <link rel="icon" href="images/logo.ico"/>
 
-  <title>Mamadou Cissé</title>
+  <title>Mamadou Cissé | Data & IA</title>
+  
   <link rel="stylesheet" href="style.css" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5RM8R10EME"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
+    function gtag() { dataLayer.push(arguments); }
     gtag("js", new Date());
-
     gtag("config", "G-5RM8R10EME");
   </script>
 </head>
 
 <body>
+
   <section id="accueil">
     <div class="container">
       <nav>
-        <a class="logo">Mamadou Cissé </a>
+        <a href="#" class="logo">Mamadou Cissé</a>
         <ul id="sidemenu">
-          <li>
-            <a href="#accueil" class="item-menu active" onclick="itemActive()">Accueil</a>
-          </li>
+          <li><a href="#accueil" class="item-menu active" onclick="itemActive()">Accueil</a></li>
           <li><a href="#about" class="item-menu" onclick="itemActive()">À propos</a></li>
           <li><a href="#projets" class="item-menu" onclick="itemActive()">Projets</a></li>
-          <li><a href="#contact" class="item-menu" onclick="itemActive()">Contactez Moi</a></li>
+          <li><a href="#contact" class="item-menu" onclick="itemActive()">Contact</a></li>
           <span id="lang" onclick="closeMenu()">Fr</span>
           <i class="bx bx-plus" onclick="closeMenu()"></i>
         </ul>
         <i class="bx bx-menu" onclick="openMenu()"></i>
       </nav>
-      <div class="bars-animations">
-        <div class="bar" style="--i: 6"></div>
-        <div class="bar" style="--i: 5"></div>
-        <div class="bar" style="--i: 4"></div>
-        <div class="bar" style="--i: 3"></div>
-        <div class="bar" style="--i: 2"></div>
-        <div class="bar" style="--i: 1"></div>
-      </div>
+      
       <div class="home">
         <div class="home-info">
-          <h1>Bienvenue ...</h1>
+          <h1>Bienvenue, je suis...</h1>
           <h2>
-            <strong class="who"> Futur   </strong>
-            <span style="--i: 5" data-text="Data Scientist">Data Scientist
-            </span>
+            <span style="--i: 5" data-text="Data Scientist">Data Scientist</span>
             <span style="--i: 4" data-text="Data Engineer">Data Engineer</span>
-            <span style="--i: 3" data-text="Data Analyst">Data Analyst</span>
-            <span style="--i: 2" data-text="Data Architech">Data Architech</span>
-             <span style="--i: 1" data-text="DBA">DBA</span >
-
-            <strong class="jr">Junior</strong>
-
+            <span style="--i: 3" data-text="Data Architect">Data Architect</span>
+            <span style="--i: 2" data-text="GenAI & RAG Expert">GenAI & RAG Expert</span>
+            <span style="--i: 1" data-text="Bio-informaticien">Bio-informaticien</span>
           </h2>
-             <p>
-              Lauréat de la promotion 2018, j’ai poursuivi mes études au Maroc avant de rejoindre la France pour approfondir mes compétences en science des données.<br/>
-Actuellement en Master DataScale à l’Université Paris-Saclay, je me spécialise dans la gestion et l’analyse de données à grande échelle.<br/>
-Passionné par la Data Science, je cherche à allier rigueur technique, vision analytique et impact concret dans mes projets.<br/>
+          <p class="intro-text">
+            Étudiant en Master 2 <strong>DataScale (Paris-Saclay)</strong>. <br/>
+            Je maîtrise le cycle de vie complet de la donnée : de l'<strong>Architecture</strong> (Cloud/NoSQL) à l'<strong>Ingénierie</strong> (Big Data pipelines) jusqu'à la <strong>Science</strong> (IA Générative & Analyse).
           </p>
           <div class="btns-sci">
-            <a href="CV_Fr.pdf" class="btn" download="CV_Mamadou_Cisse.pdf">Télécharger mon CV</a>
+            <a href="mamadouCV.pdf" class="btn" download>Télécharger mon CV</a>
             <div class="sci">
               <a href="https://github.com/Ciscom224" target="_blank"><i class="bx bxl-github"></i></a>
               <a href="https://www.linkedin.com/in/cissemamadou" target="_blank"><i class="bx bxl-linkedin"></i></a>
-              <a href="#"><i class='bx bxl-discord-alt'></i></a>
-              <a href="https://www.facebook.com/share/1A64LGBJGC/?mibextid=wwXIfr" target="_blank"><i
-                  class="bx bxl-facebook"></i></a>
+              <a href="mailto:mamadouciss224e@gmail.com"><i class='bx bx-envelope'></i></a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <!-----------------------A propos--------------------->
 
   <section id="about">
     <div class="container">
       <div class="row">
         <div class="about-col-1">
-          <img src="images/about.jpeg" alt="" />
+          <img src="images/about.jpeg" alt="Mamadou Cissé" />
         </div>
         <div class="about-col-2">
           <h2 class="sub-title">À propos de moi</h2>
-           <p>
-            Actuellement en dernière année de Master DataScale à l’Université Paris-Saclay(UVSQ),  je suis à la recherche d’un stage de fin d’études dans les domaines de la Data Science, 
-            de l’ingénierie des données ou de l’analyse de données, à partir de mars 2026.
+          <p class="about-text">
+            Profil polyvalent issu de la Bio-informatique et spécialisé en Big Data à l'Université Paris-Saclay.
+            <br><br>
+            Mon approche combine la vision du <strong>Data Architect</strong> (Modélisation Graph/Cloud), la robustesse du <strong>Data Engineer</strong> (Spark/CI-CD) et l'innovation du <strong>Data Scientist</strong> (IA Agentique/RAG).
+            <br><br>
+            <strong>Recherche :</strong> Stage de fin d'études (6 mois) à partir de <strong>Mars 2026</strong>.
           </p>
       
           <div class="tab-titles">
-            <p class="tab-links active-link skills-title" onclick="opentab('skills')">
-              Compétences
-            </p>
-            <p class="tab-links experience-title" onclick="opentab('experience')">
-              Experiences
-            </p>
-            <p class="tab-links education-title" onclick="opentab('education')">
-              Éducation
-            </p>
+            <p class="tab-links active-link skills-title" onclick="opentab('skills')">Compétences</p>
+            <p class="tab-links experience-title" onclick="opentab('experience')">Expériences</p>
+            <p class="tab-links education-title" onclick="opentab('education')">Formation</p>
           </div>
+
           <div class="tab-contents active-tab" id="skills">
             <ul>
-              <li><span class="ski-title-1">BASE DE DONNÉES & SGBD</span> <br />Oracle | Mysql | PostgreSQL | MongoDB |
-
-              </li>
-              <li><span>BIG DATA</span> <br />Hadoop | Spark |</li>
-                <li><span>BI & ETL</span> <br />Talend-ETL | Pentaho | Power BI | Excel(VBA)</li>
-              <li><span class="ski-title-2">LANGAGES</span> <br />C | C++ | Java | Python | R | SQL</li>
-              <li><span>WEB</span> <br />Laravel | MERN | Vue Js | Bootstrap | TailwindCSS</li>
-              <li><span class="ski-title-3">MOBILE & BUREAU</span> <br />Flutter , Tauri</li>
+              <li><span class="ski-title-1">DATA ENGINEERING (Build)</span> <br />PySpark | Elasticsearch | Hadoop | SQL | Docker | Kafka</li>
+              <li><span class="ski-title-2">DATA SCIENCE & AI (Analyze)</span> <br />Python | <strong>Graph RAG</strong> | Neo4j | LangChain | NLP | Statistics</li>
+              <li><span class="ski-title-3">ARCHITECTURE & DEV (Design)</span> <br />AWS/Azure | Microservices | CI/CD (Git) | FastAPI | UML</li>
             </ul>
           </div>
+
           <div class="tab-contents" id="experience">
             <ul>
               <li>
-                <span class="exp-title-1">JANVIER 2023 – JUIN 2023</span> <br />
-                <div class="exp-title-11"> Data Scientist Junior chez Office Chérifien des Phosphates (OCP), Maroc</div>
+                <span class="exp-date-1">JAN 2023 – JUIN 2023</span> <br />
+                <div class="exp-role-1">Data Scientist / Engineer - OCP Group (Maroc)</div>
                 <em>
-                  <ul>
-                    <li class="exp-li-1">Extraction et prétraitement des données du data center.</li>
-                    <li class="exp-li-2">Analyse du pipeline de données.</li>
-                    <li class="exp-li-3">Implémentation et test de modèles (RF, LSTM, Prophet).</li>
-                    <li class="exp-li-4">Prédiction de la baisse de production d'énergie.</li>
-                    <li class="exp-li-5">Création de tableaux de bord pour la visualisation du résultat.</li>
-                  </ul>
-              </li></em>
-
-              <li>
-
-                <span class="exp-title-2">MARS 2022 – AOUT 2022</span> <br />
-                <div class="exp-title-12">Analyste de Données Génétiques (NGS) au CHU de Tanger, Maroc </div>
-                <em>
-                  <ul>
-                    <li class="exp-li-21">Prétraitement et alignement de séquences ADN sur Matlab.</li>
-                    <li class="exp-li-22">Analyse statistique des résultats.</li>
+                  <ul class="exp-desc-1">
+                    <li>Ingestion de flux IoT massifs (<strong>+1 TB/jour</strong>) via PySpark sur Hadoop.</li>
+                    <li>Modèle de maintenance prédictive (LSTM) : <strong>94% de précision</strong>.</li>
+                    <li>Industrialisation MLOps (Docker, API) pour la mise en prod.</li>
                   </ul>
                 </em>
               </li>
               <li>
-                <span class="exp-title-3">DÉCEMBRE 2021 – JUIN 2022</span> <br />
-                <div class="exp-title-13"> Développeur Full Stack - AFRI Lab Marrakech,Maroc</div>
+                <span class="exp-date-2">MARS 2022 – AOÛT 2022</span> <br />
+                <div class="exp-role-2">Analyste Données Génomiques - CHU de Tanger</div>
                 <em>
-                  <ul>
-                    <li class="exp-li-31">Conception et développement d'une plateforme de gestion de laboratoire.</li>
-                    <li class="exp-li-32">Implémentation et tests unitaires.</li>
-                    <li class="exp-li-33">Mise en production sur le serveur interne.</li>
-                    <li class="exp-li-34">Résultat : digitalisation du labo et l’augmentation de la productivité des
-                      collaborateurs.</li>
+                  <ul class="exp-desc-2">
+                    <li>Architecture de pipelines pour <strong>+500 séquences ADN</strong>.</li>
+                    <li>Protocoles expérimentaux rigoureux et analyses statistiques.</li>
                   </ul>
                 </em>
-
+              </li>
+              <li>
+                <span class="exp-date-3">DÉC 2021 – JUIN 2022</span> <br />
+                <div class="exp-role-3">Développeur Full Stack - AFRI Lab</div>
+                <em>
+                  <ul class="exp-desc-3">
+                    <li>Architecture et dev d'un SaaS (Profly) pour <strong>+200 utilisateurs</strong>.</li>
+                    <li>Optimisation BDD (SQL) : Temps de réponse divisé par 2.</li>
+                  </ul>
+                </em>
               </li>
             </ul>
           </div>
 
           <div class="tab-contents" id="education">
             <ul>
-              <li><span class="edu-1">Master en DATASCALE</span> <br />
-                <div class="edu-11">Université Paris-Saclay, UVSQ (En cours)</div>
+              <li><span class="edu-date-1">2026 (En cours)</span> <br />
+                <div class="edu-name-1">Master 2 DataScale (Big Data & IA)</div>
+                <div class="edu-place-1">Université Paris-Saclay (UVSQ)</div>
               </li>
-              <li><span class="edu-2">Master Bio-informatique et Data Science</span> <br />
-                <div class="edu-21">Ecole Nationale des Sciences Appliquées de Tanger, Maroc(2023)</div>
+              <li><span class="edu-date-2">2023</span> <br />
+                <div class="edu-name-2">Master Bio-informatique & Data Science</div>
+                <div class="edu-place-2">ENSA Tanger, Maroc</div>
               </li>
-              <li><span class="edu-3">Licence Maths et Informatique Appliquées</span> <br />
-                <div class="edu-31">Université Cadi Ayyad, Maroc (2021)</div>
+              <li><span class="edu-date-3">2021</span> <br />
+                <div class="edu-name-3">Licence Mathématiques & Informatique</div>
+                <div class="edu-place-3">Université Cadi Ayyad, Maroc</div>
               </li>
-              <li><span>BAC</span> <br />Groupe Scolaire Alama Traoré (2018)</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <!--    mes projets -->
 
   <section id="projets">
     <div class="container">
-      <h1 class="sub-title">Mes Projets</h1>
+      <h1 class="sub-title">Mes Projets R&D</h1>
       <div class="work-list">
+        
         <div class="work">
-          <img src="images/p3.jpg" alt="" width="10%" />
+          <img src="images/p1.png" alt="Smart Grid Graph RAG" />
           <div class="layer">
-            <h3>Profly</h3>
+            <h3>Smart Grid Graph RAG</h3>
             <p>
-              Profly est une application bureautique dédiée aux enseignants, permettant une gestion fluide des étudiants
-              et des cours, sans nécessiter de connexion internet.
-              Son interface intuitive simplifie l'organisation pédagogique, où que vous soyez.
+              <strong>Architecture :</strong> Knowledge Graph (Neo4j) unifiant des données hétérogènes.<br>
+              <strong>Science :</strong> RAG Agentique réduisant les hallucinations de 60%.
             </p>
-            <a href="https://github.com/Ciscom224/profly" target="_blank"><i class="bx bx-link-external"></i></a>
+            <a href="https://github.com/Ciscom224" target="_blank"><i class="bx bxl-github"></i></a>
           </div>
         </div>
-        <div class="work">
-          <img src="images/p2.jpg" alt="" width="10%" />
-          <div class="layer">
-            <h3>Quiz Wiz</h3>
-            <p>
-              Plateforme de quiz multijoueurs en temps réel couvrant divers domaines tels que la cuisine, le football et
-              la culture générale.
-            </p>
-            <a href="https://github.com/Ciscom224/aws_projet" target="_blank"><i class="bx bx-link-external"></i></a>
-          </div>
-        </div>
-        <div class="work">
-          <img src="images/p4.jpg" alt="" width="10%" />
-          <div class="layer">
-            <h3>QR4You</h3>
 
-            <p>
-              En un clic, créez, téléchargez et partagez vos QR Codes personnalisés pour rendre vos contenus accessibles
-              partout. </p>
-            <a href="#qrcode-section"> <i onclick="()=>{
-              document.getElementById('qrcode-section').style.display = 'block';
-            }" class="bx bx-link-external"></i></a>
-          </div>
-        </div>
         <div class="work">
-          <img src="images/p1.jpg" alt="" width="10%" />
+          <img src="images/p2.png" alt="OCR Vision Transformer" />
           <div class="layer">
-            <h3>Face Presence</h3>
+            <h3>OCR & Vision Transformer</h3>
             <p>
-              L'application est conçue pour gérer les absences dans une salle à travers un système de reconnaissance
-              faciale.
-              Elle permet de générer des rapports détaillés sur les présences et absences des participants, puis de les
-              partager par email. </p>
-            <a href="https://github.com/Ciscom224/FaceApiProjet" target="_blank"><i class="bx bx-link-external"></i></a>
+              Pipeline de traitement d'images optimisé (<strong>< 200ms</strong>/page).
+              Fine-tuning de Transformers avec <strong>92% de précision</strong>.
+            </p>
+            <a href="https://github.com/Ciscom224" target="_blank"><i class="bx bxl-github"></i></a>
           </div>
         </div>
+
+        <div class="work">
+          <img src="images/p3.jpg" alt="Profly SaaS" />
+          <div class="layer">
+            <h3>SaaS Profly</h3>
+            <p>
+              Conception d'une application complète (Laravel/SQL).
+              Gestion des droits et architecture MVC robuste.
+            </p>
+            <a href="https://github.com/Ciscom224/profly" target="_blank"><i class="bx bxl-github"></i></a>
+          </div>
+        </div>
+
+        <div class="work">
+          <img src="images/p4.jpg" alt="QR Code Generator" />
+          <div class="layer">
+            <h3>QR4You Tool</h3>
+            <p>
+              Générateur de QR Codes dynamique intégré.
+            </p>
+             <a href="#qrcode-section" onclick="document.getElementById('qrcode-section').style.display = 'block';">
+               <i class="bx bxl-github"></i> Essayer
+             </a>
+          </div>
+        </div>
+
       </div>
-      <a href="https://github.com/Ciscom224?tab=repositories" class="btn" target="_blank">Voir plus</a>
+      <a href="https://github.com/Ciscom224?tab=repositories" class="btn" target="_blank">Voir GitHub</a>
     </div>
   </section>
 
-
- <section id="qrcode-section" >
+  <section id="qrcode-section">
     <div class="container">
       <h1 class="sub-title">🔗 QR4You</h1>
-      <p>Créez et téléchargez gratuitement vos QR codes (site web, carte de visite).</p>
-
-      <!-- Switch Bouton -->
+      <p>Créez et téléchargez gratuitement vos QR codes.</p>
       <div class="switch-container">
-        <input type="radio" id="qrLink" name="qrType" value="url"  onchange="updateInputs('url')"/>
+        <input type="radio" id="qrLink" name="qrType" value="url" onchange="updateInputs('url')"/>
         <label for="qrLink">🔗 Lien</label>
-
         <input type="radio" id="qrVcard" name="qrType" value="vcard" checked onchange="updateInputs('vcard')"/>
         <label for="qrVcard">👤 vCard</label>
       </div>
-
-      <!-- Zone dynamique -->
       <div id="qrInputs"></div>
-      <!-- QR Code affiché -->
       <div id="qrcode"></div>
-
     </div>
   </section>
+
   <section id="contact">
     <div class="container">
       <div class="row">
         <div class="contact-left">
           <h1 class="sub-title contact-title">Contactez Moi</h1>
-          <p><i class="bx bxs-paper-plane"></i>mamadouciss224e@gmail.com</p>
-          <p><i class="bx bxs-phone"></i>07 XX XX XX XX</p>
+          <p><i class="bx bx-envelope"></i> mamadouciss224e@gmail.com</p>
+          <p><i class="bx bx-map"></i> Ris-Orangis, Île-de-France</p>
           <div class="sci">
             <a href="https://github.com/Ciscom224" target="_blank"><i class="bx bxl-github"></i></a>
             <a href="https://www.linkedin.com/in/cissemamadou" target="_blank"><i class="bx bxl-linkedin"></i></a>
-            <a href=""><i class='bx bxl-discord-alt'></i></a>
-            <a href="https://www.facebook.com/share/1A64LGBJGC/?mibextid=wwXIfr" target="_blank"><i
-                class="bx bxl-facebook"></i></a>
           </div>
         </div>
         <div class="contact-right">
@@ -287,51 +250,36 @@ Passionné par la Data Science, je cherche à allier rigueur technique, vision a
       </div>
     </div>
     <footer class="copyright">
-      <p>&copy; 2025 Cisse Mamadou. Tous droits réservés.</p>
+      <p>&copy; 2026 Mamadou Cissé. All rights reserved.</p>
     </footer>
   </section>
-
-  <!-- ================== SECTION QR CODE ================== -->
-
 
   <script>
     var tablinks = document.getElementsByClassName("tab-links");
     var tabcontents = document.getElementsByClassName("tab-contents");
-    var itemenu = document.getElementsByClassName("item-menu");
 
     function opentab(tabname) {
-      for (tablink of tablinks) {
-        tablink.classList.remove("active-link");
-      }
-      for (tabcontent of tabcontents) {
-        tabcontent.classList.remove("active-tab");
-      }
+      for (tablink of tablinks) { tablink.classList.remove("active-link"); }
+      for (tabcontent of tabcontents) { tabcontent.classList.remove("active-tab"); }
       event.currentTarget.classList.add("active-link");
       document.getElementById(tabname).classList.add("active-tab");
     }
   </script>
+
   <script>
     var sidemenu = document.getElementById("sidemenu");
-    var itemenu = document.getElementsByClassName("item-menu");
-    function closeMenu() {
-      sidemenu.style.right = "-200px";
-    }
-    function openMenu() {
-      console.log(sidemenu);
-      sidemenu.style.right = "0";
-    }
-
+    function closeMenu() { sidemenu.style.right = "-200px"; }
+    function openMenu() { sidemenu.style.right = "0"; }
     function itemActive() {
-      for (itm of itemenu) {
-        itm.classList.remove("active");
-      }
+      var itemenu = document.getElementsByClassName("item-menu");
+      for (itm of itemenu) { itm.classList.remove("active"); }
       event.currentTarget.classList.add("active");
       closeMenu();
     }
   </script>
+
   <script>
-    const scriptURL =
-      "https://script.google.com/macros/s/AKfycby-aEY-9yY79_ia4Yl1iaNrGeOgCQw6bzI2rvE7ypHtxLGl0-Ff3YwWFPpWU2q0oSD4/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycby-aEY-9yY79_ia4Yl1iaNrGeOgCQw6bzI2rvE7ypHtxLGl0-Ff3YwWFPpWU2q0oSD4/exec";
     const form = document.forms["submit-to-google-sheet"];
     const msg = document.getElementById("msg");
 
@@ -339,184 +287,118 @@ Passionné par la Data Science, je cherche à allier rigueur technique, vision a
       e.preventDefault();
       fetch(scriptURL, { method: "POST", body: new FormData(form) })
         .then((response) => {
-          msg.innerHTML = "Message envoyé";
-          setTimeout(function () {
-            msg.innerHTML = "";
-          }, 5000);
+          msg.innerHTML = "Message envoyé avec succès !";
+          setTimeout(() => { msg.innerHTML = ""; }, 5000);
           form.reset();
         })
         .catch((error) => console.error("Error!", error.message));
     });
   </script>
+
   <script>
     const translations = {
       fr: {
-        accueil: "Accueil",
-        about: "À propos",
-        projets: "Projets",
-        contact: "Contactez-moi",
-        telecharger_cv: "Télécharger mon CV",
-        description: "  Actuellement en dernière année de Master DataScale à l’Université Paris-Saclay(UVSQ),\n je suis à la recherche d’un stage de fin d’études dans les domaines de la Data Science,\nde l’ingénierie des données ou de l’analyse de données, à partir de mars 2025. ",
-        competences: "Compétences",
-        who: "Futur ",
-        jr: "Junior",
-        db: "BASE DE DONNÉES & SGBD",
-        ///donnees pour competences
-        progLg: "Langages",
-        dev: "MOBILE & BUREAU",
-        experience: "Expérience",
-        /////////////////////////
-        exp1: "JANVIER 2023 – JUIN 2023",
-        exp11: "Data Scientist Junior chez Office Chérifien des Phosphates (OCP), Maroc",
-        exp2: "MARS 2022 – AOUT 2022",
-        exp22: "Analyste de Données Génétiques (NGS) au CHU de Tanger, Maroc  ",
-        exp3: "Décembre 2021 – Juin 2022",
-        exp33: "Développeur Full Stack - AFRI Lab Marrakech",
-        expLi1: "Extraction et prétraitement des données du data center.",
-        expLi2: "Analyse du pipeline de données.",
-        expLi3: "Implémentation et test de modèles (RF, LSTM, Prophet).",
-        expLi4: "Prédiction de la baisse de production d'énergie.",
-        expLi5: "Création de tableaux de bord pour la visualisation du résultat.",
-        expLi21: "Prétraitement et alignement de séquences ADN sur Matlab.",
-        expLi22: "Analyse statistique des résultats.",
-
-        expLi31: "Conception et développement d'une plateforme de gestion de laboratoire.",
-        expLi32: "Implémentation et tests unitaires.",
-        expLi33: "Mise en production sur le serveur interne.",
-        expLi34: "Résultat : digitalisation du labo et l’augmentation de la productivité des collaborateurs.",
-        //////////////////////////////////////////////////
-        education: "Éducation",
-        edu1: "Master en DATASCALE",
-        edu11: "Université Paris-Saclay, UVSQ (En cours)",
-        edu2: "Master Bio-informatique et Data Science",
-        edu21: "Ecole Nationale des Sciences Appliquées de Tanger, Maroc(2023).",
-        edu3: "Licence Maths et Informatique Appliquées",
-        edu31: "Université Cadi Ayyad - FSSM, Maroc (2021)",
-        services: "Services",
-        contact_me: "Me Contacter",
-        envoyer: "Envoyer",
-        nom: "Votre Nom",
-        email: "Votre Email",
-        message: "Votre Message",
+        nav_accueil: "Accueil", nav_about: "À propos", nav_projets: "Projets", nav_contact: "Contact",
+        intro_desc: "Étudiant en Master 2 <strong>DataScale</strong>. Je maîtrise le cycle de vie complet de la donnée : de l'<strong>Architecture</strong> (Cloud/NoSQL) à l'<strong>Ingénierie</strong> (Big Data pipelines) jusqu'à la <strong>Science</strong> (IA Générative & Analyse).",
+        btn_cv: "Télécharger mon CV",
+        about_text: "Profil polyvalent issu de la Bio-informatique et spécialisé en Big Data à l'Université Paris-Saclay. Mon approche combine la vision du <strong>Data Architect</strong> (Modélisation), la robustesse du <strong>Data Engineer</strong> (Spark/CI-CD) et l'innovation du <strong>Data Scientist</strong> (IA/RAG). Recherche : Stage de fin d'études (6 mois) à partir de <strong>Mars 2026</strong>.",
+        skills_title: "Compétences", exp_title: "Expériences", edu_title: "Formation",
+        
+        ski_title_1: "DATA ENGINEERING (Build)",
+        ski_title_2: "DATA SCIENCE & AI (Analyze)",
+        ski_title_3: "ARCHITECTURE & DEV (Design)",
+        
+        // Expériences
+        exp_role_1: "Data Scientist / Engineer - OCP Group (Maroc)",
+        exp_desc_1: "<li>Ingestion de flux IoT massifs (<strong>+1 TB/jour</strong>) via PySpark sur Hadoop.</li><li>Modèle de maintenance prédictive (LSTM) : <strong>94% de précision</strong>.</li><li>Industrialisation MLOps (Docker, API).</li>",
+        
+        exp_role_2: "Analyste Données Génomiques - CHU de Tanger",
+        exp_desc_2: "<li>Architecture de pipelines pour <strong>+500 séquences ADN</strong>.</li><li>Protocoles expérimentaux rigoureux et analyses statistiques.</li>",
+        
+        exp_role_3: "Développeur Full Stack - AFRI Lab",
+        exp_desc_3: "<li>Architecture et dev d'un SaaS (Profly) pour <strong>+200 utilisateurs</strong>.</li><li>Optimisation BDD (SQL) : Temps de réponse divisé par 2.</li>",
+        
+        edu_name_1: "Master 2 DataScale (Big Data & IA)",
+        edu_name_2: "Master Bio-informatique & Data Science",
+        edu_name_3: "Licence Mathématiques & Informatique",
+        contact_title: "Contactez Moi",
+        placeholder_name: "Votre Nom", placeholder_email: "Votre E-mail", placeholder_msg: "Votre Message",
+        btn_send: "Envoyer"
       },
       en: {
-        accueil: "Home",
-        about: "About",
-        projets: "Projects",
-        contact: "Contact Me",
-        telecharger_cv: "Download my CV",
-        description: "I am currently in the final year of my Master’s in DataScale at Université Paris-Saclay(UVSQ),\n  seeking a final-year internship starting in March 2025.",
-        competences: "Skills",
-        /// data pour experiences
-        experience: "Experience",
-        exp1: "January 2023 – June 2023",
-        exp11: "Junior Data Scientist  at Office Chérifien des Phosphates (OCP), Morocco",
-        exp2: "March 2022 – August 2022",
-        exp22: "Genetic Data Analyst (NGS) at CHU de Tanger, Morocco",
-        exp3: "December 2021 – June 2022",
-        exp33: "Full Stack Developer at AFRI Lab Marrakech, Morocco",
-        expLi1: "Extraction and preprocessing of data from the data center.",
-        expLi2: "Data pipeline analysis.",
-        expLi3: "Implementation and testing of models (RF, LSTM, Prophet).",
-        expLi4: "Prediction of energy production decline.",
-        expLi5: "Creation of dashboards for result visualization.",
-        expLi21: "Preprocessing and alignment of DNA sequences using Matlab.",
-        expLi22: "Statistical analysis of results.",
-
-        expLi31: "Design and development of a laboratory management platform.",
-        expLi32: "Implementation and unit testing.",
-        expLi33: "Deployment on internal server.",
-        expLi34: "Result: Digitalization of the lab and increased productivity of collaborators.",
-        /////////////////////////////////////////
-        education: "Education",
-        edu1: "Master's DATASCALE",
-        edu11: "Paris-Saclay University, UVSQ (current)",
-        edu2: "Master's in Bioinformatics and Data Science",
-        edu21: "National School of Applied Sciences of Tangier, Morocco (2023)",
-        edu3: "Bachelor's in Mathematics and Applied Computer Science",
-        edu31: "Cadi Ayyad University - FSSM, Morocco (2021)",
-        who: "Aspiring Junior",
-        jr: "",
-        db: "DATABASE & SGBD",
-        progLg: "Programming Languages",
-        dev: "MOBILE & DESKTOP",
-        services: "Services",
-        contact_me: "Contact Me",
-        envoyer: "Send",
-        nom: "Your Name",
-        email: "Your Email",
-        message: "Your Message",
-      },
+        nav_accueil: "Home", nav_about: "About", nav_projets: "Projects", nav_contact: "Contact",
+        intro_desc: "Master 2 <strong>DataScale</strong> student. I master the full data lifecycle: from <strong>Architecture</strong> (Cloud/NoSQL) to <strong>Engineering</strong> (Big Data pipelines) and <strong>Data Science</strong> (Generative AI & Analysis).",
+        btn_cv: "Download my CV",
+        about_text: "Hybrid profile with a background in Bioinformatics, specializing in Big Data at Paris-Saclay. My approach combines the vision of a <strong>Data Architect</strong> (Modeling), the robustness of a <strong>Data Engineer</strong> (Spark/CI-CD), and the innovation of a <strong>Data Scientist</strong> (AI/RAG). Seeking: 6-month internship starting <strong>March 2026</strong>.",
+        skills_title: "Skills", exp_title: "Experience", edu_title: "Education",
+        
+        ski_title_1: "DATA ENGINEERING (Build)",
+        ski_title_2: "DATA SCIENCE & AI (Analyze)",
+        ski_title_3: "ARCHITECTURE & DEV (Design)",
+        
+        exp_role_1: "Data Scientist / Engineer - OCP Group (Morocco)",
+        exp_desc_1: "<li>Ingestion of massive IoT streams (<strong>+1 TB/day</strong>) via PySpark on Hadoop.</li><li>Predictive maintenance model (LSTM): <strong>94% accuracy</strong>.</li><li>MLOps Industrialization (Docker, API).</li>",
+        
+        exp_role_2: "Genomic Data Analyst - CHU Tangier",
+        exp_desc_2: "<li>Pipeline architecture for <strong>+500 DNA sequences</strong>.</li><li>Rigorous experimental protocols and statistical analysis.</li>",
+        
+        exp_role_3: "Full Stack Developer - AFRI Lab",
+        exp_desc_3: "<li>SaaS architecture and dev (Profly) for <strong>+200 users</strong>.</li><li>DB Optimization (SQL): Response time divided by 2.</li>",
+        
+        edu_name_1: "Master 2 DataScale (Big Data & AI)",
+        edu_name_2: "Master Bioinformatics & Data Science",
+        edu_name_3: "Bachelor Mathematics & Computer Science",
+        contact_title: "Contact Me",
+        placeholder_name: "Your Name", placeholder_email: "Your Email", placeholder_msg: "Your Message",
+        btn_send: "Send"
+      }
     };
 
     document.getElementById("lang").addEventListener("click", function () {
       const currentLang = this.innerText === "Fr" ? "en" : "fr";
       this.innerText = currentLang === "fr" ? "Fr" : "En";
+      const t = translations[currentLang];
 
-      document.querySelector("a[href='#accueil']").innerText = translations[currentLang].accueil;
-      document.querySelector("a[href='#about']").innerText = translations[currentLang].about;
-      document.querySelector("a[href='#projets']").innerText = translations[currentLang].projets;
-      document.querySelector("a[href='#contact']").innerText = translations[currentLang].contact;
-      document.querySelector(".btn").innerText = translations[currentLang].telecharger_cv;
+      const menuItems = document.querySelectorAll(".item-menu");
+      menuItems[0].innerText = t.nav_accueil;
+      menuItems[1].innerText = t.nav_about;
+      menuItems[2].innerText = t.nav_projets;
+      menuItems[3].innerText = t.nav_contact;
 
+      document.querySelector(".intro-text").innerHTML = t.intro_desc;
+      document.querySelector(".btn").innerText = t.btn_cv;
 
-      document.querySelector(".home-info p").innerText = translations[currentLang].description;
-      document.querySelector(".skills-title").innerText = translations[currentLang].competences;
-      document.querySelector(".experience-title").innerText = translations[currentLang].experience;
-      /// section pour education
-      document.querySelector(".education-title").innerText = translations[currentLang].education;
-      document.querySelector(".edu-1").innerText = translations[currentLang].edu1.toUpperCase();
-      document.querySelector(".edu-11").innerText = translations[currentLang].edu11;
-      document.querySelector(".edu-2").innerText = translations[currentLang].edu2.toUpperCase();
-      document.querySelector(".edu-21").innerText = translations[currentLang].edu21;
-      document.querySelector(".edu-3").innerText = translations[currentLang].edu3.toUpperCase();
-      document.querySelector(".edu-31").innerText = translations[currentLang].edu31;
+      document.querySelector(".about-text").innerHTML = t.about_text;
+      document.querySelector(".skills-title").innerText = t.skills_title;
+      document.querySelector(".experience-title").innerText = t.exp_title;
+      document.querySelector(".education-title").innerText = t.edu_title;
 
+      document.querySelector(".ski-title-1").innerText = t.ski_title_1;
+      document.querySelector(".ski-title-2").innerText = t.ski_title_2;
+      document.querySelector(".ski-title-3").innerText = t.ski_title_3;
 
+      document.querySelector(".exp-role-1").innerText = t.exp_role_1;
+      document.querySelector(".exp-desc-1").innerHTML = t.exp_desc_1;
+      
+      document.querySelector(".exp-role-2").innerText = t.exp_role_2;
+      document.querySelector(".exp-desc-2").innerHTML = t.exp_desc_2;
+      
+      document.querySelector(".exp-role-3").innerText = t.exp_role_3;
+      document.querySelector(".exp-desc-3").innerHTML = t.exp_desc_3;
 
+      document.querySelector(".edu-name-1").innerText = t.edu_name_1;
+      document.querySelector(".edu-name-2").innerText = t.edu_name_2;
+      document.querySelector(".edu-name-3").innerText = t.edu_name_3;
 
-
-
-      ///section pour les titres de competences
-      document.querySelector(".ski-title-1").innerText = translations[currentLang].db;
-      document.querySelector(".ski-title-2").innerText = translations[currentLang].progLg;
-      document.querySelector(".ski-title-3").innerText = translations[currentLang].dev;
-
-      /// section experiences
-      document.querySelector(".exp-title-11").innerText = translations[currentLang].exp11;
-      document.querySelector(".exp-title-1").innerText = translations[currentLang].exp1.toUpperCase();
-      document.querySelector(".exp-title-12").innerText = translations[currentLang].exp22;
-      document.querySelector(".exp-title-2").innerText = translations[currentLang].exp2.toUpperCase();
-      document.querySelector(".exp-title-13").innerText = translations[currentLang].exp33;
-      document.querySelector(".exp-title-3").innerText = translations[currentLang].exp3.toUpperCase();
-      document.querySelector(".exp-li-1").innerText = translations[currentLang].expLi1;
-      document.querySelector(".exp-li-2").innerText = translations[currentLang].expLi2;
-      document.querySelector(".exp-li-3").innerText = translations[currentLang].expLi3;
-      document.querySelector(".exp-li-4").innerText = translations[currentLang].expLi4;
-      document.querySelector(".exp-li-5").innerText = translations[currentLang].expLi5;
-      document.querySelector(".exp-li-21").innerText = translations[currentLang].expLi21;
-      document.querySelector(".exp-li-22").innerText = translations[currentLang].expLi22;
-      document.querySelector(".exp-li-31").innerText = translations[currentLang].expLi31;
-      document.querySelector(".exp-li-32").innerText = translations[currentLang].expLi32;
-      document.querySelector(".exp-li-33").innerText = translations[currentLang].expLi33;
-      document.querySelector(".exp-li-34").innerText = translations[currentLang].expLi34;
-
-
-
-      document.querySelector(".who").innerText = translations[currentLang].who;
-      document.querySelector(".jr").innerText = translations[currentLang].jr;
-
-      document.querySelector(".sub-title contact-title").innerText = translations[currentLang].contact;
-      document.querySelector(".send-btn").innerText = translations[currentLang].envoyer;
-      document.querySelector(".name-placeholder").setAttribute("placeholder", translations[currentLang].nom);
-      document.querySelector(".email-placeholder").setAttribute("placeholder", translations[currentLang].email);
-      document.querySelector(".message-placeholder").setAttribute("placeholder", translations[currentLang].message);
+      document.querySelector(".contact-title").innerText = t.contact_title;
+      document.querySelector(".send-btn").innerText = t.btn_send;
+      document.querySelector(".name-placeholder").setAttribute("placeholder", t.placeholder_name);
+      document.querySelector(".email-placeholder").setAttribute("placeholder", t.placeholder_email);
+      document.querySelector(".message-placeholder").setAttribute("placeholder", t.placeholder_msg);
     });
   </script>
-
 
   <script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
   <script src="qrcode.js"></script>
 </body>
-
 </html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Generator ZIP</title>
+  <script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body style="font-family: Arial; padding: 40px;">
+
+  <h2>Générateur de QR Codes Bleu + Or (ZIP)</h2>
+  <p>Choisissez votre fichier texte d'URLs. Tous les QR codes seront téléchargés dans un fichier ZIP.</p>
+
+  <input type="file" id="csvInput" accept=".csv, .txt">
+
+  <script>
+    // ---- Fonction pour lire le Fichier Texte/CSV ----
+    async function readCSV(file) {
+      const text = await file.text();
+      const lines = text.trim().split("\n");
+      const urls = lines.map(l => l.replace(/"/g, "").trim()).filter(l => l.length > 0);
+      return urls;
+    }
+
+    // ---- Générer un QR Style ----
+    function createQR(data) {
+      return new QRCodeStyling({
+        width: 300,
+        height: 300,
+        data: data,
+        type: "png",
+        qrOptions: { margin: 10 },
+        dotsOptions: {
+          color: "#0066cc", // bleu
+          type: "rounded"
+        },
+        cornersSquareOptions: {
+          color: "#ff9900", // or
+          type: "rounded" 
+        },
+        cornersDotOptions: {
+          color: "#ff9900"
+        },
+        backgroundOptions: {
+          color: "#FFFFFF"
+        }
+      });
+    }
+
+    // ---- Télécharger le Fichier ZIP ----
+    function downloadZip(blob, filename) {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // ---- Lecture CSV + génération ZIP ----
+    document.getElementById("csvInput").addEventListener("change", async function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const urls = await readCSV(file);
+      if (urls.length === 0) {
+          alert("Le fichier ne contient aucune URL valide.");
+          return;
+      }
+      
+      const zip = new JSZip(); // Initialisation de l'objet ZIP
+      let errorCount = 0;
+
+      for (let i = 0; i < urls.length; i++) {
+        const url = urls[i];
+        
+        try {
+          const qr = createQR(url);
+          // Convertir le QR en Blob PNG (format Data URL)
+          const blob = await qr.getRawData("png");
+          
+          // Ajouter le QR code au fichier ZIP
+          // Le "blob" est un objet Blob de type 'image/png'
+          zip.file(`qr_${url}.png`, blob); 
+
+        } catch (error) {
+          console.error(`Erreur lors de la génération du QR code pour l'URL ${url}:`, error);
+          errorCount++;
+        }
+      }
+
+      // Générer le ZIP et déclencher le téléchargement unique
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      downloadZip(zipBlob, "qrcodes_bundle.zip");
+
+      if (errorCount > 0) {
+        alert(`Attention : ${urls.length - errorCount} QR codes ont été générés et téléchargés. ${errorCount} erreurs ont été rencontrées.`);
+      } else {
+        alert(`🎉 Tous les ${urls.length} QR codes ont été générés et téléchargés dans 'qrcodes_bundle.zip' !`);
+      }
+    });
+  </script>
+
+</body>
+</html>
