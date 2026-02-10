@@ -367,164 +367,177 @@
       </section>
     </div>
 
-  <script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbyO7ZzAd0U16Qh2z2X7bNm3u_LGRFVC5VTtfGpF_7MBQZA5lC59VhARxZZ6Jj2bUI1P/exec";
-  let currentUser = null;
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbyO7ZzAd0U16Qh2z2X7bNm3u_LGRFVC5VTtfGpF_7MBQZA5lC59VhARxZZ6Jj2bUI1P/exec";
+      let currentUser = null;
 
-  // 1. VERIFICATION ACCÈS
-  async function checkAccess() {
-    const pass = document.getElementById("pass-input").value;
-    const loginError = document.getElementById("login-error");
-    const loginBtn = document.querySelector("#login-overlay .btn");
+      // 1. VERIFICATION ACCÈS
+      async function checkAccess() {
+        const pass = document.getElementById("pass-input").value;
+        const loginError = document.getElementById("login-error");
+        const loginBtn = document.querySelector("#login-overlay .btn");
 
-    loginBtn.innerText = "Vérification...";
-    loginBtn.disabled = true;
+        loginBtn.innerText = "Vérification...";
+        loginBtn.disabled = true;
 
-    try {
-      const url = `${scriptURL}?action=login&code=${encodeURIComponent(pass)}`;
-      const response = await fetch(url, {
-        method: "GET",
-        mode: "cors",
-        redirect: "follow", // INDISPENSABLE
-      });
+        try {
+          const url = `${scriptURL}?action=login&code=${encodeURIComponent(pass)}`;
+          const response = await fetch(url, {
+            method: "GET",
+            mode: "cors",
+            redirect: "follow", // INDISPENSABLE
+          });
 
-      const result = await response.json();
+          const result = await response.json();
 
-      if (result.success) {
-        currentUser = result.user;
-        document.getElementById("login-overlay").style.display = "none";
-        document.getElementById("user-display").innerText = `| Connecté : ${currentUser.name}`;
-        document.getElementById("form-auteur").value = currentUser.name;
+          if (result.success) {
+            currentUser = result.user;
+            document.getElementById("login-overlay").style.display = "none";
+            document.getElementById("user-display").innerText =
+              `| Connecté : ${currentUser.name}`;
+            document.getElementById("form-auteur").value = currentUser.name;
 
-        if (currentUser.role === "admin") {
-          document.getElementById("nav-add").style.display = "flex";
+            if (currentUser.role === "admin") {
+              document.getElementById("nav-add").style.display = "flex";
+            }
+            loadData();
+          } else {
+            loginError.style.display = "block";
+            loginBtn.innerText = "Se connecter";
+            loginBtn.disabled = false;
+          }
+        } catch (error) {
+          console.error("Erreur login:", error);
+          alert(
+            "Erreur réseau ou CORS. Assurez-vous d'avoir déployé le script en 'Anyone'.",
+          );
+          loginBtn.innerText = "Se connecter";
+          loginBtn.disabled = false;
         }
-        loadData();
-      } else {
-        loginError.style.display = "block";
-        loginBtn.innerText = "Se connecter";
-        loginBtn.disabled = false;
       }
-    } catch (error) {
-      console.error("Erreur login:", error);
-      alert("Erreur réseau ou CORS. Assurez-vous d'avoir déployé le script en 'Anyone'.");
-      loginBtn.innerText = "Se connecter";
-      loginBtn.disabled = false;
-    }
-  }
 
-  // 2. GESTION DES ONGLETS
-  function openTab(evt, tabName) {
-    let i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) tabcontent[i].style.display = "none";
-    tablinks = document.getElementsByClassName("tab-btn");
-    for (i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.classList.add("active");
-  }
+      // 2. GESTION DES ONGLETS
+      function openTab(evt, tabName) {
+        let i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++)
+          tabcontent[i].style.display = "none";
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++)
+          tablinks[i].classList.remove("active");
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+      }
 
-  // 3. ENVOI DES DONNÉES (POST)
-  const form = document.getElementById("finance-form");
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const submitBtn = document.getElementById("submit-btn");
-    submitBtn.innerText = "Enregistrement...";
-    submitBtn.disabled = true;
+      // 3. ENVOI DES DONNÉES (POST)
+      const form = document.getElementById("finance-form");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById("submit-btn");
+        submitBtn.innerText = "Enregistrement...";
+        submitBtn.disabled = true;
 
-    fetch(scriptURL, { method: "POST", body: new FormData(form) })
-      .then(() => {
-        alert("Opération réussie !");
-        location.reload();
-      })
-      .catch(() => {
-        alert("Erreur d'envoi");
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Valider l'opération";
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then(() => {
+            alert("Opération réussie !");
+            location.reload();
+          })
+          .catch(() => {
+            alert("Erreur d'envoi");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Valider l'opération";
+          });
       });
-  });
 
-  // 4. CHARGEMENT DES DONNÉES (READ)
-  async function loadData() {
-    try {
-      const response = await fetch(`${scriptURL}?action=read`, {
-        method: "GET",
-        mode: "cors",
-        redirect: "follow", // AJOUTÉ POUR FIXER LE CORS
-      });
-      const data = await response.json();
+      // 4. CHARGEMENT DES DONNÉES (READ)
+      async function loadData() {
+        try {
+          const response = await fetch(`${scriptURL}?action=read`, {
+            method: "GET",
+            mode: "cors",
+            redirect: "follow", // AJOUTÉ POUR FIXER LE CORS
+          });
+          const data = await response.json();
 
-      let solde = 0, moto = 0, recettes = 0;
-      let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
-      const tbody = document.getElementById("table-body");
-      tbody.innerHTML = "";
+          let solde = 0,
+            moto = 0,
+            recettes = 0;
+          let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
+          const tbody = document.getElementById("table-body");
+          tbody.innerHTML = "";
 
-      data.reverse().forEach((row) => {
-        const mnt = parseFloat(row.Montant) || 0;
+          data.reverse().forEach((row) => {
+            const mnt = parseFloat(row.Montant) || 0;
 
-        if (row.Type === "Depot") {
-          solde += mnt;
-          recettes += mnt;
-        } else {
-          solde -= mnt;
-        }
-        if (row.Type === "Entretien") moto += mnt;
-        if (stats.hasOwnProperty(row.Type)) stats[row.Type] += mnt;
+            if (row.Type === "Depot") {
+              solde += mnt;
+              recettes += mnt;
+            } else {
+              solde -= mnt;
+            }
+            if (row.Type === "Entretien") moto += mnt;
+            if (stats.hasOwnProperty(row.Type)) stats[row.Type] += mnt;
 
-        // Formatage de la date (pour éviter le format ISO brut)
-        let dateFormatee = "N/A";
-        if (row.Date) {
-            const d = new Date(row.Date);
-            dateFormatee = d.toLocaleDateString('fr-FR');
-        }
+            // Formatage de la date (pour éviter le format ISO brut)
+            let dateFormatee = "N/A";
+            if (row.Date) {
+              const d = new Date(row.Date);
+              dateFormatee = d.toLocaleDateString("fr-FR");
+            }
 
-        tbody.innerHTML += `<tr>
+            tbody.innerHTML += `<tr>
             <td>${dateFormatee}</td>
             <td>${row.Auteur || "Inconnu"}</td>
             <td><span class="badge" style="background:#222; color:var(--main-color)">${row.Type}</span></td>
             <td>${row.Description}</td>
             <td style="font-weight:bold; color: ${row.Type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
         </tr>`;
-      });
+          });
 
-      document.getElementById("total-solde").innerText = solde.toLocaleString() + " GNF";
-      document.getElementById("total-moto").innerText = moto.toLocaleString() + " GNF";
-      document.getElementById("total-recettes").innerText = recettes.toLocaleString() + " GNF";
+          document.getElementById("total-solde").innerText =
+            solde.toLocaleString() + " GNF";
+          document.getElementById("total-moto").innerText =
+            moto.toLocaleString() + " GNF";
+          document.getElementById("total-recettes").innerText =
+            recettes.toLocaleString() + " GNF";
 
-      initChart(stats);
-    } catch (e) {
-      console.error("Erreur de chargement:", e);
-    }
-  }
+          initChart(stats);
+        } catch (e) {
+          console.error("Erreur de chargement:", e);
+        }
+      }
 
-  // 5. GRAPHIQUE
-  function initChart(s) {
-    const ctx = document.getElementById("financeChart").getContext("2d");
-    // Détruire l'ancien graphique s'il existe pour éviter les bugs visuels
-    if (window.myFinanceChart) window.myFinanceChart.destroy();
-    
-    window.myFinanceChart = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: ["Dépôts", "Retraits", "Dépenses", "Entretien"],
-        datasets: [{
-          data: [s.Depot, s.Retrait, s.Depense, s.Entretien],
-          backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#17a2b8"],
-          borderWidth: 0,
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: { color: "#888", font: { size: 10 } },
+      // 5. GRAPHIQUE
+      function initChart(s) {
+        const ctx = document.getElementById("financeChart").getContext("2d");
+        // Détruire l'ancien graphique s'il existe pour éviter les bugs visuels
+        if (window.myFinanceChart) window.myFinanceChart.destroy();
+
+        window.myFinanceChart = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Dépôts", "Retraits", "Dépenses", "Entretien"],
+            datasets: [
+              {
+                data: [s.Depot, s.Retrait, s.Depense, s.Entretien],
+                backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#17a2b8"],
+                borderWidth: 0,
+              },
+            ],
           },
-        },
-      },
-    });
-  }
-</script>
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { color: "#888", font: { size: 10 } },
+              },
+            },
+          },
+        });
+      }
+    </script>
   </body>
 </html>
