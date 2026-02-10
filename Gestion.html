@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EKIP | Management Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --main-color: #ff004f;
+        --bg-color: #080808;
+        --container-bg: #111;
+        --success: #28a745;
+        --text-grey: #888;
+      }
+      body {
+        background: var(--bg-color);
+        color: white;
+        font-family: "Poppins", sans-serif;
+        overflow-x: hidden;
+        margin: 0;
+      }
+      .secret-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+      }
+
+      /* Tabs & Nav */
+      .tab-menu {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 25px;
+      }
+      .tab-btn {
+        background: #222;
+        border: none;
+        color: var(--text-grey);
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+      }
+      .tab-btn.active {
+        background: var(--main-color);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 0, 79, 0.3);
+      }
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.4s ease;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      /* Stats Cards */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .stat-card {
+        background: var(--container-bg);
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid #222;
+        text-align: center;
+      }
+      .stat-card i {
+        font-size: 24px;
+        color: var(--main-color);
+        margin-bottom: 10px;
+      }
+      .stat-card p {
+        font-size: 13px;
+        color: var(--text-grey);
+      }
+      .stat-card h2 {
+        font-size: 20px;
+        margin-top: 5px;
+      }
+
+      /* Formulaire */
+      .form-card {
+        background: var(--container-bg);
+        padding: 25px;
+        border-radius: 15px;
+        border: 1px solid #222;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      input,
+      select {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 5px;
+        width: 100%;
+        outline: none;
+      }
+      label {
+        color: var(--text-grey);
+        font-size: 14px;
+      }
+
+      /* Table Design */
+      .table-wrapper {
+        background: var(--container-bg);
+        border-radius: 15px;
+        overflow-x: auto;
+        border: 1px solid #222;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+      }
+      th {
+        background: #1a1a1a;
+        color: var(--main-color);
+        padding: 15px;
+        text-align: left;
+        font-size: 14px;
+      }
+      td {
+        padding: 15px;
+        border-bottom: 1px solid #1a1a1a;
+        font-size: 13px;
+        color: #ccc;
+      }
+      .badge {
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      /* Login Overlay */
+      #login-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="login-overlay">
+      <div class="stat-card" style="width: 320px; padding: 40px">
+        <i class="bx bxs-user-badge" style="font-size: 40px"></i>
+        <h3>L-EKIP Access</h3>
+        <input
+          type="password"
+          id="pass-input"
+          placeholder="Entrez votre code"
+          style="text-align: center"
+        />
+        <button
+          class="btn"
+          onclick="checkAccess()"
+          style="
+            margin-top: 20px;
+            width: 100%;
+            background: var(--main-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+          "
+        >
+          Se connecter
+        </button>
+        <p
+          id="login-error"
+          style="
+            color: var(--main-color);
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+          "
+        >
+          Code incorrect
+        </p>
+      </div>
+    </div>
+
+    <div class="secret-container">
+      <header
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 30px;
+        "
+      >
+        <h1 style="font-size: 24px">
+          <span style="color: var(--main-color)">E</span>KIP
+          <small style="font-size: 12px; color: #555" id="user-display"></small>
+        </h1>
+        <a
+          href="index.html"
+          style="
+            text-decoration: none;
+            color: var(--text-grey);
+            font-size: 14px;
+          "
+        >
+          <i class="bx bx-log-out"></i> Portfolio
+        </a>
+      </header>
+
+      <nav class="tab-menu">
+        <button class="tab-btn active" onclick="openTab(event, 'stats')">
+          <i class="bx bx-pie-chart-alt-2"></i> Stats
+        </button>
+        <button class="tab-btn" onclick="openTab(event, 'history')">
+          <i class="bx bx-list-ul"></i> Historique
+        </button>
+        <button
+          id="nav-add"
+          class="tab-btn"
+          onclick="openTab(event, 'add')"
+          style="display: none"
+        >
+          <i class="bx bx-plus-circle"></i> Ajouter
+        </button>
+      </nav>
+
+      <section id="stats" class="tab-content active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <i class="bx bx-wallet"></i>
+            <p>Solde Actuel</p>
+            <h2 id="total-solde">0 GNF</h2>
+          </div>
+          <div class="stat-card">
+            <i class="bx bx-wrench"></i>
+            <p>Entretien Moto</p>
+            <h2 id="total-moto">0 GNF</h2>
+          </div>
+          <div class="stat-card">
+            <i class="bx bx-trending-up"></i>
+            <p>Recettes Totales</p>
+            <h2 id="total-recettes" style="color: var(--success)">0 GNF</h2>
+          </div>
+        </div>
+        <div
+          class="stat-card"
+          style="
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <canvas id="financeChart"></canvas>
+        </div>
+      </section>
+
+      <section id="history" class="tab-content">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Auteur</th>
+                <th>Type</th>
+                <th>Détails</th>
+                <th>Montant</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="add" class="tab-content">
+        <div class="form-card">
+          <h3 style="text-align: center; margin-bottom: 20px">
+            Enregistrer une opération
+          </h3>
+          <form id="finance-form">
+            <input type="hidden" name="Auteur" id="form-auteur" />
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px"
+            >
+              <div>
+                <label>Catégorie</label>
+                <select name="Type" required>
+                  <option value="Depot">💰 Dépôt</option>
+                  <option value="Retrait">💸 Retrait</option>
+                  <option value="Depense">🛒 Dépense</option>
+                  <option value="Entretien">🏍️ Entretien</option>
+                </select>
+              </div>
+              <div>
+                <label>Montant (GNF)</label>
+                <input
+                  type="number"
+                  name="Montant"
+                  placeholder="Ex: 5000"
+                  required
+                />
+              </div>
+            </div>
+            <div style="margin-top: 15px">
+              <label>Description / Détails</label>
+              <input
+                type="text"
+                name="Description"
+                placeholder="Ex: Recette course..."
+                required
+              />
+            </div>
+            <input type="hidden" name="Date" id="current-date" />
+            <button
+              type="submit"
+              class="btn"
+              id="submit-btn"
+              style="
+                width: 100%;
+                margin-top: 20px;
+                padding: 15px;
+                background: var(--main-color);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+              "
+            >
+              Valider l'opération
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbyO7ZzAd0U16Qh2z2X7bNm3u_LGRFVC5VTtfGpF_7MBQZA5lC59VhARxZZ6Jj2bUI1P/exec";
+      let currentUser = null;
+
+      // 1. VERIFICATION ACCÈS (LOGIN VIA APPS SCRIPT)
+      async function checkAccess() {
+        const pass = document.getElementById("pass-input").value;
+        const loginError = document.getElementById("login-error");
+        const loginBtn = document.querySelector("#login-overlay .btn");
+
+        loginBtn.innerText = "Vérification...";
+        loginBtn.disabled = true;
+
+        try {
+          // Dans checkAccess
+          const response = await fetch(
+            `${scriptURL}?action=login&code=${pass}`,
+            {
+              method: "GET",
+              mode: "cors", // Force le mode CORS
+              headers: { "Content-Type": "text/plain;charset=utf-8" }, // Évite le pré-contrôle complexe
+            },
+          );
+
+          const result = await response.json();
+          if (result.success) {
+            currentUser = result.user;
+            document.getElementById("login-overlay").style.display = "none";
+            document.getElementById("user-display").innerText =
+              `| Connecté : ${currentUser.name}`;
+            document.getElementById("form-auteur").value = currentUser.name;
+
+            if (currentUser.role === "admin") {
+              document.getElementById("nav-add").style.display = "flex";
+            }
+            loadData();
+          } else {
+            loginError.style.display = "block";
+            loginBtn.innerText = "Se connecter";
+            loginBtn.disabled = false;
+          }
+        } catch (error) {
+          console.error("Erreur login:", error);
+          alert("Erreur de connexion serveur.");
+          loginBtn.innerText = "Se connecter";
+          loginBtn.disabled = false;
+        }
+      }
+
+      // 2. GESTION DES ONGLETS
+      function openTab(evt, tabName) {
+        let i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++)
+          tabcontent[i].style.display = "none";
+
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++)
+          tablinks[i].classList.remove("active");
+
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+      }
+
+      // 3. ENVOI DES DONNÉES (POST)
+      const form = document.getElementById("finance-form");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        document.getElementById("current-date").value =
+          new Date().toLocaleString("fr-FR");
+        const submitBtn = document.getElementById("submit-btn");
+        submitBtn.innerText = "Enregistrement...";
+        submitBtn.disabled = true;
+
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then(() => {
+            alert("Opération réussie !");
+            location.reload();
+          })
+          .catch(() => {
+            alert("Erreur d'envoi");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Valider l'opération";
+          });
+      });
+
+      // 4. CHARGEMENT DES DONNÉES (READ)
+      async function loadData() {
+        try {
+          const response = await fetch(`${scriptURL}?action=read`, {
+            method: "GET",
+            mode: "cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+          });
+          const data = await response.json();
+
+          let solde = 0,
+            moto = 0,
+            recettes = 0;
+          let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
+          const tbody = document.getElementById("table-body");
+          tbody.innerHTML = "";
+
+          data.reverse().forEach((row) => {
+            const mnt = parseFloat(row.Montant) || 0;
+
+            // Calculs financiers
+            if (row.Type === "Depot") {
+              solde += mnt;
+              recettes += mnt;
+            } else {
+              solde -= mnt;
+            }
+            if (row.Type === "Entretien") moto += mnt;
+
+            if (stats.hasOwnProperty(row.Type)) stats[row.Type] += mnt;
+
+            // Ajout au tableau
+            tbody.innerHTML += `<tr>
+                        <td>${row.Date ? row.Date.split("T")[0] : "N/A"}</td>
+                        <td>${row.Auteur || "Inconnu"}</td>
+                        <td><span class="badge" style="background:#222; color:var(--main-color)">${row.Type}</span></td>
+                        <td>${row.Description}</td>
+                        <td style="font-weight:bold; color: ${row.Type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
+                    </tr>`;
+          });
+
+          document.getElementById("total-solde").innerText =
+            solde.toLocaleString() + " GNF";
+          document.getElementById("total-moto").innerText =
+            moto.toLocaleString() + " GNF";
+          document.getElementById("total-recettes").innerText =
+            recettes.toLocaleString() + " GNF";
+
+          initChart(stats);
+        } catch (e) {
+          console.error("Erreur de chargement:", e);
+        }
+      }
+
+      // 5. GRAPHIQUE
+      function initChart(s) {
+        const ctx = document.getElementById("financeChart").getContext("2d");
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Dépôts", "Retraits", "Dépenses", "Entretien"],
+            datasets: [
+              {
+                data: [s.Depot, s.Retrait, s.Depense, s.Entretien],
+                backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#17a2b8"],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { color: "#888", font: { size: 10 } },
+              },
+            },
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
