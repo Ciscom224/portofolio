@@ -437,7 +437,7 @@
         submitBtn.innerText = "Enregistrement...";
         submitBtn.disabled = true;
 
-        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+        fetch(scriptURL, { method: "POST", mode:'cors',body: new FormData(form) })
           .then(() => {
             alert("Opération réussie !");
             location.reload();
@@ -455,7 +455,6 @@
           const response = await fetch(`${scriptURL}?action=read`, {
             method: "GET",
             mode: "cors",
-            redirect: "follow", // AJOUTÉ POUR FIXER LE CORS
           });
           const data = await response.json();
 
