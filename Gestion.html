@@ -367,175 +367,181 @@
       </section>
     </div>
 
-    <script>
-      const scriptURL ="https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
-      let currentUser = null;
+   <script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
+  let currentUser = null;
 
-      // 1. VERIFICATION ACCÈS
-      async function checkAccess() {
-        const pass = document.getElementById("pass-input").value;
-        const loginError = document.getElementById("login-error");
-        const loginBtn = document.querySelector("#login-overlay .btn");
+  // 1. VERIFICATION ACCÈS
+  async function checkAccess() {
+    const pass = document.getElementById("pass-input").value;
+    const loginError = document.getElementById("login-error");
+    const loginBtn = document.querySelector("#login-overlay .btn");
 
-        loginBtn.innerText = "Vérification...";
-        loginBtn.disabled = true;
+    loginBtn.innerText = "Vérification...";
+    loginBtn.disabled = true;
 
-        try {
-          const url = `${scriptURL}?action=login&code=${encodeURIComponent(pass)}`;
-          const response = await fetch(url, {
-            method: "GET",
-            mode: "cors",
-            redirect: "follow", // INDISPENSABLE
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            currentUser = result.user;
-            document.getElementById("login-overlay").style.display = "none";
-            document.getElementById("user-display").innerText =
-              `| Connecté : ${currentUser.name}`;
-            document.getElementById("form-auteur").value = currentUser.name;
-
-            if (currentUser.role === "admin") {
-              document.getElementById("nav-add").style.display = "flex";
-            }
-            loadData();
-          } else {
-            loginError.style.display = "block";
-            loginBtn.innerText = "Se connecter";
-            loginBtn.disabled = false;
-          }
-        } catch (error) {
-          console.error("Erreur login:", error);
-          alert(
-            "Erreur réseau ou CORS. Assurez-vous d'avoir déployé le script en 'Anyone'.",
-          );
-          loginBtn.innerText = "Se connecter";
-          loginBtn.disabled = false;
-        }
-      }
-
-      // 2. GESTION DES ONGLETS
-      function openTab(evt, tabName) {
-        let i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++)
-          tabcontent[i].style.display = "none";
-        tablinks = document.getElementsByClassName("tab-btn");
-        for (i = 0; i < tablinks.length; i++)
-          tablinks[i].classList.remove("active");
-        document.getElementById(tabName).style.display = "block";
-        evt.currentTarget.classList.add("active");
-      }
-
-      // 3. ENVOI DES DONNÉES (POST)
-      const form = document.getElementById("finance-form");
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const submitBtn = document.getElementById("submit-btn");
-        submitBtn.innerText = "Enregistrement...";
-        submitBtn.disabled = true;
-
-        fetch(scriptURL, { method: "POST", mode:'cors',body: new FormData(form) })
-          .then(() => {
-            alert("Opération réussie !");
-            location.reload();
-          })
-          .catch(() => {
-            alert("Erreur d'envoi");
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Valider l'opération";
-          });
+    try {
+      const url = `${scriptURL}?action=login&code=${encodeURIComponent(pass)}`;
+      const response = await fetch(url, {
+        method: "GET",
+        mode: "cors",
+        redirect: "follow",
       });
 
-      // 4. CHARGEMENT DES DONNÉES (READ)
-      async function loadData() {
-        try {
-          const response = await fetch(`${scriptURL}?action=read`, {
-            method: "GET",
-            mode: "cors",
-          });
-          const data = await response.json();
+      const result = await response.json();
 
-          let solde = 0,
-            moto = 0,
-            recettes = 0;
-          let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
-          const tbody = document.getElementById("table-body");
-          tbody.innerHTML = "";
+      if (result.success) {
+        currentUser = result.user;
+        document.getElementById("login-overlay").style.display = "none";
+        document.getElementById("user-display").innerText =
+          `| Connecté : ${currentUser.name}`;
+        document.getElementById("form-auteur").value = currentUser.name;
 
-          data.reverse().forEach((row) => {
-            const mnt = parseFloat(row.Montant) || 0;
+        if (currentUser.role === "admin") {
+          document.getElementById("nav-add").style.display = "flex";
+        }
+        loadData();
+      } else {
+        loginError.style.display = "block";
+        loginBtn.innerText = "Se connecter";
+        loginBtn.disabled = false;
+      }
+    } catch (error) {
+      console.error("Erreur login:", error);
+      alert("Erreur réseau ou CORS. Vérifie le déploiement Apps Script.");
+      loginBtn.innerText = "Se connecter";
+      loginBtn.disabled = false;
+    }
+  }
 
-            if (row.Type === "Depot") {
-              solde += mnt;
-              recettes += mnt;
-            } else {
-              solde -= mnt;
-            }
-            if (row.Type === "Entretien") moto += mnt;
-            if (stats.hasOwnProperty(row.Type)) stats[row.Type] += mnt;
+  // 2. GESTION DES ONGLETS
+  function openTab(evt, tabName) {
+    const tabcontent = document.getElementsByClassName("tab-content");
+    const tablinks = document.getElementsByClassName("tab-btn");
 
-            // Formatage de la date (pour éviter le format ISO brut)
-            let dateFormatee = "N/A";
-            if (row.Date) {
-              const d = new Date(row.Date);
-              dateFormatee = d.toLocaleDateString("fr-FR");
-            }
+    for (let i = 0; i < tabcontent.length; i++)
+      tabcontent[i].classList.remove("active");
 
-            tbody.innerHTML += `<tr>
+    for (let i = 0; i < tablinks.length; i++)
+      tablinks[i].classList.remove("active");
+
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // 3. ENVOI DES DONNÉES (POST)
+  const form = document.getElementById("finance-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById("submit-btn");
+    submitBtn.innerText = "Enregistrement...";
+    submitBtn.disabled = true;
+
+    fetch(scriptURL, {
+      method: "POST",
+      mode: "cors",
+      body: new FormData(form)
+    })
+      .then(res => res.json())
+      .then(() => {
+        alert("Opération réussie !");
+        location.reload();
+      })
+      .catch(() => {
+        alert("Erreur d'envoi");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Valider l'opération";
+      });
+  });
+
+  // 4. CHARGEMENT DES DONNÉES (READ)
+  async function loadData() {
+    try {
+      const response = await fetch(`${scriptURL}?action=read`, {
+        method: "GET",
+        mode: "cors",
+        redirect: "follow",
+      });
+
+      const data = await response.json();
+
+      let solde = 0, moto = 0, recettes = 0;
+      let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
+
+      const tbody = document.getElementById("table-body");
+      let rowsHTML = "";
+
+      data.reverse().forEach(row => {
+        const mnt = parseFloat(row.Montant) || 0;
+
+        if (row.Type === "Depot") {
+          solde += mnt;
+          recettes += mnt;
+        } else {
+          solde -= mnt;
+        }
+
+        if (row.Type === "Entretien") moto += mnt;
+        if (stats[row.Type] !== undefined) stats[row.Type] += mnt;
+
+        const dateFormatee = row.Date
+          ? new Date(row.Date).toLocaleDateString("fr-FR")
+          : "N/A";
+
+        rowsHTML += `
+          <tr>
             <td>${dateFormatee}</td>
             <td>${row.Auteur || "Inconnu"}</td>
             <td><span class="badge" style="background:#222; color:var(--main-color)">${row.Type}</span></td>
             <td>${row.Description}</td>
-            <td style="font-weight:bold; color: ${row.Type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
-        </tr>`;
-          });
+            <td style="font-weight:bold; color:${row.Type === "Depot" ? "#28a745" : "#fff"}">
+              ${mnt.toLocaleString()} GNF
+            </td>
+          </tr>`;
+      });
 
-          document.getElementById("total-solde").innerText =
-            solde.toLocaleString() + " GNF";
-          document.getElementById("total-moto").innerText =
-            moto.toLocaleString() + " GNF";
-          document.getElementById("total-recettes").innerText =
-            recettes.toLocaleString() + " GNF";
+      tbody.innerHTML = rowsHTML;
 
-          initChart(stats);
-        } catch (e) {
-          console.error("Erreur de chargement:", e);
-        }
-      }
+      document.getElementById("total-solde").innerText = solde.toLocaleString() + " GNF";
+      document.getElementById("total-moto").innerText = moto.toLocaleString() + " GNF";
+      document.getElementById("total-recettes").innerText = recettes.toLocaleString() + " GNF";
 
-      // 5. GRAPHIQUE
-      function initChart(s) {
-        const ctx = document.getElementById("financeChart").getContext("2d");
-        // Détruire l'ancien graphique s'il existe pour éviter les bugs visuels
-        if (window.myFinanceChart) window.myFinanceChart.destroy();
+      initChart(stats);
+    } catch (e) {
+      console.error("Erreur de chargement:", e);
+    }
+  }
 
-        window.myFinanceChart = new Chart(ctx, {
-          type: "doughnut",
-          data: {
-            labels: ["Dépôts", "Retraits", "Dépenses", "Entretien"],
-            datasets: [
-              {
-                data: [s.Depot, s.Retrait, s.Depense, s.Entretien],
-                backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#17a2b8"],
-                borderWidth: 0,
-              },
-            ],
+  // 5. GRAPHIQUE
+  function initChart(s) {
+    const ctx = document.getElementById("financeChart").getContext("2d");
+    if (window.myFinanceChart) window.myFinanceChart.destroy();
+
+    window.myFinanceChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Dépôts", "Retraits", "Dépenses", "Entretien"],
+        datasets: [{
+          data: [s.Depot, s.Retrait, s.Depense, s.Entretien],
+          backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#17a2b8"],
+          borderWidth: 0,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "bottom",
+            labels: { color: "#888", font: { size: 10 } },
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: "bottom",
-                labels: { color: "#888", font: { size: 10 } },
-              },
-            },
-          },
-        });
-      }
-    </script>
+        },
+      },
+    });
+  }
+</script>
+
+
+
   </body>
 </html>
