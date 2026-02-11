@@ -57,7 +57,7 @@
       td { padding: 15px; border-bottom: 1px solid #1a1a1a; font-size: 13px; color: #ccc; }
       .badge { padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
 
-      /* Login */
+      /* Login Overlay */
       #login-overlay { position: fixed; inset: 0; background: var(--bg-color); display: flex; align-items: center; justify-content: center; z-index: 10000; }
 
       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -144,6 +144,7 @@
     </div>
 
 <script>
+  // UTILISE BIEN L'URL QUI FINIT PAR /exec
   const scriptURL = "https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
   let currentUser = null;
 
@@ -158,6 +159,7 @@
 
     try {
       const url = `${scriptURL}?action=login&code=${encodeURIComponent(pass)}`;
+      // Pas de Headers personnalisés pour éviter le preflight CORS bloquant de Google
       const response = await fetch(url, { method: "GET", mode: "cors", redirect: "follow" });
       const result = await response.json();
 
@@ -175,7 +177,7 @@
       }
     } catch (error) {
       console.error("Erreur login:", error);
-      alert("Erreur de connexion. Vérifie ton code ou le déploiement Apps Script.");
+      alert("Erreur réseau ou CORS. Assure-toi que le script est déployé sur 'Tout le monde'.");
       loginBtn.innerText = "Se connecter";
       loginBtn.disabled = false;
     }
@@ -200,6 +202,7 @@
     submitBtn.disabled = true;
 
     fetch(scriptURL, { method: "POST", mode: "cors", body: new FormData(e.target) })
+      .then(res => res.json())
       .then(() => { alert("Opération réussie !"); location.reload(); })
       .catch(() => { alert("Erreur d'envoi"); submitBtn.disabled = false; submitBtn.innerText = "Valider l'opération"; });
   });
@@ -207,7 +210,8 @@
   // 4. READ DATA
   async function loadData() {
     try {
-      const response = await fetch(`${scriptURL}?action=read`, { method: "GET", mode: "cors", redirect: "follow" });
+      const url = `${scriptURL}?action=read`;
+      const response = await fetch(url, { method: "GET", mode: "cors", redirect: "follow" });
       const data = await response.json();
 
       let solde = 0, moto = 0, recettes = 0;
@@ -215,7 +219,7 @@
       const tbody = document.getElementById("table-body");
       let rowsHTML = "";
 
-      // Trier pour avoir le plus récent en haut
+      // Inverser pour avoir le plus récent en premier
       data.reverse().forEach(row => {
         const mnt = parseFloat(row.Montant) || 0;
         if (row.Type === "Depot") { solde += mnt; recettes += mnt; } else { solde -= mnt; }
