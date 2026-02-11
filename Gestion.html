@@ -161,7 +161,7 @@
       const url = `${scriptURL}?action=login&code=${encodeURIComponent(pass)}`;
       // Pas de Headers personnalisés pour éviter le preflight CORS bloquant de Google
       const response = await fetch(url, { method: "GET", mode: "cors", redirect: "follow" });
-      const result = await response.json();
+      const result = await response.json()
 
       if (result.success) {
         currentUser = result.user;
