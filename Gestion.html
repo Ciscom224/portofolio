@@ -333,96 +333,168 @@
     </section>
   </div>
 
-  <script>
-    /* ================================
- CONFIG
-================================ */
+ <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
+  const proxyURL = "https://corsproxy.io/?";
 
-    const scriptURL =
-      "https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
-    const proxyURL = "https://corsproxy.io/?";
+  let currentUser = null;
 
-    /* ================================
- LOGIN
-================================ */
+  /* ================================
+  LOGIN
+  ================================= */
+  const loginBtn = document.querySelector("#login-overlay .btn");
+  loginBtn.addEventListener("click", async () => {
+    const passInput = document.getElementById("pass-input");
+    const loginError = document.getElementById("login-error");
 
-    async function checkAccess() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+    loginBtn.innerText = "Vérification...";
+    loginBtn.disabled = true;
 
-      const url = `${scriptURL}?action=login&username=${username}&password=${password}`;
+    try {
+      const url = `${scriptURL}?action=login&code=${encodeURIComponent(passInput.value)}`;
+      const response = await fetch(proxyURL + url, { method: "GET", redirect: "follow" });
+      const result = await response.json();
 
-      try {
-        const response = await fetch(proxyURL + url);
-        const result = await response.json();
+      if (result.success) {
+        currentUser = result.user;
+        document.getElementById("login-overlay").style.display = "none";
+        document.getElementById("user-display").innerText = `| Connecté : ${currentUser.name}`;
+        document.getElementById("form-auteur").value = currentUser.name;
 
-        if (result.success) {
-          document.getElementById("loginSection").style.display = "none";
-          document.getElementById("appSection").style.display = "block";
-          loadData();
-        } else {
-          alert("Identifiants incorrects");
-        }
-      } catch (error) {
-        console.error("Erreur login:", error);
-        alert("Erreur de connexion");
+        if (currentUser.role === "admin")
+          document.getElementById("nav-add").style.display = "flex";
+
+        loadData();
+      } else {
+        loginError.style.display = "block";
       }
+    } catch (err) {
+      console.error("Erreur login:", err);
+      alert("Erreur réseau ou CORS. Assure-toi que le script est déployé sur 'Tout le monde'.");
+    } finally {
+      loginBtn.innerText = "Se connecter";
+      loginBtn.disabled = false;
     }
+  });
 
-    /* ================================
- LOAD DATA
-================================ */
+  /* ================================
+  TABS
+  ================================= */
+  window.openTab = (evt, tabName) => {
+    const tabcontent = document.getElementsByClassName("tab-content");
+    const tablinks = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < tabcontent.length; i++) tabcontent[i].classList.remove("active");
+    for (let i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  };
 
-    async function loadData() {
-      try {
-        const response = await fetch(proxyURL + `${scriptURL}?action=read`);
+  /* ================================
+  LOAD DATA
+  ================================= */
+  async function loadData() {
+    try {
+      const response = await fetch(proxyURL + `${scriptURL}?action=read`);
+      const data = await response.json();
 
-        const data = await response.json();
+      let solde = 0, moto = 0, recettes = 0;
+      let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
 
-        const tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = "";
+      const tbody = document.getElementById("table-body");
+      let rowsHTML = "";
 
-        data.forEach((row) => {
-          const tr = document.createElement("tr");
+      data.reverse().forEach((row) => {
+        const mnt = parseFloat(row.Montant) || 0;
 
-          row.forEach((cell) => {
-            const td = document.createElement("td");
-            td.textContent = cell;
-            tr.appendChild(td);
-          });
+        if (row.Type === "Depot") { solde += mnt; recettes += mnt; }
+        else solde -= mnt;
 
-          tableBody.appendChild(tr);
-        });
-      } catch (error) {
-        console.error("Erreur de chargement:", error);
-      }
-    }
+        if (row.Type === "Entretien") moto += mnt;
+        if (stats[row.Type] !== undefined) stats[row.Type] += mnt;
 
-    /* ================================
- FORM SUBMIT (POST)
-================================ */
+        const dateFormatee = row.Date ? new Date(row.Date).toLocaleDateString("fr-FR") : "N/A";
 
-    document
-      .getElementById("dataForm")
-      .addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        fetch(proxyURL + scriptURL, {
-          method: "POST",
-          body: new URLSearchParams(new FormData(e.target)),
-        })
-          .then((response) => response.text())
-          .then((result) => {
-            alert("Données envoyées !");
-            e.target.reset();
-            loadData();
-          })
-          .catch((error) => {
-            console.error("Erreur envoi:", error);
-            alert("Erreur d'envoi");
-          });
+        rowsHTML += `
+          <tr>
+            <td>${dateFormatee}</td>
+            <td>${row.Auteur || "Inconnu"}</td>
+            <td><span class="badge" style="background:#222; color:var(--main-color)">
+              ${row.Type}
+            </span></td>
+            <td>${row.Description}</td>
+            <td style="font-weight:bold; color:${row.Type === "Depot" ? "#28a745" : "#fff"}">
+              ${mnt.toLocaleString()} GNF
+            </td>
+          </tr>
+        `;
       });
-  </script>
+
+      tbody.innerHTML = rowsHTML;
+      document.getElementById("total-solde").innerText = solde.toLocaleString() + " GNF";
+      document.getElementById("total-moto").innerText = moto.toLocaleString() + " GNF";
+      document.getElementById("total-recettes").innerText = recettes.toLocaleString() + " GNF";
+
+      initChart(stats);
+    } catch (err) {
+      console.error("Erreur de chargement:", err);
+    }
+  }
+
+  /* ================================
+  POST DATA
+  ================================= */
+  const financeForm = document.getElementById("finance-form");
+  financeForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    document.getElementById("current-date").value = new Date().toISOString();
+    const submitBtn = document.getElementById("submit-btn");
+    submitBtn.innerText = "Enregistrement...";
+    submitBtn.disabled = true;
+
+    fetch(proxyURL + scriptURL, { method: "POST", body: new FormData(financeForm) })
+      .then(res => res.json())
+      .then(() => {
+        alert("Opération réussie !");
+        financeForm.reset();
+        loadData();
+      })
+      .catch(err => {
+        console.error("Erreur d'envoi:", err);
+        alert("Erreur d'envoi");
+      })
+      .finally(() => {
+        submitBtn.innerText = "Valider l'opération";
+        submitBtn.disabled = false;
+      });
+  });
+
+  /* ================================
+  CHART
+  ================================= */
+  function initChart(s) {
+    const ctx = document.getElementById("financeChart").getContext("2d");
+    if (window.myFinanceChart) window.myFinanceChart.destroy();
+    window.myFinanceChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Dépôts", "Retraits", "Dépenses", "Entretien"],
+        datasets: [{
+          data: [s.Depot, s.Retrait, s.Depense, s.Entretien],
+          backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#17a2b8"],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom", labels: { color: "#888", font: { size: 10 } } } }
+      }
+    });
+  }
+});
+</script>
+
 </body>
 
 </html>
