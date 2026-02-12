@@ -444,42 +444,47 @@
       // 4. READ DATA
       async function loadData() {
         try {
-          const url = `${scriptURL}?action=read`;
-          const response = await fetch(scriptURL, {
-            method: "POST",
-            body: new URLSearchParams(new FormData(e.target)),
-          });
+          const response = await fetch(`${scriptURL}?action=read`);
           const data = await response.json();
 
           let solde = 0,
             moto = 0,
             recettes = 0;
+
           let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
           const tbody = document.getElementById("table-body");
           let rowsHTML = "";
 
-          // Inverser pour avoir le plus récent en premier
           data.reverse().forEach((row) => {
             const mnt = parseFloat(row.Montant) || 0;
+
             if (row.Type === "Depot") {
               solde += mnt;
               recettes += mnt;
             } else {
               solde -= mnt;
             }
+
             if (row.Type === "Entretien") moto += mnt;
             if (stats[row.Type] !== undefined) stats[row.Type] += mnt;
 
             const dateFormatee = row.Date
               ? new Date(row.Date).toLocaleDateString("fr-FR")
               : "N/A";
-            rowsHTML += `<tr>
-            <td>${dateFormatee}</td>
-            <td>${row.Auteur || "Inconnu"}</td>
-            <td><span class="badge" style="background:#222; color:var(--main-color)">${row.Type}</span></td>
-            <td>${row.Description}</td>
-            <td style="font-weight:bold; color:${row.Type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
-          </tr>`;
+
+            rowsHTML += `
+        <tr>
+          <td>${dateFormatee}</td>
+          <td>${row.Auteur || "Inconnu"}</td>
+          <td><span class="badge" style="background:#222; color:var(--main-color)">
+            ${row.Type}
+          </span></td>
+          <td>${row.Description}</td>
+          <td style="font-weight:bold; color:${row.Type === "Depot" ? "#28a745" : "#fff"}">
+            ${mnt.toLocaleString()} GNF
+          </td>
+        </tr>
+      `;
           });
 
           tbody.innerHTML = rowsHTML;
@@ -489,6 +494,7 @@
             moto.toLocaleString() + " GNF";
           document.getElementById("total-recettes").innerText =
             recettes.toLocaleString() + " GNF";
+
           initChart(stats);
         } catch (e) {
           console.error("Erreur de chargement:", e);
