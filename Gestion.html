@@ -332,97 +332,165 @@
       </div>
     </section>
   </div>
+<script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
+  let currentUser = null;
 
-  <script>
-    /* ================================
- CONFIG
-================================ */
+  /* ================================
+   LOGIN
+  ================================ */
+  async function checkAccess() {
+    const passInput = document.getElementById("pass-input");
+    const loginError = document.getElementById("login-error");
+    const loginBtn = document.querySelector("#login-overlay .btn");
+    const code = passInput.value;
 
-    const scriptURL =
-      "https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
-    const proxyURL = "https://corsproxy.io/?";
+    loginBtn.innerText = "Vérification...";
+    loginBtn.disabled = true;
 
-    /* ================================
- LOGIN
-================================ */
-
-    async function checkAccess() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-
-      const url = `${scriptURL}?action=login&username=${username}&password=${password}`;
-
-      try {
-        const response = await fetch(proxyURL + url);
-        const result = await response.json();
-
-        if (result.success) {
-          document.getElementById("loginSection").style.display = "none";
-          document.getElementById("appSection").style.display = "block";
-          loadData();
-        } else {
-          alert("Identifiants incorrects");
-        }
-      } catch (error) {
-        console.error("Erreur login:", error);
-        alert("Erreur de connexion");
-      }
-    }
-
-    /* ================================
- LOAD DATA
-================================ */
-
-    async function loadData() {
-      try {
-        const response = await fetch(proxyURL + `${scriptURL}?action=read`);
-
-        const data = await response.json();
-
-        const tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = "";
-
-        data.forEach((row) => {
-          const tr = document.createElement("tr");
-
-          row.forEach((cell) => {
-            const td = document.createElement("td");
-            td.textContent = cell;
-            tr.appendChild(td);
-          });
-
-          tableBody.appendChild(tr);
-        });
-      } catch (error) {
-        console.error("Erreur de chargement:", error);
-      }
-    }
-
-    /* ================================
- FORM SUBMIT (POST)
-================================ */
-
-    document
-      .getElementById("dataForm")
-      .addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        fetch(proxyURL + scriptURL, {
-          method: "POST",
-          body: new URLSearchParams(new FormData(e.target)),
-        })
-          .then((response) => response.text())
-          .then((result) => {
-            alert("Données envoyées !");
-            e.target.reset();
-            loadData();
-          })
-          .catch((error) => {
-            console.error("Erreur envoi:", error);
-            alert("Erreur d'envoi");
-          });
+    try {
+      // Pas besoin de proxy, on utilise redirect follow
+      const response = await fetch(`${scriptURL}?action=login&code=${encodeURIComponent(code)}`, {
+        method: "GET",
+        redirect: "follow"
       });
-  </script>
+      const result = await response.json();
+
+      if (result.success) {
+        currentUser = result.user;
+        document.getElementById("login-overlay").style.display = "none";
+        document.getElementById("user-display").innerText = `| Connecté : ${currentUser.name}`;
+        document.getElementById("form-auteur").value = currentUser.name;
+        
+        if (currentUser.role === "admin") {
+          document.getElementById("nav-add").style.display = "flex";
+        }
+        loadData();
+      } else {
+        loginError.style.display = "block";
+        loginBtn.innerText = "Se connecter";
+        loginBtn.disabled = false;
+      }
+    } catch (error) {
+      console.error("Erreur login:", error);
+      alert("Erreur réseau. Vérifiez votre connexion.");
+      loginBtn.disabled = false;
+    }
+  }
+
+  /* ================================
+   TABS GESTION
+  ================================ */
+  function openTab(evt, tabName) {
+    const tabcontent = document.getElementsByClassName("tab-content");
+    const tablinks = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < tabcontent.length; i++) tabcontent[i].classList.remove("active");
+    for (let i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  /* ================================
+   LOAD DATA
+  ================================ */
+  async function loadData() {
+    try {
+      const response = await fetch(`${scriptURL}?action=read`, {
+        method: "GET",
+        redirect: "follow"
+      });
+      const data = await response.json();
+
+      let solde = 0, moto = 0, recettes = 0;
+      let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
+      const tbody = document.getElementById("table-body");
+      let rowsHTML = "";
+
+      data.reverse().forEach(row => {
+        const mnt = parseFloat(row.Montant) || 0;
+        if (row.Type === "Depot") { solde += mnt; recettes += mnt; } 
+        else { solde -= mnt; }
+        if (row.Type === "Entretien") moto += mnt;
+        if (stats[row.Type] !== undefined) stats[row.Type] += mnt;
+
+        const dateFormatee = row.Date ? new Date(row.Date).toLocaleDateString("fr-FR") : "N/A";
+        
+        rowsHTML += `<tr>
+            <td>${dateFormatee}</td>
+            <td>${row.Auteur || "Inconnu"}</td>
+            <td><span class="badge" style="background:#222; color:var(--main-color)">${row.Type}</span></td>
+            <td>${row.Description}</td>
+            <td style="font-weight:bold; color:${row.Type === "Depot" ? "var(--success)" : "#fff"}">${mnt.toLocaleString()} GNF</td>
+          </tr>`;
+      });
+
+      tbody.innerHTML = rowsHTML;
+      document.getElementById("total-solde").innerText = solde.toLocaleString() + " GNF";
+      document.getElementById("total-moto").innerText = moto.toLocaleString() + " GNF";
+      document.getElementById("total-recettes").innerText = recettes.toLocaleString() + " GNF";
+      
+      initChart(stats);
+    } catch (error) {
+      console.error("Erreur de chargement:", error);
+    }
+  }
+
+  /* ================================
+   FORM SUBMIT (POST)
+  ================================ */
+  document.getElementById("finance-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById("submit-btn");
+    submitBtn.innerText = "Enregistrement...";
+    submitBtn.disabled = true;
+
+    // Utilisation de FormData pour éviter les problèmes de format
+    const formData = new FormData(this);
+
+    fetch(scriptURL, {
+      method: "POST",
+      body: new URLSearchParams(formData),
+    })
+    .then(() => {
+      alert("Opération réussie !");
+      this.reset();
+      submitBtn.innerText = "Valider l'opération";
+      submitBtn.disabled = false;
+      loadData();
+    })
+    .catch((error) => {
+      console.error("Erreur envoi:", error);
+      alert("Erreur lors de l'enregistrement");
+      submitBtn.disabled = false;
+    });
+  });
+
+  /* ================================
+   CHART
+  ================================ */
+  function initChart(s) {
+    const ctx = document.getElementById("financeChart").getContext("2d");
+    if (window.myChart) window.myChart.destroy();
+    window.myChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Dépôts", "Retraits", "Dépenses", "Entretien"],
+        datasets: [{
+          data: [s.Depot, s.Retrait, s.Depense, s.Entretien],
+          backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#17a2b8"],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "bottom", labels: { color: "#888", font: { size: 10 } } }
+        }
+      }
+    });
+  }
+</script>
   
 </body>
 
