@@ -7,12 +7,11 @@
   <title>EKIP | Management Dashboard</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    /* TON DESIGN RESTE IDENTIQUE A 100% */
     :root {
       --main-color: #ff004f;
       --bg-color: #080808;
@@ -35,7 +34,6 @@
       padding: 20px;
     }
 
-    /* Navigation Tabs */
     .tab-menu {
       display: flex;
       justify-content: center;
@@ -71,7 +69,6 @@
       display: block;
     }
 
-    /* Stats Cards */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -103,7 +100,6 @@
       margin-top: 5px;
     }
 
-    /* Formulaire */
     .form-card {
       background: var(--container-bg);
       padding: 25px;
@@ -130,7 +126,6 @@
       font-size: 14px;
     }
 
-    /* Tableau */
     .table-wrapper {
       background: var(--container-bg);
       border-radius: 15px;
@@ -166,7 +161,6 @@
       text-transform: uppercase;
     }
 
-    /* Login Overlay */
     #login-overlay {
       position: fixed;
       inset: 0;
@@ -196,98 +190,51 @@
     <div class="stat-card" style="width: 320px; padding: 40px">
       <i class="bx bxs-user-badge" style="font-size: 40px"></i>
       <h3>L-EKIP Access</h3>
-      <input type="password" id="pass-input" placeholder="Entrez votre code" style="text-align: center" />
-      <button class="btn" onclick="checkAccess()" style="
-            margin-top: 20px;
-            width: 100%;
-            background: var(--main-color);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-          ">
-        Se connecter
-      </button>
-      <p id="login-error" style="
-            color: var(--main-color);
-            font-size: 12px;
-            margin-top: 10px;
-            display: none;
-          ">
-        Code incorrect
-      </p>
+      <form onsubmit="event.preventDefault(); checkAccess();">
+        <input type="password" id="pass-input" placeholder="Entrez votre code" style="text-align: center" autocomplete="current-password" />
+        <button type="submit" class="btn" style="
+              margin-top: 20px;
+              width: 100%;
+              background: var(--main-color);
+              color: white;
+              border: none;
+              padding: 12px;
+              border-radius: 8px;
+              cursor: pointer;
+              font-weight: 600;
+            ">
+          Se connecter
+        </button>
+      </form>
+      <p id="login-error" style="color: var(--main-color); font-size: 12px; margin-top: 10px; display: none;">Code incorrect</p>
     </div>
   </div>
 
   <div class="secret-container">
-    <header style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 30px;
-        ">
-      <h1 style="font-size: 24px">
-        <span style="color: var(--main-color)">E</span>KIP
-        <small style="font-size: 12px; color: #555" id="user-display"></small>
-      </h1>
-      <a href="index.html" style="
-            text-decoration: none;
-            color: var(--text-grey);
-            font-size: 14px;
-          ">
-        <i class="bx bx-log-out"></i> Portfolio
-      </a>
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+      <h1 style="font-size: 24px"><span style="color: var(--main-color)">E</span>KIP <small style="font-size: 12px; color: #555" id="user-display"></small></h1>
+      <a href="index.html" style="text-decoration: none; color: var(--text-grey); font-size: 14px;"><i class="bx bx-log-out"></i> Portfolio</a>
     </header>
 
     <nav class="tab-menu">
-      <button class="tab-btn active" onclick="openTab(event, 'stats')">
-        <i class="bx bx-pie-chart-alt-2"></i> Stats
-      </button>
-      <button class="tab-btn" onclick="openTab(event, 'history')">
-        <i class="bx bx-list-ul"></i> Historique
-      </button>
-      <button id="nav-add" class="tab-btn" onclick="openTab(event, 'add')" style="display: none">
-        <i class="bx bx-plus-circle"></i> Ajouter
-      </button>
+      <button class="tab-btn active" onclick="openTab(event, 'stats')"><i class="bx bx-pie-chart-alt-2"></i> Stats</button>
+      <button class="tab-btn" onclick="openTab(event, 'history')"><i class="bx bx-list-ul"></i> Historique</button>
+      <button id="nav-add" class="tab-btn" onclick="openTab(event, 'add')" style="display: none"><i class="bx bx-plus-circle"></i> Ajouter</button>
     </nav>
 
     <section id="stats" class="tab-content active">
       <div class="stats-grid">
-        <div class="stat-card">
-          <i class="bx bx-wallet"></i>
-          <p>Solde Actuel</p>
-          <h2 id="total-solde">0 GNF</h2>
-        </div>
-        <div class="stat-card">
-          <i class="bx bx-wrench"></i>
-          <p>Entretien Moto</p>
-          <h2 id="total-moto">0 GNF</h2>
-        </div>
-        <div class="stat-card">
-          <i class="bx bx-trending-up"></i>
-          <p>Recettes Totales</p>
-          <h2 id="total-recettes" style="color: var(--success)">0 GNF</h2>
-        </div>
+        <div class="stat-card"><i class="bx bx-wallet"></i><p>Solde Actuel</p><h2 id="total-solde">0 GNF</h2></div>
+        <div class="stat-card"><i class="bx bx-wrench"></i><p>Entretien Moto</p><h2 id="total-moto">0 GNF</h2></div>
+        <div class="stat-card"><i class="bx bx-trending-up"></i><p>Recettes Totales</p><h2 id="total-recettes" style="color: var(--success)">0 GNF</h2></div>
       </div>
-      <div class="stat-card" style="height: 300px">
-        <canvas id="financeChart"></canvas>
-      </div>
+      <div class="stat-card" style="height: 300px"><canvas id="financeChart"></canvas></div>
     </section>
 
     <section id="history" class="tab-content">
       <div class="table-wrapper">
         <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Auteur</th>
-              <th>Type</th>
-              <th>Détails</th>
-              <th>Montant</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Date</th><th>Auteur</th><th>Type</th><th>Détails</th><th>Montant</th></tr></thead>
           <tbody id="table-body"></tbody>
         </table>
       </div>
@@ -295,9 +242,7 @@
 
     <section id="add" class="tab-content">
       <div class="form-card">
-        <h3 style="text-align: center; margin-bottom: 20px">
-          Enregistrer une opération
-        </h3>
+        <h3 style="text-align: center; margin-bottom: 20px">Enregistrer une opération</h3>
         <form id="finance-form">
           <input type="hidden" name="Auteur" id="form-auteur" />
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px">
@@ -310,99 +255,84 @@
                 <option value="Entretien">🏍️ Entretien</option>
               </select>
             </div>
-            <div>
-              <label>Montant (GNF)</label><input type="number" name="Montant" placeholder="Ex: 5000" required />
-            </div>
+            <div><label>Montant (GNF)</label><input type="number" name="Montant" placeholder="Ex: 5000" required /></div>
           </div>
           <div style="margin-top: 15px">
             <label>Description / Détails</label>
             <input type="text" name="Description" placeholder="Ex: Recette course..." required />
           </div>
-          <button type="submit" class="btn" id="submit-btn" style="
-                width: 100%;
-                margin-top: 20px;
-                padding: 15px;
-                background: var(--main-color);
-                color: white;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                font-weight: bold;
-              ">
-            Valider l'opération
-          </button>
+          <button type="submit" class="btn" id="submit-btn" style="width: 100%; margin-top: 20px; padding: 15px; background: var(--main-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Valider l'opération</button>
         </form>
       </div>
     </section>
   </div>
 
 <script>
-  /* ================================
-     CONFIGURATION SUPABASE
-     COLLE TES CLÉS ICI 👇
-  ================================ */
+  // --- CLÉS SUPABASE ---
   const SUPABASE_URL = 'https://xsqdvitggbfhzrvkjjez.supabase.co'; 
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzcWR2aXRnZ2JmaHpydmtqamV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Mzg5MTUsImV4cCI6MjA4NjUxNDkxNX0.aafH3na9KsrycP_gtYZgw9LGMfNqyvoOhVv5DuKZXZc';
 
-  // Initialisation du client
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Initialisation du client SUPABASE sans conflit
+  const supabaseClient = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   let currentUser = null;
 
-  // Liste des utilisateurs autorisés (Login simplifié)
-  const USERS = {
-    "224Cisse@amdin": { name: "Mamadou", role: "admin" },
-    "lixfe@1820": { name: "Félix", role: "viewer" },
-    "manager@lekif2620": { name: "Gérante", role: "admin" },
-    "Badra@lekif2018": { name: "Badra", role: "viewer" },
-    "riaso@lekif.com": { name: "Soria", role: "viewer" }
-  };
+  // --- SÉCURITÉ : Fonction Anti-XSS (Empêche l'injection de code HTML/JS) ---
+  function escapeHtml(text) {
+    if (!text) return text;
+    return text
+      .toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
-  /* ================================
-   1. LOGIN (Vérification Locale)
-  ================================ */
-  function checkAccess() {
-    const passInput = document.getElementById("pass-input");
+  // --- LOGIN SÉCURISÉ (Via Base de données) ---
+  async function checkAccess() {
+    const code = document.getElementById("pass-input").value.trim();
     const loginError = document.getElementById("login-error");
     const loginBtn = document.querySelector("#login-overlay .btn");
-    
-    // Nettoyage de l'entrée (espaces vides)
-    const code = passInput.value.trim();
 
     loginBtn.innerText = "Vérification...";
     loginBtn.disabled = true;
 
-    // Vérification directe dans l'objet USERS
-    if (USERS[code]) {
-      currentUser = USERS[code];
-      
-      // Mise à jour de l'interface
+    try {
+      // On interroge la table 'allowed_users' au lieu d'une liste JS
+      const { data, error } = await supabaseClient
+        .from('allowed_users')
+        .select('*')
+        .eq('code', code)
+        .single();
+
+      if (error || !data) {
+        throw new Error("Code incorrect");
+      }
+
+      // Connexion réussie
+      currentUser = data;
       document.getElementById("login-overlay").style.display = "none";
       document.getElementById("user-display").innerText = `| Connecté : ${currentUser.name}`;
       document.getElementById("form-auteur").value = currentUser.name;
-      
-      // Afficher le bouton Ajouter si Admin
+
       if (currentUser.role === "admin") {
         document.getElementById("nav-add").style.display = "flex";
       }
-      
-      // Charger les données depuis Supabase
       loadData();
-    } else {
+
+    } catch (err) {
       loginError.style.display = "block";
       loginBtn.innerText = "Se connecter";
       loginBtn.disabled = false;
     }
   }
 
-  /* ================================
-   2. CHARGEMENT DONNÉES (Supabase SELECT)
-  ================================ */
+  // --- CHARGEMENT DES DONNÉES ---
   async function loadData() {
     try {
-      // Requête Supabase : Lire la table 'transactions' triée par date
-      let { data: transactions, error } = await supabase
-        .from('transaction')
+      const { data: transactions, error } = await supabaseClient
+        .from('transactions')
         .select('*')
         .order('date', { ascending: false });
 
@@ -410,125 +340,113 @@
 
       let solde = 0, moto = 0, recettes = 0;
       let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
+      let rowsHTML = '';
+
       const tbody = document.getElementById("table-body");
-      let rowsHTML = "";
 
       transactions.forEach(row => {
-        // Convertir le montant en nombre
         const mnt = parseFloat(row.montant) || 0;
-        
-        // Calculs Financiers
-        if (row.type === "Depot") { solde += mnt; recettes += mnt; } 
-        else { solde -= mnt; }
-        
+        if (row.type === "Depot") { solde += mnt; recettes += mnt; } else { solde -= mnt; }
         if (row.type === "Entretien") moto += mnt;
         if (stats[row.type] !== undefined) stats[row.type] += mnt;
 
-        // Formatage de la date (Supabase envoie du format ISO)
-        const dateObj = new Date(row.date);
-        const dateFormatee = dateObj.toLocaleDateString("fr-FR");
+        const dateFormatee = new Date(row.date).toLocaleDateString("fr-FR");
 
+        // NOTE : On utilise escapeHtml() ici pour sécuriser l'affichage
         rowsHTML += `<tr>
-            <td>${dateFormatee}</td>
-            <td>${row.auteur || "Inconnu"}</td>
-            <td><span class="badge" style="background:#222; color:var(--main-color)">${row.type}</span></td>
-            <td>${row.description}</td>
-            <td style="font-weight:bold; color:${row.type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
-          </tr>`;
+          <td>${dateFormatee}</td>
+          <td>${escapeHtml(row.auteur) || "Inconnu"}</td>
+          <td><span class="badge" style="background:#222; color:var(--main-color)">${escapeHtml(row.type)}</span></td>
+          <td>${escapeHtml(row.description)}</td>
+          <td style="font-weight:bold; color:${row.type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
+        </tr>`;
       });
 
       tbody.innerHTML = rowsHTML;
       document.getElementById("total-solde").innerText = solde.toLocaleString() + " GNF";
       document.getElementById("total-moto").innerText = moto.toLocaleString() + " GNF";
       document.getElementById("total-recettes").innerText = recettes.toLocaleString() + " GNF";
-      
+
       initChart(stats);
 
-    } catch (error) {
-      console.error("Erreur Supabase:", error);
-      alert("Erreur de chargement des données. Vérifiez votre connexion.");
+    } catch (err) {
+      console.error(err);
+      alert("Erreur de chargement : " + err.message);
     }
   }
 
-  /* ================================
-   3. ENVOI DONNÉES (Supabase INSERT)
-  ================================ */
-  document.getElementById("finance-form").addEventListener("submit", async function (e) {
+  // --- ENVOI FORMULAIRE ---
+  document.getElementById("finance-form").addEventListener("submit", async function(e){
     e.preventDefault();
     const submitBtn = document.getElementById("submit-btn");
     submitBtn.innerText = "Enregistrement...";
     submitBtn.disabled = true;
 
     const formData = new FormData(this);
+    
+    // Nettoyage basique des entrées avant envoi
+    const description = formData.get("Description").trim();
+    const auteur = formData.get("Auteur").trim();
 
-    // Construction de l'objet à envoyer
-    // Les clés correspondent aux colonnes de ta table Supabase
+    if(!description || !auteur) {
+        alert("Champs invalides");
+        submitBtn.innerText = "Valider l'opération";
+        submitBtn.disabled = false;
+        return;
+    }
+
     const transaction = {
       date: new Date().toISOString(),
-      auteur: formData.get("Auteur"),
+      auteur: auteur, 
       type: formData.get("Type"),
       montant: parseFloat(formData.get("Montant")),
-      description: formData.get("Description")
+      description: description
     };
 
     try {
-      const { error } = await supabase
-        .from('transactions')
-        .insert([transaction]);
-
+      const { error } = await supabaseClient.from('transactions').insert([transaction]);
       if (error) throw error;
 
       alert("Opération réussie !");
       this.reset();
-      // On remet l'auteur car le reset l'efface
       document.getElementById("form-auteur").value = currentUser.name;
-      
-      // On recharge les données pour voir la nouvelle ligne
-      loadData(); 
+      loadData();
 
-    } catch (error) {
-      console.error("Erreur Envoi:", error);
-      alert("Erreur lors de l'enregistrement : " + error.message);
+    } catch (err) {
+      console.error(err);
+      alert("Erreur : " + err.message);
     } finally {
       submitBtn.innerText = "Valider l'opération";
       submitBtn.disabled = false;
     }
   });
 
-  /* ================================
-   4. INTERFACE (Tabs & Chart)
-  ================================ */
-  function openTab(evt, tabName) {
+  // --- TABS ---
+  function openTab(evt, tabName){
     const tabcontent = document.getElementsByClassName("tab-content");
     const tablinks = document.getElementsByClassName("tab-btn");
-    for (let i = 0; i < tabcontent.length; i++) tabcontent[i].classList.remove("active");
-    for (let i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
+    for(let t of tabcontent) t.classList.remove("active");
+    for(let l of tablinks) l.classList.remove("active");
     document.getElementById(tabName).classList.add("active");
     evt.currentTarget.classList.add("active");
   }
 
-  function initChart(s) {
+  // --- CHART ---
+  function initChart(s){
     const ctx = document.getElementById("financeChart").getContext("2d");
-    if (window.myChart) window.myChart.destroy();
+    if(window.myChart) window.myChart.destroy();
     window.myChart = new Chart(ctx, {
       type: "doughnut",
       data: {
-        labels: ["Dépôts", "Retraits", "Dépenses", "Entretien"],
-        datasets: [{
-          data: [s.Depot, s.Retrait, s.Depense, s.Entretien],
-          backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#17a2b8"],
-          borderWidth: 0
-        }]
+        labels: ["Dépôts","Retraits","Dépenses","Entretien"],
+        datasets: [{ data:[s.Depot, s.Retrait, s.Depense, s.Entretien],
+                     backgroundColor:["#28a745","#dc3545","#ffc107","#17a2b8"],
+                     borderWidth:0 }]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: "bottom", labels: { color: "#888", font: { size: 10 } } }
-        }
-      }
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"bottom", labels:{ color:"#888", font:{ size:10 } } } } }
     });
   }
+
 </script>
 </body>
 </html>
