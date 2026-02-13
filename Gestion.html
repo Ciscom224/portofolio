@@ -7,8 +7,12 @@
   <title>EKIP | Management Dashboard</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
+    /* TON DESIGN RESTE IDENTIQUE A 100% */
     :root {
       --main-color: #ff004f;
       --bg-color: #080808;
@@ -314,7 +318,6 @@
             <label>Description / Détails</label>
             <input type="text" name="Description" placeholder="Ex: Recette course..." required />
           </div>
-          <input type="hidden" name="Date" id="current-date" />
           <button type="submit" class="btn" id="submit-btn" style="
                 width: 100%;
                 margin-top: 20px;
@@ -332,54 +335,168 @@
       </div>
     </section>
   </div>
+
 <script>
-  // Remplace par ton URL (vérifie qu'elle finit par /exec)
-  const scriptURL = "https://script.google.com/macros/s/AKfycbwJgpG6rqM5wkTqErS92IgXmyVMr07onehRxzbtR9Gp3Bzs68hZkJ7xbLtMQTpi953Usg/exec";
+  /* ================================
+     CONFIGURATION SUPABASE
+     COLLE TES CLÉS ICI 👇
+  ================================ */
+  const SUPABASE_URL = 'https://xsqdvitggbfhzrvkjjez.supabase.co'; 
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzcWR2aXRnZ2JmaHpydmtqamV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5Mzg5MTUsImV4cCI6MjA4NjUxNDkxNX0.aafH3na9KsrycP_gtYZgw9LGMfNqyvoOhVv5DuKZXZc';
+
+  // Initialisation du client
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
   let currentUser = null;
 
+  // Liste des utilisateurs autorisés (Login simplifié)
+  const USERS = {
+    "224Cisse@amdin": { name: "Mamadou", role: "admin" },
+    "lixfe@1820": { name: "Félix", role: "viewer" },
+    "manager@lekif2620": { name: "Gérante", role: "admin" },
+    "Badra@lekif2018": { name: "Badra", role: "viewer" },
+    "riaso@lekif.com": { name: "Soria", role: "viewer" }
+  };
+
   /* ================================
-   LOGIN
+   1. LOGIN (Vérification Locale)
   ================================ */
-  async function checkAccess() {
+  function checkAccess() {
     const passInput = document.getElementById("pass-input");
     const loginError = document.getElementById("login-error");
     const loginBtn = document.querySelector("#login-overlay .btn");
     
-    const code = encodeURIComponent(passInput.value);
+    // Nettoyage de l'entrée (espaces vides)
+    const code = passInput.value.trim();
 
     loginBtn.innerText = "Vérification...";
     loginBtn.disabled = true;
 
-    try {
-      // Fetch simple
-      const response = await fetch(`${scriptURL}?action=login&code=${code}`);
-      const result = await response.json();
-
-      if (result.success) {
-        currentUser = result.user;
-        document.getElementById("login-overlay").style.display = "none";
-        document.getElementById("user-display").innerText = `| Connecté : ${currentUser.name}`;
-        document.getElementById("form-auteur").value = currentUser.name;
-        
-        if (currentUser.role === "admin") {
-          document.getElementById("nav-add").style.display = "flex";
-        }
-        loadData();
-      } else {
-        loginError.style.display = "block";
-        loginBtn.innerText = "Se connecter";
-        loginBtn.disabled = false;
+    // Vérification directe dans l'objet USERS
+    if (USERS[code]) {
+      currentUser = USERS[code];
+      
+      // Mise à jour de l'interface
+      document.getElementById("login-overlay").style.display = "none";
+      document.getElementById("user-display").innerText = `| Connecté : ${currentUser.name}`;
+      document.getElementById("form-auteur").value = currentUser.name;
+      
+      // Afficher le bouton Ajouter si Admin
+      if (currentUser.role === "admin") {
+        document.getElementById("nav-add").style.display = "flex";
       }
-    } catch (error) {
-      console.error("Erreur login:", error);
-      alert("Erreur de connexion. Vérifiez que le script est déployé en 'Tout le monde'.");
+      
+      // Charger les données depuis Supabase
+      loadData();
+    } else {
+      loginError.style.display = "block";
       loginBtn.innerText = "Se connecter";
       loginBtn.disabled = false;
     }
   }
 
   /* ================================
-   TABS UI
+   2. CHARGEMENT DONNÉES (Supabase SELECT)
+  ================================ */
+  async function loadData() {
+    try {
+      // Requête Supabase : Lire la table 'transactions' triée par date
+      let { data: transactions, error } = await supabase
+        .from('transaction')
+        .select('*')
+        .order('date', { ascending: false });
+
+      if (error) throw error;
+
+      let solde = 0, moto = 0, recettes = 0;
+      let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
+      const tbody = document.getElementById("table-body");
+      let rowsHTML = "";
+
+      transactions.forEach(row => {
+        // Convertir le montant en nombre
+        const mnt = parseFloat(row.montant) || 0;
+        
+        // Calculs Financiers
+        if (row.type === "Depot") { solde += mnt; recettes += mnt; } 
+        else { solde -= mnt; }
+        
+        if (row.type === "Entretien") moto += mnt;
+        if (stats[row.type] !== undefined) stats[row.type] += mnt;
+
+        // Formatage de la date (Supabase envoie du format ISO)
+        const dateObj = new Date(row.date);
+        const dateFormatee = dateObj.toLocaleDateString("fr-FR");
+
+        rowsHTML += `<tr>
+            <td>${dateFormatee}</td>
+            <td>${row.auteur || "Inconnu"}</td>
+            <td><span class="badge" style="background:#222; color:var(--main-color)">${row.type}</span></td>
+            <td>${row.description}</td>
+            <td style="font-weight:bold; color:${row.type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
+          </tr>`;
+      });
+
+      tbody.innerHTML = rowsHTML;
+      document.getElementById("total-solde").innerText = solde.toLocaleString() + " GNF";
+      document.getElementById("total-moto").innerText = moto.toLocaleString() + " GNF";
+      document.getElementById("total-recettes").innerText = recettes.toLocaleString() + " GNF";
+      
+      initChart(stats);
+
+    } catch (error) {
+      console.error("Erreur Supabase:", error);
+      alert("Erreur de chargement des données. Vérifiez votre connexion.");
+    }
+  }
+
+  /* ================================
+   3. ENVOI DONNÉES (Supabase INSERT)
+  ================================ */
+  document.getElementById("finance-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById("submit-btn");
+    submitBtn.innerText = "Enregistrement...";
+    submitBtn.disabled = true;
+
+    const formData = new FormData(this);
+
+    // Construction de l'objet à envoyer
+    // Les clés correspondent aux colonnes de ta table Supabase
+    const transaction = {
+      date: new Date().toISOString(),
+      auteur: formData.get("Auteur"),
+      type: formData.get("Type"),
+      montant: parseFloat(formData.get("Montant")),
+      description: formData.get("Description")
+    };
+
+    try {
+      const { error } = await supabase
+        .from('transactions')
+        .insert([transaction]);
+
+      if (error) throw error;
+
+      alert("Opération réussie !");
+      this.reset();
+      // On remet l'auteur car le reset l'efface
+      document.getElementById("form-auteur").value = currentUser.name;
+      
+      // On recharge les données pour voir la nouvelle ligne
+      loadData(); 
+
+    } catch (error) {
+      console.error("Erreur Envoi:", error);
+      alert("Erreur lors de l'enregistrement : " + error.message);
+    } finally {
+      submitBtn.innerText = "Valider l'opération";
+      submitBtn.disabled = false;
+    }
+  });
+
+  /* ================================
+   4. INTERFACE (Tabs & Chart)
   ================================ */
   function openTab(evt, tabName) {
     const tabcontent = document.getElementsByClassName("tab-content");
@@ -390,89 +507,6 @@
     evt.currentTarget.classList.add("active");
   }
 
-  /* ================================
-   LOAD DATA
-  ================================ */
-  async function loadData() {
-    try {
-      // Pas de header, pas de mode cors, juste l'URL. Le navigateur gère le reste.
-      const response = await fetch(`${scriptURL}?action=read`);
-      
-      if (!response.ok) throw new Error("Réponse serveur invalide (Vérifiez le déploiement)");
-      
-      const data = await response.json();
-
-      let solde = 0, moto = 0, recettes = 0;
-      let stats = { Depot: 0, Retrait: 0, Depense: 0, Entretien: 0 };
-      const tbody = document.getElementById("table-body");
-      let rowsHTML = "";
-
-      // Inverser pour voir les derniers ajouts
-      data.reverse().forEach(row => {
-        const mnt = parseFloat(row.Montant) || 0;
-        
-        if (row.Type === "Depot") { solde += mnt; recettes += mnt; } 
-        else { solde -= mnt; }
-        
-        if (row.Type === "Entretien") moto += mnt;
-        if (stats[row.Type] !== undefined) stats[row.Type] += mnt;
-
-        const dateFormatee = row.Date ? new Date(row.Date).toLocaleDateString("fr-FR") : "N/A";
-        
-        rowsHTML += `<tr>
-            <td>${dateFormatee}</td>
-            <td>${row.Auteur || "Inconnu"}</td>
-            <td><span class="badge" style="background:#222; color:var(--main-color)">${row.Type}</span></td>
-            <td>${row.Description}</td>
-            <td style="font-weight:bold; color:${row.Type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
-          </tr>`;
-      });
-
-      tbody.innerHTML = rowsHTML;
-      document.getElementById("total-solde").innerText = solde.toLocaleString() + " GNF";
-      document.getElementById("total-moto").innerText = moto.toLocaleString() + " GNF";
-      document.getElementById("total-recettes").innerText = recettes.toLocaleString() + " GNF";
-      
-      initChart(stats);
-    } catch (error) {
-      console.error("Erreur chargement:", error);
-    }
-  }
-
-  /* ================================
-   FORM SUBMIT (POST) - SECURISE
-  ================================ */
-  document.getElementById("finance-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const submitBtn = document.getElementById("submit-btn");
-    submitBtn.innerText = "Enregistrement...";
-    submitBtn.disabled = true;
-
-    // ASTUCE CORS : Utiliser URLSearchParams au lieu de FormData brut
-    // Cela évite l'envoi d'une requête "OPTIONS" (Preflight) que Google déteste
-    const formData = new FormData(this);
-    const urlEncodedData = new URLSearchParams(formData);
-
-    fetch(scriptURL, {
-      method: "POST",
-      body: urlEncodedData, 
-    })
-    .then(response => response.json())
-    .then(() => {
-      alert("Opération réussie !");
-      location.reload(); 
-    })
-    .catch((error) => {
-      console.error("Erreur envoi:", error);
-      alert("Erreur lors de l'enregistrement");
-      submitBtn.innerText = "Valider l'opération";
-      submitBtn.disabled = false;
-    });
-  });
-
-  /* ================================
-   CHART
-  ================================ */
   function initChart(s) {
     const ctx = document.getElementById("financeChart").getContext("2d");
     if (window.myChart) window.myChart.destroy();
@@ -497,5 +531,4 @@
   }
 </script>
 </body>
-
 </html>
