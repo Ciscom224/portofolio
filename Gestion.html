@@ -333,6 +333,7 @@
     </section>
   </div>
 <script>
+  // Assurez-vous que cette URL finit bien par /exec
   const scriptURL = "https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
   let currentUser = null;
 
@@ -343,17 +344,19 @@
     const passInput = document.getElementById("pass-input");
     const loginError = document.getElementById("login-error");
     const loginBtn = document.querySelector("#login-overlay .btn");
-    const code = passInput.value;
+    
+    // On encode le mot de passe pour éviter les bugs avec les caractères spéciaux
+    const code = encodeURIComponent(passInput.value);
 
     loginBtn.innerText = "Vérification...";
     loginBtn.disabled = true;
 
     try {
-      // Pas besoin de proxy, on utilise redirect follow
-      const response = await fetch(`${scriptURL}?action=login&code=${encodeURIComponent(code)}`, {
-        method: "GET",
-        redirect: "follow"
-      });
+      // Fetch simple sans headers complexes
+      const response = await fetch(`${scriptURL}?action=login&code=${code}`);
+      
+      if (!response.ok) throw new Error("Erreur réseau");
+      
       const result = await response.json();
 
       if (result.success) {
@@ -373,13 +376,15 @@
       }
     } catch (error) {
       console.error("Erreur login:", error);
-      alert("Erreur réseau. Vérifiez votre connexion.");
+      // Si l'erreur persiste ici, c'est souvent le déploiement "Tout le monde" qui manque
+      alert("Impossible de connecter au serveur Google. Vérifiez le déploiement.");
+      loginBtn.innerText = "Se connecter";
       loginBtn.disabled = false;
     }
   }
 
   /* ================================
-   TABS GESTION
+   TABS & UI
   ================================ */
   function openTab(evt, tabName) {
     const tabcontent = document.getElementsByClassName("tab-content");
@@ -395,10 +400,7 @@
   ================================ */
   async function loadData() {
     try {
-      const response = await fetch(`${scriptURL}?action=read`, {
-        method: "GET",
-        redirect: "follow"
-      });
+      const response = await fetch(`${scriptURL}?action=read`);
       const data = await response.json();
 
       let solde = 0, moto = 0, recettes = 0;
@@ -406,13 +408,18 @@
       const tbody = document.getElementById("table-body");
       let rowsHTML = "";
 
+      // Inverser pour voir les derniers ajouts en premier
       data.reverse().forEach(row => {
         const mnt = parseFloat(row.Montant) || 0;
+        
+        // Calculs
         if (row.Type === "Depot") { solde += mnt; recettes += mnt; } 
         else { solde -= mnt; }
+        
         if (row.Type === "Entretien") moto += mnt;
         if (stats[row.Type] !== undefined) stats[row.Type] += mnt;
 
+        // Formatage date
         const dateFormatee = row.Date ? new Date(row.Date).toLocaleDateString("fr-FR") : "N/A";
         
         rowsHTML += `<tr>
@@ -420,7 +427,7 @@
             <td>${row.Auteur || "Inconnu"}</td>
             <td><span class="badge" style="background:#222; color:var(--main-color)">${row.Type}</span></td>
             <td>${row.Description}</td>
-            <td style="font-weight:bold; color:${row.Type === "Depot" ? "var(--success)" : "#fff"}">${mnt.toLocaleString()} GNF</td>
+            <td style="font-weight:bold; color:${row.Type === "Depot" ? "#28a745" : "#fff"}">${mnt.toLocaleString()} GNF</td>
           </tr>`;
       });
 
@@ -431,7 +438,7 @@
       
       initChart(stats);
     } catch (error) {
-      console.error("Erreur de chargement:", error);
+      console.error("Erreur chargement:", error);
     }
   }
 
@@ -444,23 +451,27 @@
     submitBtn.innerText = "Enregistrement...";
     submitBtn.disabled = true;
 
-    // Utilisation de FormData pour éviter les problèmes de format
+    // Utilisation de URLSearchParams pour envoyer comme un formulaire standard HTML
+    // C'est ce qui permet d'éviter le "Preflight CORS"
     const formData = new FormData(this);
+    const data = new URLSearchParams();
+    for (const pair of formData) {
+        data.append(pair[0], pair[1]);
+    }
 
     fetch(scriptURL, {
       method: "POST",
-      body: new URLSearchParams(formData),
+      body: data,
     })
+    .then(response => response.json())
     .then(() => {
       alert("Opération réussie !");
-      this.reset();
-      submitBtn.innerText = "Valider l'opération";
-      submitBtn.disabled = false;
-      loadData();
+      location.reload(); 
     })
     .catch((error) => {
       console.error("Erreur envoi:", error);
       alert("Erreur lors de l'enregistrement");
+      submitBtn.innerText = "Valider l'opération";
       submitBtn.disabled = false;
     });
   });
@@ -491,7 +502,6 @@
     });
   }
 </script>
-  
 </body>
 
 </html>
