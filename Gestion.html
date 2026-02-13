@@ -333,8 +333,8 @@
     </section>
   </div>
 <script>
-  // Assurez-vous que cette URL finit bien par /exec
-  const scriptURL = "https://script.google.com/macros/s/AKfycbwsEN2MpRU4IyPqZECAY_HCnt-Goc9RsHK0HL-tl3Sx-K_QhW21Xc2YtvgKDaKvZMok/exec";
+  // Remplace par ton URL (vérifie qu'elle finit par /exec)
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwJgpG6rqM5wkTqErS92IgXmyVMr07onehRxzbtR9Gp3Bzs68hZkJ7xbLtMQTpi953Usg/exec";
   let currentUser = null;
 
   /* ================================
@@ -345,18 +345,14 @@
     const loginError = document.getElementById("login-error");
     const loginBtn = document.querySelector("#login-overlay .btn");
     
-    // On encode le mot de passe pour éviter les bugs avec les caractères spéciaux
     const code = encodeURIComponent(passInput.value);
 
     loginBtn.innerText = "Vérification...";
     loginBtn.disabled = true;
 
     try {
-      // Fetch simple sans headers complexes
+      // Fetch simple
       const response = await fetch(`${scriptURL}?action=login&code=${code}`);
-      
-      if (!response.ok) throw new Error("Erreur réseau");
-      
       const result = await response.json();
 
       if (result.success) {
@@ -376,15 +372,14 @@
       }
     } catch (error) {
       console.error("Erreur login:", error);
-      // Si l'erreur persiste ici, c'est souvent le déploiement "Tout le monde" qui manque
-      alert("Impossible de connecter au serveur Google. Vérifiez le déploiement.");
+      alert("Erreur de connexion. Vérifiez que le script est déployé en 'Tout le monde'.");
       loginBtn.innerText = "Se connecter";
       loginBtn.disabled = false;
     }
   }
 
   /* ================================
-   TABS & UI
+   TABS UI
   ================================ */
   function openTab(evt, tabName) {
     const tabcontent = document.getElementsByClassName("tab-content");
@@ -400,7 +395,11 @@
   ================================ */
   async function loadData() {
     try {
+      // Pas de header, pas de mode cors, juste l'URL. Le navigateur gère le reste.
       const response = await fetch(`${scriptURL}?action=read`);
+      
+      if (!response.ok) throw new Error("Réponse serveur invalide (Vérifiez le déploiement)");
+      
       const data = await response.json();
 
       let solde = 0, moto = 0, recettes = 0;
@@ -408,18 +407,16 @@
       const tbody = document.getElementById("table-body");
       let rowsHTML = "";
 
-      // Inverser pour voir les derniers ajouts en premier
+      // Inverser pour voir les derniers ajouts
       data.reverse().forEach(row => {
         const mnt = parseFloat(row.Montant) || 0;
         
-        // Calculs
         if (row.Type === "Depot") { solde += mnt; recettes += mnt; } 
         else { solde -= mnt; }
         
         if (row.Type === "Entretien") moto += mnt;
         if (stats[row.Type] !== undefined) stats[row.Type] += mnt;
 
-        // Formatage date
         const dateFormatee = row.Date ? new Date(row.Date).toLocaleDateString("fr-FR") : "N/A";
         
         rowsHTML += `<tr>
@@ -443,7 +440,7 @@
   }
 
   /* ================================
-   FORM SUBMIT (POST)
+   FORM SUBMIT (POST) - SECURISE
   ================================ */
   document.getElementById("finance-form").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -451,17 +448,14 @@
     submitBtn.innerText = "Enregistrement...";
     submitBtn.disabled = true;
 
-    // Utilisation de URLSearchParams pour envoyer comme un formulaire standard HTML
-    // C'est ce qui permet d'éviter le "Preflight CORS"
+    // ASTUCE CORS : Utiliser URLSearchParams au lieu de FormData brut
+    // Cela évite l'envoi d'une requête "OPTIONS" (Preflight) que Google déteste
     const formData = new FormData(this);
-    const data = new URLSearchParams();
-    for (const pair of formData) {
-        data.append(pair[0], pair[1]);
-    }
+    const urlEncodedData = new URLSearchParams(formData);
 
     fetch(scriptURL, {
       method: "POST",
-      body: data,
+      body: urlEncodedData, 
     })
     .then(response => response.json())
     .then(() => {
