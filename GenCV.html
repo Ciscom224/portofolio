@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de Candidature - Mamadou Cissé</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    .panel {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .controls { flex: 1; max-width: 450px; overflow-y: auto; }
+    .preview { flex: 2; background: #e2e8f0; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center;}
+    
+    h3 { margin-top: 0; color: var(--text); border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+    label { font-weight: 600; font-size: 13px; margin-top: 15px; display: block; color: #475569; }
+    textarea, input, select {
+      width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1;
+      border-radius: 6px; box-sizing: border-box; font-family: inherit; transition: border-color 0.2s;
+    }
+    textarea:focus, input:focus, select:focus { border-color: var(--primary); outline: none; }
+    
+    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+    button {
+      flex: 1; background-color: var(--primary); color: white; border: none;
+      padding: 12px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: opacity 0.2s;
+    }
+    button:hover { opacity: 0.9; }
+    .btn-success { background-color: var(--success); }
+
+    .view-switcher {
+      display: flex; gap: 10px; margin-bottom: 20px; width: 210mm;
+    }
+    .view-btn {
+      background: white; color: var(--text); border: 1px solid #cbd5e1;
+    }
+    .view-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .a4-page {
+      background: white; width: 210mm; min-height: 297mm; box-sizing: border-box;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
+      padding: 30px 40px; /* Marges réduites pour tout faire tenir */
+      position: relative;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+
+    .header { border-bottom: 3px solid var(--primary); padding-bottom: 12px; margin-bottom: 12px; }
+    .header h1 { margin: 0; font-size: 26px; color: var(--text); letter-spacing: 1px;}
+    .header h2 { margin: 4px 0 0 0; font-size: 17px; color: var(--primary); font-weight: 600; }
+    .contact-info { font-size: 12px; color: #64748b; margin-top: 6px; }
+    
+    .section-title { font-size: 15px; color: var(--primary); border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-top: 15px; text-transform: uppercase; font-weight: bold; }
+    .about-text { font-size: 12px; line-height: 1.5; text-align: justify; color: #334155; margin-bottom: 5px; }
+    
+    /* Grille principale */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 10px; }
+    
+    ul { padding-left: 20px; margin: 6px 0; font-size: 12px; color: #334155; }
+    li { margin-bottom: 5px; line-height: 1.4; }
+    .exp-item { margin-bottom: 12px; }
+    .exp-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; color: var(--text); }
+    .exp-company { font-style: italic; color: var(--primary); font-size: 12px; margin-bottom: 4px; font-weight: 600;}
+    .highlight { background-color: #fef08a; font-weight: bold; padding: 0 2px; border-radius: 2px; }
+
+    /* NOUVEAU : Style pour les projets en pleine largeur */
+    .project-item { margin-bottom: 10px; }
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-left: 3px solid var(--primary);
+      padding-left: 8px;
+      margin-bottom: 4px;
+    }
+    .project-title { font-weight: bold; font-size: 13px; color: var(--text); }
+    .project-tech { font-size: 11px; color: var(--primary); font-weight: bold; }
+    .project-list { margin-top: 2px; margin-bottom: 0; }
+
+    /* Footer QR Code */
+    .cv-footer {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .cv-footer-text { font-size: 10px; color: #64748b; margin-bottom: 4px; }
+    #qrcode { display: flex; justify-content: center; }
+
+    /* Style spécifique Lettre de Motivation */
+    #lm-container { display: none; font-size: 13px; line-height: 1.6; color: #1e293b; }
+    .lm-header-sender { margin-bottom: 25px; }
+    .lm-header-recipient { text-align: right; margin-bottom: 25px; font-weight: bold; }
+    .lm-date { text-align: right; margin-bottom: 25px; font-style: italic; }
+    .lm-subject { font-weight: bold; margin-bottom: 25px; }
+    .lm-body p { margin-bottom: 15px; text-align: justify; }
+    .lm-signature { margin-top: 30px; text-align: right; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="panel controls">
+    <h3>Configuration Candidature</h3>
+    
+    <label for="profileSelect">1. Spécialité du Profil</label>
+    <select id="profileSelect" onchange="loadProfile()">
+      <option value="engineer">Data Engineer / Big Data</option>
+      <option value="scientist">Data Scientist / IA Engineer</option>
+      <option value="analyst">Data Analyst / BI Analyst</option>
+    </select>
+
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label for="companyName">2. Entreprise cible</label>
+        <input type="text" id="companyName" placeholder="Ex: Thales, LVMH..." oninput="updateCoverLetter()">
+      </div>
+      <div style="flex: 1;">
+        <label for="recruiterName">3. Recruteur (Optionnel)</label>
+        <input type="text" id="recruiterName" placeholder="Mme/M. Dupont" oninput="updateCoverLetter()">
+      </div>
+    </div>
+
+    <label for="jobTitle">4. Titre de l'offre</label>
+    <input type="text" id="jobTitle" oninput="updateTitle()">
+    
+    <label for="jobDesc">5. Description de l'offre (Optionnel)</label>
+    <textarea id="jobDesc" rows="4" placeholder="Collez le texte pour vérifier le matching..."></textarea>
+    
+    <div class="btn-group">
+      <button onclick="analyzeAndHighlight()">🔍 Analyser CV</button>
+      <button class="btn-success" onclick="generatePDF()">📥 Exporter PDF</button>
+    </div>
+
+    <div id="analysis-card" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0;">
+      <h4 style="margin: 0 0 10px 0;">Score CV : <span id="score-text">0%</span></h4>
+      <div style="background: #e2e8f0; border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 10px;">
+        <div id="score-bar" style="height: 100%; width: 0%; background-color: var(--primary);"></div>
+      </div>
+      <div id="found-keywords" style="margin-bottom: 5px;"></div>
+      <div id="missed-keywords"></div>
+    </div>
+  </div>
+
+  <div class="panel preview">
+    
+    <div class="view-switcher">
+      <button id="btn-cv" class="view-btn active" onclick="switchView('cv')">📄 Voir le CV</button>
+      <button id="btn-lm" class="view-btn" onclick="switchView('lm')">✉️ Voir la Lettre de Motivation</button>
+    </div>
+
+    <div id="cv-container" class="a4-page">
+      <div>
+        <div class="header">
+          <h1>Mamadou CISSÉ</h1>
+          <h2 id="cv-title"></h2>
+          <div class="contact-info">📍 Île-de-France | ✉️ mamadouciss224e@gmail.com | 🎓 Étudiant en M2 DataScale</div>
+        </div>
+        
+        <h3 class="section-title">Profil</h3>
+        <p class="about-text" id="cv-profil"></p>
+        
+        <div class="grid-2">
+          <div>
+            <h3 class="section-title">Compétences Techniques</h3>
+            <ul id="cv-skills"></ul>
+            
+            <h3 class="section-title">Formation Académique</h3>
+            <ul>
+              <li><strong>2026 (En cours)</strong><br>Master 2 DataScale (Big Data & IA)<br><em>Université Paris-Saclay</em></li>
+              <li><strong>2023</strong><br>Master Bio-informatique & Data Science<br><em>ENSA Tanger, Maroc</em></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="section-title">Expériences Professionnelles</h3>
+            <div id="cv-experiences"></div>
+          </div>
+        </div>
+
+        <h3 class="section-title" style="margin-top: 5px;">Projets Académiques & Architectures</h3>
+        <div id="cv-projects"></div>
+      </div>
+      
+      <div class="cv-footer">
+        <span class="cv-footer-text">Découvrez l'intégralité de mes projets et dashboards sur mon portfolio interactif :</span>
+        <div id="qrcode"></div>
+        <span class="cv-footer-text" style="margin-top: 4px; font-weight: bold;">ciscom224.github.io/portofolio</span>
+      </div>
+    </div>
+
+    <div id="lm-container" class="a4-page">
+      <div class="lm-header-sender">
+        <strong>Mamadou CISSÉ</strong><br>
+        Île-de-France<br>
+        mamadouciss224e@gmail.com<br>
+        Portfolio : ciscom224.github.io/portofolio
+      </div>
+      
+      <div class="lm-header-recipient" id="lm-recipient">
+        À l'attention de l'équipe recrutement<br>
+        [Entreprise]
+      </div>
+
+      <div class="lm-date" id="lm-date"></div>
+
+      <div class="lm-subject">Objet : Candidature au poste de <span id="lm-subject-title"></span> (Stage 6 mois)</div>
+
+      <div class="lm-body">
+        <p id="lm-salutation">Madame, Monsieur,</p>
+        
+        <p>Actuellement étudiant en dernière année du Master DataScale (Ingénierie des Données et Big Data) à l'Université Paris-Saclay, je suis à la recherche d'un stage de fin d'études de 6 mois à partir d'avril 2026. Souhaitant évoluer dans un environnement technique exigeant, j'aimerais mettre mon expertise en traitement de données au service des équipes de <strong class="lm-company-name">[Entreprise]</strong>.</p>
+        
+        <p id="lm-specialty-paragraph"></p>
+        
+        <p>Au-delà de ma maîtrise technique, je suis reconnu pour ma rigueur scientifique, ma capacité à vulgariser des concepts complexes et mon esprit d'équipe. Rejoindre <strong class="lm-company-name">[Entreprise]</strong> représente pour moi l'opportunité de collaborer sur des problématiques à forte valeur ajoutée, tout en vous apportant mon dynamisme et ma capacité d'adaptation.</p>
+        
+        <p>Je me tiens à votre entière disposition pour un entretien afin d'échanger plus en détail sur la manière dont mon profil répond à vos besoins. Dans cette attente, je vous prie d'agréer, <span id="lm-salutation-end">Madame, Monsieur</span>, l'expression de mes salutations distinguées.</p>
+      </div>
+
+      <div class="lm-signature">
+        Mamadou CISSÉ
+      </div>
+    </div>
+
+  </div>
+
+<script>
+const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+document.getElementById('lm-date').innerText = "Fait à Paris, le " + new Date().toLocaleDateString('fr-FR', dateOptions);
+
+let currentView = 'cv';
+let qrCodeInstance = null; 
+
+// --- DONNÉES DES PROJETS (Pleins largeur) ---
+const allProjectsData = `
+  <div class="project-item cv-exp">
+    <div class="project-header">
+      <span class="project-title">Analyse Financière Temps Réel</span>
+      <span class="project-tech">Kafka, Spark, Elasticsearch, Kibana | 2026</span>
+    </div>
+    <ul class="project-list">
+      <li><strong>Data Pipeline (ETL) :</strong> Mise en place d’une architecture de streaming pour collecter des données à haute fréquence.</li>
+      <li><strong>Processing & Dataviz :</strong> Calcul d’indicateurs financiers en temps réel (Spark) et exploration dynamique via Kibana.</li>
+    </ul>
+  </div>
+
+  <div class="project-item cv-exp">
+    <div class="project-header">
+      <span class="project-title">Smart Grid Graph RAG Architecture</span>
+      <span class="project-tech">Neo4j, GPT-4, LangChain | 2026</span>
+    </div>
+    <ul class="project-list">
+      <li><strong>GenAI :</strong> Développement d’une architecture RAG couplant graphes de connaissances (Neo4j) et LLM.</li>
+      <li><strong>Impact :</strong> Réduction drastique des hallucinations grâce à l’ancrage dans les données réelles et structurées du réseau.</li>
+    </ul>
+  </div>
+
+  <div class="project-item cv-exp" style="margin-bottom:0;">
+    <div class="project-header">
+      <span class="project-title">Fine-tuning & Benchmarking de Modèles QA</span>
+      <span class="project-tech">Transformers, Hugging Face, Python | 2026</span>
+    </div>
+    <ul class="project-list">
+      <li><strong>NLP & Évaluation :</strong> Entraînement de 3 architectures, évaluation des performances via métriques standards (F1-score, ROC).</li>
+      <li><strong>Déploiement :</strong> Mise en production du meilleur modèle via une interface utilisateur sur Hugging Face Spaces.</li>
+    </ul>
+  </div>
+`;
+
+// --- DONNÉES DES PROFILS ---
+const profilesData = {
+  engineer: {
+    title: "Data Engineer / Architecte Big Data (Stage 6 mois)",
+    profil: "Étudiant en M2 DataScale (Université Paris-Saclay), je conçois des architectures Big Data robustes et scalables. Fort d'une expérience de traitement de données massives (+1 TB/jour), je maîtrise l'écosystème Hadoop/Spark, les pipelines ETL/ELT et le streaming temps réel. Orienté résultats, j'industrialise les modèles d'IA pour fiabiliser la donnée.",
+    skills: `
+      <li><strong>Big Data & Cloud :</strong> PySpark, Kafka, Hadoop, GCP.</li>
+      <li><strong>Architecture :</strong> Docker, CI/CD, SQL, Microservices.</li>
+      <li><strong>Pipelines de Données :</strong> Architecture ETL/ELT, Indexation (Elasticsearch).</li>`,
+    experiences: `
+      <div class="exp-item"><div class="exp-header"><span>Data Engineer (Stage)</span><span>2023</span></div><ul class="cv-exp"><li>Ingestion IoT (+1 TB/jour) via PySpark et Hadoop.</li><li>Industrialisation MLOps (Docker, API) des flux.</li></ul></div>
+      <div class="exp-item"><div class="exp-header"><span>Analyste de Données</span><span>2022</span></div><ul class="cv-exp"><li>Nettoyage et structuration via pipelines ETL Python.</li><li>Mise en place de contrôles de qualité automatisés.</li></ul></div>`,
+    projects: allProjectsData, // On injecte le bloc complet pour tout le monde
+    lmParagraph: "Fort de 6 mois d'expérience pratique au sein du groupe OCP où j'ai conçu des pipelines d'ingestion de flux massifs (+1 TB/jour) via PySpark sur des environnements Hadoop, j'ai développé une solide expertise dans la construction d'architectures de données. Qu'il s'agisse de streaming temps réel (Kafka), d'architectures Cloud (GCP) ou d'industrialisation ETL/ELT, je suis prêt à m'investir pour optimiser vos infrastructures."
+  },
+  scientist: {
+    title: "Data Scientist / Ingénieur IA (Stage 6 mois)",
+    profil: "Étudiant en M2 DataScale (Université Paris-Saclay), je conçois des modèles prédictifs et des solutions d'IA performantes. Combinant mathématiques appliquées et maîtrise des architectures complexes (Graph RAG, Transformers, ETL), j'interviens sur tout le cycle de la donnée pour créer de la valeur métier.",
+    skills: `
+      <li><strong>Machine Learning :</strong> Python (Scikit-learn, PyTorch), LSTM.</li>
+      <li><strong>GenAI & NLP :</strong> Graph RAG, LangChain, Neo4j, Hugging Face.</li>
+      <li><strong>Cloud & MLOps :</strong> Déploiement d'API, Cloud GCP, pipelines ETL/ELT.</li>`,
+    experiences: `
+      <div class="exp-item"><div class="exp-header"><span>Data Scientist (Stage)</span><span>2023</span></div><ul class="cv-exp"><li>Modèles de maintenance prédictive (LSTM) à 94% de précision.</li><li>Anticipation fine des pannes industrielles historiques.</li></ul></div>
+      <div class="exp-item"><div class="exp-header"><span>Analyste Données</span><span>2022</span></div><ul class="cv-exp"><li>Modélisation et analyse statistique sur données complexes.</li></ul></div>`,
+    projects: allProjectsData,
+    lmParagraph: "Mon parcours, alliant mathématiques appliquées et ingénierie de la donnée, m'a permis de développer une expertise forte en Machine Learning et en IA générative. Lors de ma précédente expérience, j'ai conçu et mis en production des modèles prédictifs complexes ayant permis d'anticiper des pannes industrielles critiques. Fortement impliqué sur les sujets de NLP, de Fine-Tuning de Transformers et d'architectures RAG, je souhaite concevoir pour vous des algorithmes innovants."
+  },
+  analyst: {
+    title: "Data Analyst / BI Analyst (Stage 6 mois)",
+    profil: "Étudiant en M2 DataScale (Université Paris-Saclay) avec un profil analytique pointu (ex-Bio-informatique), je transforme des données brutes en informations stratégiques. Rigoureux, je maîtrise l'extraction complexe (SQL), la préparation (ETL, GCP) et la restitution visuelle (Power BI). Mon objectif : éclairer vos prises de décision.",
+    skills: `
+      <li><strong>Analyse & Cloud :</strong> SQL avancé, Python (Pandas), Cloud GCP.</li>
+      <li><strong>Dataviz :</strong> Power BI, Kibana.</li>
+      <li><strong>Modélisation :</strong> Conception ETL/ELT, KPIs, Data Storytelling.</li>`,
+    experiences: `
+      <div class="exp-item">
+        <div class="exp-header"><span>Analyste BI & Données (Stage)</span><span>Jan - Juin 2023</span></div>
+        <ul class="cv-exp">
+          <li>Création de tableaux de bord interactifs sur Power BI et suivi de KPIs de performance.</li>
+          <li>Automatisation des reportings hebdomadaires.</li>
+        </ul>
+      </div>
+      <div class="exp-item">
+        <div class="exp-header"><span>Analyste Bio-Statistiques</span><span>Mars - Août 2022</span></div>
+        <ul class="cv-exp">
+          <li>Analyse statistique et vulgarisation de données.</li>
+        </ul>
+      </div>`,
+    projects: allProjectsData,
+    lmParagraph: "Issu d'une formation exigeante croisant l'informatique et l'analyse statistique, je suis passionné par l'art de faire parler les données. Lors de mes précédentes missions, j'ai transformé des données brutes hétérogènes en tableaux de bord décisionnels interactifs clairs. Maîtrisant le requêtage SQL complexe, la structuration via ETL et la restitution via Power BI, je souhaite vous accompagner activement dans le suivi de vos KPIs et l'extraction d'insights stratégiques."
+  }
+};
+
+window.onload = function() { 
+  loadProfile(); 
+  
+  // Génération du QR Code
+  qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
+    text: "https://ciscom224.github.io/portofolio/",
+    width: 60,  // Taille ajustée pour le bas de page
+    height: 60,
+    colorDark : "#1e293b",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.L
+  });
+};
+
+function switchView(view) {
+  currentView = view;
+  document.getElementById('btn-cv').classList.toggle('active', view === 'cv');
+  document.getElementById('btn-lm').classList.toggle('active', view === 'lm');
+  document.getElementById('cv-container').style.display = view === 'cv' ? 'flex' : 'none';
+  document.getElementById('lm-container').style.display = view === 'lm' ? 'block' : 'none';
+}
+
+function loadProfile() {
+  const profileKey = document.getElementById('profileSelect').value;
+  const data = profilesData[profileKey];
+
+  document.getElementById('jobTitle').value = data.title;
+  
+  document.getElementById('cv-title').innerText = data.title;
+  document.getElementById('cv-profil').innerText = data.profil;
+  document.getElementById('cv-skills').innerHTML = data.skills;
+  document.getElementById('cv-experiences').innerHTML = data.experiences;
+  document.getElementById('cv-projects').innerHTML = data.projects;
+  
+  document.getElementById('lm-subject-title').innerText = data.title;
+  document.getElementById('lm-specialty-paragraph').innerText = data.lmParagraph;
+
+  updateCoverLetter();
+}
+
+function updateTitle() {
+  const title = document.getElementById('jobTitle').value;
+  document.getElementById('cv-title').innerText = title;
+  document.getElementById('lm-subject-title').innerText = title;
+}
+
+function updateCoverLetter() {
+  const company = document.getElementById('companyName').value || "[Entreprise]";
+  const recruiter = document.getElementById('recruiterName').value;
+
+  const elements = document.querySelectorAll('.lm-company-name');
+  elements.forEach(el => el.innerText = company);
+
+  const recipientDiv = document.getElementById('lm-recipient');
+  const salutation = document.getElementById('lm-salutation');
+  const salutationEnd = document.getElementById('lm-salutation-end');
+
+  if(recruiter) {
+    recipientDiv.innerHTML = `À l'attention de ${recruiter}<br><strong>${company}</strong>`;
+    salutation.innerText = `Bonjour ${recruiter},`;
+    salutationEnd.innerText = `Bonjour ${recruiter}`;
+  } else {
+    recipientDiv.innerHTML = `À l'attention de l'équipe recrutement<br><strong>${company}</strong>`;
+    salutation.innerText = `Madame, Monsieur,`;
+    salutationEnd.innerText = `Madame, Monsieur`;
+  }
+}
+
+function generatePDF() {
+  const containerId = currentView === 'cv' ? 'cv-container' : 'lm-container';
+  const container = document.getElementById(containerId);
+  const prefix = currentView === 'cv' ? 'CV_' : 'LM_';
+  const company = document.getElementById('companyName').value.replace(/\s+/g, '_') || 'Entreprise';
+  const filename = `${prefix}Mamadou_CISSE_${company}.pdf`;
+
+  // Suppression temporaire des tags jaunes pour un PDF propre
+  const originalHTML = container.innerHTML;
+  if(currentView === 'cv') {
+      container.innerHTML = container.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/gi, '<strong>$1</strong>');
+  }
+
+  const opt = {
+    margin: 0,
+    filename: filename,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true }, 
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  const btn = document.querySelector('.btn-success');
+  const originalText = btn.innerText;
+  btn.innerText = "⏳ Génération...";
+
+  html2pdf().set(opt).from(container).save().then(() => {
+    container.innerHTML = originalHTML; // Restauration des tags
+    btn.innerText = originalText;
+  });
+}
+
+function normalizeText(text) { return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function analyzeAndHighlight() {
+  switchView('cv'); 
+  const rawJobDesc = document.getElementById('jobDesc').value;
+  if (!rawJobDesc.trim()) { alert("Collez une offre d'emploi pour l'analyse."); return; }
+
+  const jobDesc = normalizeText(rawJobDesc);
+const keywordsMap = {
+    // 1. Langages & Fondamentaux
+    "python": ["python", "pandas", "numpy", "matplotlib", "seaborn"],
+    "sql": ["sql", "postgres", "mysql", "nosql", "bigquery"],
+
+    // 2. Développement & Ingénierie Logicielle
+    "dev logiciel": ["developpement logiciel", "software engineering", "poo", "api", "rest", "fastapi", "clean code"],
+    "versioning & ci/cd": ["git", "github", "gitlab", "ci/cd", "devops"],
+    "docker": ["docker", "kubernetes", "container"],
+
+    // 3. Cloud Computing
+    "azure": ["azure", "microsoft azure", "azure data factory", "adf", "synapse"],
+    "gcp": ["gcp", "google cloud", "cloud"],
+    "aws": ["aws", "amazon web services"],
+
+    // 4. Big Data, Calcul Distribué & ETL
+    "calcul distribue": ["spark", "pyspark", "databricks", "calcul distribue", "hadoop", "hdfs"],
+    "streaming": ["kafka", "streaming", "temps reel", "real-time"],
+    "etl & pipelines": ["etl", "elt", "pipeline", "data engineering", "airflow", "dbt"],
+
+    // 5. Data Science, Stats & Analyse
+    "data science": ["data science", "analyse de donnees", "series temporelles", "time series"],
+    "statistiques": ["statistiques", "modelisation statistique", "tests statistiques", "a/b testing"],
+    "machine learning": ["machine learning", "ml", "predictif", "scikit-learn", "pytorch", "algorithmes"],
+
+    // 6. IA & IA Générative
+    "ia & genai": ["ia generative", "generative ai", "genai", "llm", "intelligence artificielle", "nlp", "hugging face", "transformers"],
+    "rag": ["rag", "langchain", "neo4j", "vector search"],
+
+    // 7. Data Visualization & Business Intelligence
+    "dataviz": ["dataviz", "visualisation", "power bi", "tableau", "dashboard", "reporting", "kpi", "kibana"]
+  };
+
+  let matchedKeywords = [];
+  Object.keys(keywordsMap).forEach(key => {
+    if (keywordsMap[key].some(v => new RegExp('\\b' + escapeRegExp(v) + '\\b').test(jobDesc))) matchedKeywords.push(key);
+  });
+
+  const cvText = normalizeText(document.getElementById('cv-container').innerText);
+  let matchedInCV = matchedKeywords.filter(kw => keywordsMap[kw].some(v => new RegExp('\\b' + escapeRegExp(v) + '\\b').test(cvText)));
+  let suggestions = matchedKeywords.filter(kw => !matchedInCV.includes(kw));
+  const score = matchedKeywords.length === 0 ? 0 : (matchedInCV.length / matchedKeywords.length) * 100;
+
+  loadProfile(); 
+  
+  // Surligner le texte partout dans le CV (y compris les nouveaux blocs projets complets)
+  ['cv-profil', 'cv-skills', 'cv-projects', 'cv-experiences'].forEach(id => {
+    let el = document.getElementById(id);
+    if (!el) return;
+    let text = el.innerHTML;
+    matchedKeywords.forEach(kw => {
+      keywordsMap[kw].forEach(v => { text = text.replace(new RegExp('(\\b' + escapeRegExp(v) + '\\b)', 'gi'), '<span class="highlight">$1</span>'); });
+    });
+    el.innerHTML = text;
+  });
+
+  const card = document.getElementById('analysis-card');
+  card.style.display = 'block';
+  document.getElementById('score-text').innerText = `${score.toFixed(0)}%`;
+  document.getElementById('score-bar').style.width = `${score}%`;
+  document.getElementById('found-keywords').innerHTML = `<span style="font-size:12px">Détecté : ${matchedInCV.join(', ') || 'Aucun'}</span>`;
+  document.getElementById('missed-keywords').innerHTML = `<span style="font-size:12px; color:red">Manquant : ${suggestions.join(', ') || 'Aucun'}</span>`;
+}
+</script>
+</body>
+</html>
