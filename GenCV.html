@@ -64,7 +64,7 @@
     .a4-page {
       background: white; width: 210mm; min-height: 297mm; box-sizing: border-box;
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
-      padding: 30px 40px; /* Marges réduites pour tout faire tenir */
+      padding: 30px 40px; 
       position: relative;
       display: flex; flex-direction: column; justify-content: space-between;
     }
@@ -77,7 +77,6 @@
     .section-title { font-size: 15px; color: var(--primary); border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-top: 15px; text-transform: uppercase; font-weight: bold; }
     .about-text { font-size: 12px; line-height: 1.5; text-align: justify; color: #334155; margin-bottom: 5px; }
     
-    /* Grille principale */
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 10px; }
     
     ul { padding-left: 20px; margin: 6px 0; font-size: 12px; color: #334155; }
@@ -87,7 +86,6 @@
     .exp-company { font-style: italic; color: var(--primary); font-size: 12px; margin-bottom: 4px; font-weight: 600;}
     .highlight { background-color: #fef08a; font-weight: bold; padding: 0 2px; border-radius: 2px; }
 
-    /* NOUVEAU : Style pour les projets en pleine largeur */
     .project-item { margin-bottom: 10px; }
     .project-header {
       display: flex;
@@ -101,7 +99,6 @@
     .project-tech { font-size: 11px; color: var(--primary); font-weight: bold; }
     .project-list { margin-top: 2px; margin-bottom: 0; }
 
-    /* Footer QR Code */
     .cv-footer {
       margin-top: 10px;
       padding-top: 8px;
@@ -114,7 +111,6 @@
     .cv-footer-text { font-size: 10px; color: #64748b; margin-bottom: 4px; }
     #qrcode { display: flex; justify-content: center; }
 
-    /* Style spécifique Lettre de Motivation */
     #lm-container { display: none; font-size: 13px; line-height: 1.6; color: #1e293b; }
     .lm-header-sender { margin-bottom: 25px; }
     .lm-header-recipient { text-align: right; margin-bottom: 25px; font-weight: bold; }
@@ -257,7 +253,6 @@ document.getElementById('lm-date').innerText = "Fait à Paris, le " + new Date()
 let currentView = 'cv';
 let qrCodeInstance = null; 
 
-// --- DONNÉES DES PROJETS (Pleins largeur) ---
 const allProjectsData = `
   <div class="project-item cv-exp">
     <div class="project-header">
@@ -283,29 +278,35 @@ const allProjectsData = `
 
   <div class="project-item cv-exp" style="margin-bottom:0;">
     <div class="project-header">
-      <span class="project-title">Fine-tuning & Benchmarking de Modèles QA</span>
+      <span class="project-title">Fine-tuning & Benchmarking QA</span>
       <span class="project-tech">Transformers, Hugging Face, Python | 2026</span>
     </div>
     <ul class="project-list">
-      <li><strong>NLP & Évaluation :</strong> Entraînement de 3 architectures, évaluation des performances via métriques standards (F1-score, ROC).</li>
-      <li><strong>Déploiement :</strong> Mise en production du meilleur modèle via une interface utilisateur sur Hugging Face Spaces.</li>
+      <li><strong>NLP & Évaluation :</strong> Entraînement de 3 architectures, évaluation via métriques standards (F1-score, ROC).</li>
+      <li><strong>Déploiement :</strong> Mise en production via une interface utilisateur sur Hugging Face Spaces.</li>
     </ul>
   </div>
 `;
-
-// --- DONNÉES DES PROFILS ---
 const profilesData = {
   engineer: {
     title: "Data Engineer / Architecte Big Data (Stage 6 mois)",
     profil: "Étudiant en M2 DataScale (Université Paris-Saclay), je conçois des architectures Big Data robustes et scalables. Fort d'une expérience de traitement de données massives (+1 TB/jour), je maîtrise l'écosystème Hadoop/Spark, les pipelines ETL/ELT et le streaming temps réel. Orienté résultats, j'industrialise les modèles d'IA pour fiabiliser la donnée.",
     skills: `
       <li><strong>Big Data & Cloud :</strong> PySpark, Kafka, Hadoop, GCP.</li>
-      <li><strong>Architecture :</strong> Docker, CI/CD, SQL, Microservices.</li>
+      <li><strong>Architecture & Outils :</strong> Docker, CI/CD, SQL, Microservices, Git/GitHub, Jira.</li>
       <li><strong>Pipelines de Données :</strong> Architecture ETL/ELT, Indexation (Elasticsearch).</li>`,
     experiences: `
-      <div class="exp-item"><div class="exp-header"><span>Data Engineer (Stage)</span><span>2023</span></div><ul class="cv-exp"><li>Ingestion IoT (+1 TB/jour) via PySpark et Hadoop.</li><li>Industrialisation MLOps (Docker, API) des flux.</li></ul></div>
-      <div class="exp-item"><div class="exp-header"><span>Analyste de Données</span><span>2022</span></div><ul class="cv-exp"><li>Nettoyage et structuration via pipelines ETL Python.</li><li>Mise en place de contrôles de qualité automatisés.</li></ul></div>`,
-    projects: allProjectsData, // On injecte le bloc complet pour tout le monde
+      <div class="exp-item">
+        <div class="exp-header"><span>Data Engineer (Stage)</span><span>2023</span></div>
+        <div class="exp-company">OCP Group</div>
+        <ul class="cv-exp"><li>Ingestion IoT (+1 TB/jour) via PySpark et Hadoop.</li><li>Industrialisation MLOps (Docker, API) des flux.</li></ul>
+      </div>
+      <div class="exp-item">
+        <div class="exp-header"><span>Analyste de Données</span><span>2022</span></div>
+        <div class="exp-company">CHU de Tanger</div>
+        <ul class="cv-exp"><li>Nettoyage et structuration via pipelines ETL Python.</li><li>Mise en place de contrôles de qualité automatisés.</li></ul>
+      </div>`,
+    projects: allProjectsData,
     lmParagraph: "Fort de 6 mois d'expérience pratique au sein du groupe OCP où j'ai conçu des pipelines d'ingestion de flux massifs (+1 TB/jour) via PySpark sur des environnements Hadoop, j'ai développé une solide expertise dans la construction d'architectures de données. Qu'il s'agisse de streaming temps réel (Kafka), d'architectures Cloud (GCP) ou d'industrialisation ETL/ELT, je suis prêt à m'investir pour optimiser vos infrastructures."
   },
   scientist: {
@@ -314,47 +315,54 @@ const profilesData = {
     skills: `
       <li><strong>Machine Learning :</strong> Python (Scikit-learn, PyTorch), LSTM.</li>
       <li><strong>GenAI & NLP :</strong> Graph RAG, LangChain, Neo4j, Hugging Face.</li>
-      <li><strong>Cloud & MLOps :</strong> Déploiement d'API, Cloud GCP, pipelines ETL/ELT.</li>`,
+      <li><strong>MLOps & Outils :</strong> Déploiement d'API, Cloud GCP, Git/GitLab, Jira.</li>`,
     experiences: `
-      <div class="exp-item"><div class="exp-header"><span>Data Scientist (Stage)</span><span>2023</span></div><ul class="cv-exp"><li>Modèles de maintenance prédictive (LSTM) à 94% de précision.</li><li>Anticipation fine des pannes industrielles historiques.</li></ul></div>
-      <div class="exp-item"><div class="exp-header"><span>Analyste Données</span><span>2022</span></div><ul class="cv-exp"><li>Modélisation et analyse statistique sur données complexes.</li></ul></div>`,
+      <div class="exp-item">
+        <div class="exp-header"><span>Data Scientist (Stage)</span><span>2023</span></div>
+        <div class="exp-company">OCP Group</div>
+        <ul class="cv-exp"><li>Modèles de maintenance prédictive (LSTM) à 94% de précision.</li><li>Anticipation fine des pannes industrielles historiques.</li></ul>
+      </div>
+      <div class="exp-item">
+        <div class="exp-header"><span>Analyste Données</span><span>2022</span></div>
+        <div class="exp-company">CHU de Tanger</div>
+        <ul class="cv-exp"><li>Modélisation et analyse statistique sur données complexes.</li></ul>
+      </div>`,
     projects: allProjectsData,
     lmParagraph: "Mon parcours, alliant mathématiques appliquées et ingénierie de la donnée, m'a permis de développer une expertise forte en Machine Learning et en IA générative. Lors de ma précédente expérience, j'ai conçu et mis en production des modèles prédictifs complexes ayant permis d'anticiper des pannes industrielles critiques. Fortement impliqué sur les sujets de NLP, de Fine-Tuning de Transformers et d'architectures RAG, je souhaite concevoir pour vous des algorithmes innovants."
   },
   analyst: {
     title: "Data Analyst / BI Analyst (Stage 6 mois)",
-    profil: "Étudiant en M2 DataScale (Université Paris-Saclay) avec un profil analytique pointu (ex-Bio-informatique), je transforme des données brutes en informations stratégiques. Rigoureux, je maîtrise l'extraction complexe (SQL), la préparation (ETL, GCP) et la restitution visuelle (Power BI). Mon objectif : éclairer vos prises de décision.",
+    profil: "Étudiant en M2 DataScale (Université Paris-Saclay) avec un profil analytique pointu (ex-Bio-informatique), je transforme des données brutes en informations stratégiques. Rigoureux, je maîtrise l'extraction complexe (SQL), la préparation (ETL, GCP) et la restitution visuelle (Power BI, Excel/VBA). Mon objectif : éclairer vos prises de décision.",
     skills: `
       <li><strong>Analyse & Cloud :</strong> SQL avancé, Python (Pandas), Cloud GCP.</li>
-      <li><strong>Dataviz :</strong> Power BI, Kibana.</li>
-      <li><strong>Modélisation :</strong> Conception ETL/ELT, KPIs, Data Storytelling.</li>`,
+      <li><strong>Dataviz & Tableurs :</strong> Power BI, Kibana, Excel Avancé (VBA, Power Query, Macros).</li>
+      <li><strong>Modélisation & Outils :</strong> Conception ETL/ELT, KPIs, Git/GitHub, Jira.</li>`,
     experiences: `
       <div class="exp-item">
         <div class="exp-header"><span>Analyste BI & Données (Stage)</span><span>Jan - Juin 2023</span></div>
+        <div class="exp-company">OCP Group</div>
         <ul class="cv-exp">
-          <li>Création de tableaux de bord interactifs sur Power BI et suivi de KPIs de performance.</li>
-          <li>Automatisation des reportings hebdomadaires.</li>
+          <li>Création de tableaux de bord interactifs sur Power BI et suivi de KPIs.</li>
+          <li>Automatisation des reportings hebdomadaires via des macros VBA (gain de temps de 30%).</li>
         </ul>
       </div>
       <div class="exp-item">
         <div class="exp-header"><span>Analyste Bio-Statistiques</span><span>Mars - Août 2022</span></div>
+        <div class="exp-company">CHU de Tanger</div>
         <ul class="cv-exp">
-          <li>Analyse statistique et vulgarisation de données.</li>
+          <li>Analyse statistique et vulgarisation de données complexes sous Python et Excel.</li>
         </ul>
       </div>`,
     projects: allProjectsData,
-    lmParagraph: "Issu d'une formation exigeante croisant l'informatique et l'analyse statistique, je suis passionné par l'art de faire parler les données. Lors de mes précédentes missions, j'ai transformé des données brutes hétérogènes en tableaux de bord décisionnels interactifs clairs. Maîtrisant le requêtage SQL complexe, la structuration via ETL et la restitution via Power BI, je souhaite vous accompagner activement dans le suivi de vos KPIs et l'extraction d'insights stratégiques."
+    lmParagraph: "Issu d'une formation exigeante croisant l'informatique et l'analyse statistique, je suis passionné par l'art de faire parler les données. Lors de mes précédentes missions, j'ai transformé des données brutes hétérogènes en tableaux de bord décisionnels interactifs clairs. Maîtrisant le requêtage SQL complexe, l'automatisation via VBA/Python et la restitution via Power BI, je souhaite vous accompagner activement dans le suivi de vos KPIs et l'extraction d'insights stratégiques."
   }
 };
-
 window.onload = function() { 
   loadProfile(); 
-  
-  // Génération du QR Code
   qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
     text: "https://ciscom224.github.io/portofolio/",
-    width: 60,  // Taille ajustée pour le bas de page
-    height: 60,
+    width: 50,
+    height: 50,
     colorDark : "#1e293b",
     colorLight : "#ffffff",
     correctLevel : QRCode.CorrectLevel.L
@@ -374,13 +382,11 @@ function loadProfile() {
   const data = profilesData[profileKey];
 
   document.getElementById('jobTitle').value = data.title;
-  
   document.getElementById('cv-title').innerText = data.title;
   document.getElementById('cv-profil').innerText = data.profil;
   document.getElementById('cv-skills').innerHTML = data.skills;
   document.getElementById('cv-experiences').innerHTML = data.experiences;
   document.getElementById('cv-projects').innerHTML = data.projects;
-  
   document.getElementById('lm-subject-title').innerText = data.title;
   document.getElementById('lm-specialty-paragraph').innerText = data.lmParagraph;
 
@@ -422,18 +428,18 @@ function generatePDF() {
   const company = document.getElementById('companyName').value.replace(/\s+/g, '_') || 'Entreprise';
   const filename = `${prefix}Mamadou_CISSE_${company}.pdf`;
 
-  // Suppression temporaire des tags jaunes pour un PDF propre
   const originalHTML = container.innerHTML;
   if(currentView === 'cv') {
       container.innerHTML = container.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/gi, '<strong>$1</strong>');
   }
 
   const opt = {
-    margin: 0,
+    margin: [0, 0, 10, 0],
     filename: filename,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true }, 
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } 
   };
 
   const btn = document.querySelector('.btn-success');
@@ -441,7 +447,7 @@ function generatePDF() {
   btn.innerText = "⏳ Génération...";
 
   html2pdf().set(opt).from(container).save().then(() => {
-    container.innerHTML = originalHTML; // Restauration des tags
+    container.innerHTML = originalHTML;
     btn.innerText = originalText;
   });
 }
@@ -455,37 +461,26 @@ function analyzeAndHighlight() {
   if (!rawJobDesc.trim()) { alert("Collez une offre d'emploi pour l'analyse."); return; }
 
   const jobDesc = normalizeText(rawJobDesc);
-const keywordsMap = {
-    // 1. Langages & Fondamentaux
+  const keywordsMap = {
     "python": ["python", "pandas", "numpy", "matplotlib", "seaborn"],
     "sql": ["sql", "postgres", "mysql", "nosql", "bigquery"],
-
-    // 2. Développement & Ingénierie Logicielle
     "dev logiciel": ["developpement logiciel", "software engineering", "poo", "api", "rest", "fastapi", "clean code"],
-    "versioning & ci/cd": ["git", "github", "gitlab", "ci/cd", "devops"],
+    "versioning": ["git", "github", "gitlab", "bitbucket", "versioning"],
+    "gestion de projet": ["jira", "trello", "confluence", "agile", "scrum", "gestion de projet"],
     "docker": ["docker", "kubernetes", "container"],
-
-    // 3. Cloud Computing
     "azure": ["azure", "microsoft azure", "azure data factory", "adf", "synapse"],
     "gcp": ["gcp", "google cloud", "cloud"],
     "aws": ["aws", "amazon web services"],
-
-    // 4. Big Data, Calcul Distribué & ETL
     "calcul distribue": ["spark", "pyspark", "databricks", "calcul distribue", "hadoop", "hdfs"],
     "streaming": ["kafka", "streaming", "temps reel", "real-time"],
     "etl & pipelines": ["etl", "elt", "pipeline", "data engineering", "airflow", "dbt"],
-
-    // 5. Data Science, Stats & Analyse
     "data science": ["data science", "analyse de donnees", "series temporelles", "time series"],
     "statistiques": ["statistiques", "modelisation statistique", "tests statistiques", "a/b testing"],
     "machine learning": ["machine learning", "ml", "predictif", "scikit-learn", "pytorch", "algorithmes"],
-
-    // 6. IA & IA Générative
     "ia & genai": ["ia generative", "generative ai", "genai", "llm", "intelligence artificielle", "nlp", "hugging face", "transformers"],
     "rag": ["rag", "langchain", "neo4j", "vector search"],
-
-    // 7. Data Visualization & Business Intelligence
-    "dataviz": ["dataviz", "visualisation", "power bi", "tableau", "dashboard", "reporting", "kpi", "kibana"]
+    "dataviz": ["dataviz", "visualisation", "power bi", "tableau", "dashboard", "reporting", "kpi", "kibana"],
+    "excel": ["excel", "vba", "power query", "tcd", "macros"]
   };
 
   let matchedKeywords = [];
@@ -500,7 +495,6 @@ const keywordsMap = {
 
   loadProfile(); 
   
-  // Surligner le texte partout dans le CV (y compris les nouveaux blocs projets complets)
   ['cv-profil', 'cv-skills', 'cv-projects', 'cv-experiences'].forEach(id => {
     let el = document.getElementById(id);
     if (!el) return;

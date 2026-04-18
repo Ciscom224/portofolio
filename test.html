@@ -2,104 +2,435 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>QR Generator ZIP</title>
-  <script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de Candidature - Mariame Condé</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f766e; /* Couleur compta pro */
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    .panel {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .controls { flex: 1; max-width: 450px; overflow-y: auto; }
+    .preview { flex: 2; background: #e2e8f0; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center;}
+    
+    h3 { margin-top: 0; color: var(--text); border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
+    label { font-weight: 600; font-size: 13px; margin-top: 15px; display: block; color: #475569; }
+    textarea, input, select {
+      width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1;
+      border-radius: 6px; box-sizing: border-box; font-family: inherit; transition: border-color 0.2s;
+    }
+    textarea:focus, input:focus, select:focus { border-color: var(--primary); outline: none; }
+    
+    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+    button {
+      flex: 1; background-color: var(--primary); color: white; border: none;
+      padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: opacity 0.2s;
+    }
+    button:hover { opacity: 0.9; }
+    .btn-success { background-color: var(--success); }
+
+    .view-switcher { display: flex; gap: 10px; margin-bottom: 20px; width: 210mm; }
+    .view-btn { background: white; color: var(--text); border: 1px solid #cbd5e1; }
+    .view-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* --- OPTIMISATION A4 MULTI-PAGES --- */
+    .a4-page {
+      background: white; 
+      width: 210mm; 
+      min-height: 297mm; /* min-height permet à la page de s'agrandir naturellement */
+      box-sizing: border-box;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
+      padding: 40px 45px; /* Marges confortables et aérées */
+      position: relative;
+      display: flex; flex-direction: column; 
+    }
+
+    /* Le footer est poussé en bas avec margin-top: auto */
+    .cv-content {
+      flex: 1;
+    }
+
+    .header { border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin-bottom: 15px; }
+    .header h1 { margin: 0; font-size: 26px; color: var(--text); letter-spacing: 1px;}
+    .header h2 { margin: 4px 0 0 0; font-size: 17px; color: var(--primary); font-weight: 600; }
+    .contact-info { font-size: 11.5px; color: #64748b; margin-top: 6px; }
+    
+    .section-title { font-size: 15px; color: var(--primary); border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; margin-top: 20px; text-transform: uppercase; font-weight: bold; }
+    .about-text { font-size: 12.5px; line-height: 1.5; text-align: justify; color: #334155; margin-bottom: 10px; }
+    
+    ul { padding-left: 20px; margin: 8px 0; font-size: 12.5px; color: #334155; }
+    li { margin-bottom: 5px; line-height: 1.45; }
+    
+    .exp-item { margin-bottom: 15px; page-break-inside: avoid; } /* Évite de couper un bloc expérience en deux */
+    .exp-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 13.5px; color: var(--text); }
+    .exp-company { font-style: italic; color: var(--primary); font-size: 12.5px; margin-bottom: 4px; font-weight: 600;}
+    .highlight { background-color: #fef08a; font-weight: bold; padding: 0 2px; border-radius: 2px; }
+
+    .cv-footer {
+      margin-top: auto; /* Pousse le footer tout en bas */
+      padding-top: 20px; 
+      border-top: 1px dashed #cbd5e1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      page-break-inside: avoid;
+    }
+    .cv-footer-text { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+    #qrcode { display: flex; justify-content: center; }
+
+    /* Lettre de Motivation */
+    #lm-container { display: none; font-size: 13.5px; line-height: 1.6; color: #1e293b; }
+    .lm-header-sender { margin-bottom: 30px; }
+    .lm-header-recipient { text-align: right; margin-bottom: 30px; font-weight: bold; }
+    .lm-date { text-align: right; margin-bottom: 30px; font-style: italic; }
+    .lm-subject { font-weight: bold; margin-bottom: 30px; }
+    .lm-body p { margin-bottom: 15px; text-align: justify; }
+    .lm-signature { margin-top: 35px; text-align: right; font-weight: bold; }
+  </style>
 </head>
-<body style="font-family: Arial; padding: 40px;">
+<body>
 
-  <h2>Générateur de QR Codes Bleu + Or (ZIP)</h2>
-  <p>Choisissez votre fichier texte d'URLs. Tous les QR codes seront téléchargés dans un fichier ZIP.</p>
+  <div class="panel controls">
+    <h3>Configuration Candidature</h3>
+    
+    <label for="profileSelect">1. Spécialité de l'Alternance</label>
+    <select id="profileSelect" onchange="loadProfile()">
+      <option value="entreprise">Comptabilité Générale / Entreprise</option>
+      <option value="cabinet">Cabinet d'Expertise Comptable</option>
+      <option value="tresorerie">Trésorerie / Contrôle de Gestion</option>
+    </select>
 
-  <input type="file" id="csvInput" accept=".csv, .txt">
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label for="companyName">2. Entreprise/Cabinet cible</label>
+        <input type="text" id="companyName" placeholder="Ex: KPMG, L'Oréal..." oninput="updateCoverLetter()">
+      </div>
+      <div style="flex: 1;">
+        <label for="recruiterName">3. Recruteur (Optionnel)</label>
+        <input type="text" id="recruiterName" placeholder="Mme/M. Dupont" oninput="updateCoverLetter()">
+      </div>
+    </div>
 
-  <script>
-    // ---- Fonction pour lire le Fichier Texte/CSV ----
-    async function readCSV(file) {
-      const text = await file.text();
-      const lines = text.trim().split("\n");
-      const urls = lines.map(l => l.replace(/"/g, "").trim()).filter(l => l.length > 0);
-      return urls;
-    }
+    <label for="jobTitle">4. Titre de l'offre</label>
+    <input type="text" id="jobTitle" oninput="updateTitle()">
+    
+    <label for="jobDesc">5. Description de l'offre (Optionnel)</label>
+    <textarea id="jobDesc" rows="4" placeholder="Collez le texte pour vérifier le matching des compétences..."></textarea>
+    
+    <div class="btn-group">
+      <button onclick="analyzeAndHighlight()">🔍 Analyser CV</button>
+      <button class="btn-success" onclick="generatePDF()">📥 Exporter PDF</button>
+    </div>
 
-    // ---- Générer un QR Style ----
-    function createQR(data) {
-      return new QRCodeStyling({
-        width: 300,
-        height: 300,
-        data: data,
-        type: "png",
-        qrOptions: { margin: 10 },
-        dotsOptions: {
-          color: "#0066cc", // bleu
-          type: "rounded"
-        },
-        cornersSquareOptions: {
-          color: "#ff9900", // or
-          type: "rounded" 
-        },
-        cornersDotOptions: {
-          color: "#ff9900"
-        },
-        backgroundOptions: {
-          color: "#FFFFFF"
-        }
-      });
-    }
+    <div id="analysis-card" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0;">
+      <h4 style="margin: 0 0 10px 0;">Score de Pertinence : <span id="score-text">0%</span></h4>
+      <div style="background: #e2e8f0; border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 10px;">
+        <div id="score-bar" style="height: 100%; width: 0%; background-color: var(--primary);"></div>
+      </div>
+      <div id="found-keywords" style="margin-bottom: 5px;"></div>
+      <div id="missed-keywords"></div>
+    </div>
+  </div>
 
-    // ---- Télécharger le Fichier ZIP ----
-    function downloadZip(blob, filename) {
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+  <div class="panel preview">
+    
+    <div class="view-switcher">
+      <button id="btn-cv" class="view-btn active" onclick="switchView('cv')">📄 Voir le CV</button>
+      <button id="btn-lm" class="view-btn" onclick="switchView('lm')">✉️ Voir la Lettre de Motivation</button>
+    </div>
 
-    // ---- Lecture CSV + génération ZIP ----
-    document.getElementById("csvInput").addEventListener("change", async function (e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      
-      const urls = await readCSV(file);
-      if (urls.length === 0) {
-          alert("Le fichier ne contient aucune URL valide.");
-          return;
-      }
-      
-      const zip = new JSZip(); // Initialisation de l'objet ZIP
-      let errorCount = 0;
-
-      for (let i = 0; i < urls.length; i++) {
-        const url = urls[i];
+    <div id="cv-container" class="a4-page">
+      <div class="cv-content">
+        <div class="header">
+          <h1>Mariame CONDÉ</h1>
+          <h2 id="cv-title"></h2>
+          <div class="contact-info">📍 Aubervilliers (93300) | 📱 06 52 63 53 40 | ✉️ mariamakorela@gmail.com</div>
+        </div>
         
-        try {
-          const qr = createQR(url);
-          // Convertir le QR en Blob PNG (format Data URL)
-          const blob = await qr.getRawData("png");
-          
-          // Ajouter le QR code au fichier ZIP
-          // Le "blob" est un objet Blob de type 'image/png'
-          zip.file(`qr_${url}.png`, blob); 
+        <h3 class="section-title">Profil</h3>
+        <p class="about-text" id="cv-profil"></p>
+        
+        <h3 class="section-title">Compétences Techniques & Outils</h3>
+        <ul id="cv-skills"></ul>
+            
+        <h3 class="section-title">Expériences Professionnelles</h3>
+        <div id="cv-experiences"></div>
+        
+        <h3 class="section-title">Formation Académique</h3>
+        <ul>
+          <li><strong>Depuis Octobre 2025</strong> : 2ème Année DCG (Diplôme de Comptabilité et de Gestion) - <em>Institut F2i, Vincennes</em></li>
+          <li><strong>Sept. 2022 - Mai 2025</strong> : Licence AES (Administration Économique et Sociale) - <em>Université de Haute-Alsace, Mulhouse</em></li>
+          <li><strong>2019 - 2022</strong> : Licence Comptabilité de Gestion - <em>Université Générale Lanssana Conté, Guinée</em></li>
+        </ul>
+      </div>
+      
+      <div class="cv-footer">
+        <span class="cv-footer-text">Pour en savoir plus sur mon parcours, consultez mon profil LinkedIn :</span>
+        <div id="qrcode"></div>
+        <span class="cv-footer-text" style="margin-top: 4px; font-weight: bold;">linkedin.com/in/mariame-conde</span>
+      </div>
+    </div>
 
-        } catch (error) {
-          console.error(`Erreur lors de la génération du QR code pour l'URL ${url}:`, error);
-          errorCount++;
-        }
-      }
+    <div id="lm-container" class="a4-page">
+      <div class="lm-header-sender">
+        <strong>Mariame CONDÉ</strong><br>
+        Aubervilliers (93300)<br>
+        06 52 63 53 40<br>
+        mariamakorela@gmail.com
+      </div>
+      
+      <div class="lm-header-recipient" id="lm-recipient">
+        À l'attention de l'équipe recrutement<br>
+        [Entreprise]
+      </div>
 
-      // Générer le ZIP et déclencher le téléchargement unique
-      const zipBlob = await zip.generateAsync({ type: "blob" });
-      downloadZip(zipBlob, "qrcodes_bundle.zip");
+      <div class="lm-date" id="lm-date"></div>
 
-      if (errorCount > 0) {
-        alert(`Attention : ${urls.length - errorCount} QR codes ont été générés et téléchargés. ${errorCount} erreurs ont été rencontrées.`);
-      } else {
-        alert(`🎉 Tous les ${urls.length} QR codes ont été générés et téléchargés dans 'qrcodes_bundle.zip' !`);
-      }
+      <div class="lm-subject">Objet : Candidature au poste de <span id="lm-subject-title"></span> (Alternance)</div>
+
+      <div class="lm-body">
+        <p id="lm-salutation">Madame, Monsieur,</p>
+        
+        <p>Actuellement en préparation du Diplôme de Comptabilité et de Gestion (DCG) à l'Institut F2i, je suis à la recherche d'une alternance pour mettre en pratique et approfondir mes connaissances comptables et fiscales. Fortement motivée par l'excellence opérationnelle, je souhaite intégrer les équipes de <strong class="lm-company-name">[Entreprise]</strong> pour accompagner votre développement.</p>
+        
+        <p id="lm-specialty-paragraph"></p>
+        
+        <p>Outre mes compétences techniques acquises lors de ma double Licence, mes expériences variées m'ont permis de développer une grande rigueur, un sens aigu de la confidentialité et une forte capacité d'adaptation. Rejoindre <strong class="lm-company-name">[Entreprise]</strong> représente pour moi l'opportunité de m'investir pleinement dans des missions exigeantes tout en apportant mon dynamisme à votre équipe.</p>
+        
+        <p>Je serais ravie de vous rencontrer afin de vous détailler mon parcours et mes motivations. Dans l'attente d'un échange, je vous prie d'agréer, <span id="lm-salutation-end">Madame, Monsieur</span>, l'expression de mes salutations respectueuses.</p>
+      </div>
+
+      <div class="lm-signature">
+        Mariame CONDÉ
+      </div>
+    </div>
+
+  </div>
+
+<script>
+const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+document.getElementById('lm-date').innerText = "Fait à Paris, le " + new Date().toLocaleDateString('fr-FR', dateOptions);
+
+let currentView = 'cv';
+let qrCodeInstance = null; 
+
+const profilesData = {
+  entreprise: {
+    title: "Assistante Comptable (Alternance DCG)",
+    profil: "Étudiante rigoureuse en préparation du DCG, je suis déterminée à évoluer vers les métiers de la comptabilité d'entreprise. Titulaire d'une double licence en Gestion et Comptabilité, je maîtrise la comptabilité générale, la fiscalité et le suivi fournisseur. Dotée d'un grand sens de la précision, je recherche une alternance pour optimiser vos processus financiers internes.",
+    skills: `
+      <li><strong>Comptabilité & Fiscalité :</strong> Saisie comptable, rapprochement bancaire, gestion des factures fournisseurs, déclarations fiscales (TVA, CSG, CRDS).</li>
+      <li><strong>Contrôle & Finance :</strong> Suivi des comptes tiers, lettrage, préparation de prévisionnels.</li>
+      <li><strong>Outils & SI :</strong> SAGE 100, EBP Compta, Excel Avancé (Tableaux de bord, Recherche V, TCD).</li>
+      <li><strong>Savoir-être :</strong> Rigueur technique, confidentialité, esprit de synthèse.</li>`,
+    experiences: `
+      <div class="exp-item"><div class="exp-header"><span>Assistante Comptable (Stage)</span><span>Fév. 2022 - Mai 2022</span></div><div class="exp-company">Gui-co pres BTP sa</div><ul class="cv-exp"><li>Amélioration de la précision des comptes tiers (réduction des erreurs de 15%).</li><li>Préparation des déclarations fiscales et sociales (TVA, taxes salariales).</li><li>Optimisation des flux et gestion courante de la trésorerie.</li></ul></div>
+      <div class="exp-item"><div class="exp-header"><span>Adjointe Trésorière (Stage)</span><span>2024</span></div><div class="exp-company">Secours Populaire Haut-Rhin</div><ul class="cv-exp"><li>Préparation, suivi et contrôle des budgets prévisionnels.</li><li>Rapprochements, édition de rapports et analyses financières.</li></ul></div>
+      <div class="exp-item"><div class="exp-header"><span>Employée Polyvalente</span><span>Mai 2023 - Sept. 2025</span></div><div class="exp-company">Burger King</div><ul class="cv-exp"><li>Travail en équipe, gestion du stress et relation client de qualité.</li></ul></div>`,
+    lmParagraph: "Lors de ma précédente expérience en tant qu'assistante comptable dans le secteur du BTP, j'ai pris en charge la comptabilité tiers en réduisant significativement les erreurs de lettrage, tout en assurant le suivi de la trésorerie et la préparation des déclarations fiscales. Familiarisée avec les logiciels SAGE 100 et EBP, je suis opérationnelle pour vous assister dans la tenue comptable quotidienne et la préparation des clôtures."
+  },
+  cabinet: {
+    title: "Collaboratrice Comptable (Alternance DCG)",
+    profil: "Étudiante en DCG et titulaire d'une double licence, je souhaite intégrer un cabinet d'expertise comptable dynamique. Maîtrisant la tenue de dossiers, la fiscalité et possédant un excellent relationnel client, je suis capable de m'adapter rapidement à de multiples conventions. Rigoureuse et investie, je souhaite accompagner vos clients dans leur gestion quotidienne.",
+    skills: `
+      <li><strong>Tenue de dossiers :</strong> Saisie de masse, rapprochements bancaires, préparation des liasses.</li>
+      <li><strong>Fiscalité & Social :</strong> Déclarations de TVA, impôts, préparation des éléments variables.</li>
+      <li><strong>Outils & SI :</strong> SAGE 100, EBP Compta, Excel Avancé (TCD, macros basiques).</li>
+      <li><strong>Savoir-être :</strong> Adaptabilité (multi-dossiers), aisance relationnelle, éthique professionnelle.</li>`,
+    experiences: `
+      <div class="exp-item"><div class="exp-header"><span>Assistante Comptable (Stage)</span><span>Fév. 2022 - Mai 2022</span></div><div class="exp-company">Gui-co pres BTP sa</div><ul class="cv-exp"><li>Tenue de la comptabilité générale et suivi rigoureux des comptes tiers.</li><li>Préparation des déclarations fiscales et sociales (TVA, CSG).</li></ul></div>
+      <div class="exp-item"><div class="exp-header"><span>Adjointe Trésorière & Caissière</span><span>2024</span></div><div class="exp-company">Secours Populaire</div><ul class="cv-exp"><li>Gestion de la liquidité, des encaissements et contrôle des écarts de caisse.</li><li>Édition de rapports financiers fiables.</li></ul></div>
+      <div class="exp-item"><div class="exp-header"><span>Employée Polyvalente</span><span>Mai 2023 - Sept. 2025</span></div><div class="exp-company">Burger King</div><ul class="cv-exp"><li>Gestion des réclamations, accueil client et efficacité opérationnelle.</li></ul></div>`,
+    lmParagraph: "Consciente de l'exigence et du rythme inhérents au travail en cabinet, j'ai développé une grande capacité d'adaptation et un sens aigu de l'organisation. Mon stage en tant qu'assistante comptable m'a permis de maîtriser la gestion d'un cycle comptable (comptes tiers, rapprochements, déclarations fiscales), tandis que mon expérience au contact direct de la clientèle a forgé mon aisance relationnelle. Je suis prête à m'investir sur un portefeuille varié."
+  },
+  tresorerie: {
+    title: "Assistante Contrôle de Gestion / Finance (Alternance DCG)",
+    profil: "Étudiante en DCG avec une forte appétence pour l'analyse financière, je transforme les données comptables en outils d'aide à la décision. Titulaire d'une double licence en AES et Comptabilité, je maîtrise l'élaboration de budgets, le suivi de trésorerie et la modélisation sous Excel. Je recherche une alternance pour piloter la performance financière.",
+    skills: `
+      <li><strong>Contrôle de Gestion :</strong> Analyse des coûts, préparation et suivi de budgets prévisionnels.</li>
+      <li><strong>Trésorerie :</strong> Gestion de la liquidité, optimisation des flux, contrôle des écarts.</li>
+      <li><strong>Outils & Data :</strong> Excel Avancé (Tableaux de bord, TCD, modélisation), SAGE 100, EBP.</li>
+      <li><strong>Savoir-être :</strong> Esprit d'analyse et de synthèse, force de proposition, précision.</li>`,
+    experiences: `
+      <div class="exp-item"><div class="exp-header"><span>Adjointe Trésorière (Stage)</span><span>2024</span></div><div class="exp-company">Secours Populaire Haut-Rhin</div><ul class="cv-exp"><li>Élaboration et suivi analytique des budgets prévisionnels de l'association.</li><li>Édition de rapports d'analyse financière et gestion des risques de liquidité.</li></ul></div>
+      <div class="exp-item"><div class="exp-header"><span>Caissière et Collectrice</span><span>Avril - Mai 2024</span></div><div class="exp-company">Secours Populaire</div><ul class="cv-exp"><li>Gestion stricte des flux financiers, suivi des encaissements et contrôle des écarts.</li></ul></div>
+      <div class="exp-item"><div class="exp-header"><span>Assistante Comptable</span><span>Fév. 2022 - Mai 2022</span></div><div class="exp-company">Gui-co pres BTP sa</div><ul class="cv-exp"><li>Optimisation des flux financiers et facilitation de la prise de décision.</li></ul></div>`,
+    lmParagraph: "Particulièrement attirée par l'analyse de la performance, mon expérience en tant qu'adjointe trésorière a confirmé mon goût pour le pilotage financier. J'y ai géré la liquidité, élaboré des budgets prévisionnels et produit des rapports financiers aidant à la prise de décision. Maîtrisant les fonctions avancées d'Excel pour la création de tableaux de bord, je suis enthousiaste à l'idée d'accompagner vos managers dans l'analyse des coûts et l'optimisation de vos flux de trésorerie."
+  }
+};
+
+window.onload = function() { 
+  loadProfile(); 
+  qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
+    text: "https://www.linkedin.com/in/mariame-conde/", 
+    width: 60, 
+    height: 60,
+    colorDark : "#1e293b",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.L
+  });
+};
+
+function switchView(view) {
+  currentView = view;
+  document.getElementById('btn-cv').classList.toggle('active', view === 'cv');
+  document.getElementById('btn-lm').classList.toggle('active', view === 'lm');
+  document.getElementById('cv-container').style.display = view === 'cv' ? 'flex' : 'none';
+  document.getElementById('lm-container').style.display = view === 'lm' ? 'block' : 'none';
+}
+
+function loadProfile() {
+  const profileKey = document.getElementById('profileSelect').value;
+  const data = profilesData[profileKey];
+
+  document.getElementById('jobTitle').value = data.title;
+  document.getElementById('cv-title').innerText = data.title;
+  document.getElementById('cv-profil').innerText = data.profil;
+  document.getElementById('cv-skills').innerHTML = data.skills;
+  document.getElementById('cv-experiences').innerHTML = data.experiences;
+  document.getElementById('lm-subject-title').innerText = data.title;
+  document.getElementById('lm-specialty-paragraph').innerText = data.lmParagraph;
+
+  updateCoverLetter();
+}
+
+function updateTitle() {
+  const title = document.getElementById('jobTitle').value;
+  document.getElementById('cv-title').innerText = title;
+  document.getElementById('lm-subject-title').innerText = title;
+}
+
+function updateCoverLetter() {
+  const company = document.getElementById('companyName').value || "[Entreprise]";
+  const recruiter = document.getElementById('recruiterName').value;
+
+  const elements = document.querySelectorAll('.lm-company-name');
+  elements.forEach(el => el.innerText = company);
+
+  const recipientDiv = document.getElementById('lm-recipient');
+  const salutation = document.getElementById('lm-salutation');
+  const salutationEnd = document.getElementById('lm-salutation-end');
+
+  if(recruiter) {
+    recipientDiv.innerHTML = `À l'attention de ${recruiter}<br><strong>${company}</strong>`;
+    salutation.innerText = `Bonjour ${recruiter},`;
+    salutationEnd.innerText = `Bonjour ${recruiter}`;
+  } else {
+    recipientDiv.innerHTML = `À l'attention de l'équipe recrutement<br><strong>${company}</strong>`;
+    salutation.innerText = `Madame, Monsieur,`;
+    salutationEnd.innerText = `Madame, Monsieur`;
+  }
+}
+
+function generatePDF() {
+  const containerId = currentView === 'cv' ? 'cv-container' : 'lm-container';
+  const container = document.getElementById(containerId);
+  const prefix = currentView === 'cv' ? 'CV_' : 'LM_';
+  const company = document.getElementById('companyName').value.replace(/\s+/g, '_') || 'Entreprise';
+  const filename = `${prefix}Mariame_CONDE_${company}.pdf`;
+
+  const originalHTML = container.innerHTML;
+  if(currentView === 'cv') {
+      container.innerHTML = container.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/gi, '<strong>$1</strong>');
+  }
+
+  // Configuration pour le multi-pages
+  const opt = {
+    margin: [0, 0, 10, 0], // Ajoute une marge de 10mm en bas des pages suivantes
+    filename: filename,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true }, 
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Évite de couper du texte en deux !
+  };
+
+  const btn = document.querySelector('.btn-success');
+  const originalText = btn.innerText;
+  btn.innerText = "⏳ Génération...";
+
+  html2pdf().set(opt).from(container).save().then(() => {
+    container.innerHTML = originalHTML;
+    btn.innerText = originalText;
+  });
+}
+
+function normalizeText(text) { return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function analyzeAndHighlight() {
+  switchView('cv'); 
+  const rawJobDesc = document.getElementById('jobDesc').value;
+  if (!rawJobDesc.trim()) { alert("Collez une offre d'emploi pour l'analyse."); return; }
+
+  const jobDesc = normalizeText(rawJobDesc);
+  
+  const keywordsMap = {
+    "compta generale": ["comptabilite generale", "saisie", "lettrage", "rapprochement bancaire", "factures", "fournisseurs", "clients", "cloture", "bilan"],
+    "fiscalite": ["fiscalite", "tva", "impots", "liasse fiscale", "declarations fiscales", "csg", "crds"],
+    "controle de gestion": ["controle de gestion", "budget", "previsionnel", "analyse financière", "couts", "reporting", "kpi", "tableaux de bord"],
+    "tresorerie": ["tresorerie", "flux", "liquidite", "encaissement", "banque"],
+    "logiciels compta": ["sage", "sage 100", "ebp", "cegid", "quadratus", "erp"],
+    "excel": ["excel", "tcd", "recherche v", "croises dynamiques", "macros"],
+    "social": ["social", "paie", "bulletins", "dsn"],
+    "soft skills": ["rigueur", "confidentialite", "relationnel", "adaptabilite", "esprit de synthese", "equipe"]
+  };
+
+  let matchedKeywords = [];
+  Object.keys(keywordsMap).forEach(key => {
+    if (keywordsMap[key].some(v => new RegExp('\\b' + escapeRegExp(v) + '\\b').test(jobDesc))) matchedKeywords.push(key);
+  });
+
+  const cvText = normalizeText(document.getElementById('cv-container').innerText);
+  let matchedInCV = matchedKeywords.filter(kw => keywordsMap[kw].some(v => new RegExp('\\b' + escapeRegExp(v) + '\\b').test(cvText)));
+  let suggestions = matchedKeywords.filter(kw => !matchedInCV.includes(kw));
+  const score = matchedKeywords.length === 0 ? 0 : (matchedInCV.length / matchedKeywords.length) * 100;
+
+  loadProfile(); 
+  
+  ['cv-profil', 'cv-skills', 'cv-experiences'].forEach(id => {
+    let el = document.getElementById(id);
+    if (!el) return;
+    let text = el.innerHTML;
+    matchedKeywords.forEach(kw => {
+      keywordsMap[kw].forEach(v => { text = text.replace(new RegExp('(\\b' + escapeRegExp(v) + '\\b)', 'gi'), '<span class="highlight">$1</span>'); });
     });
-  </script>
+    el.innerHTML = text;
+  });
 
+  const card = document.getElementById('analysis-card');
+  card.style.display = 'block';
+  document.getElementById('score-text').innerText = `${score.toFixed(0)}%`;
+  document.getElementById('score-bar').style.width = `${score}%`;
+  
+  if (score >= 80) document.getElementById('score-bar').style.backgroundColor = 'var(--success)';
+  else if (score >= 50) document.getElementById('score-bar').style.backgroundColor = 'var(--warning)';
+  else document.getElementById('score-bar').style.backgroundColor = 'var(--danger)';
+
+  document.getElementById('found-keywords').innerHTML = `<span style="font-size:12px">Détecté : ${matchedInCV.join(', ') || 'Aucun'}</span>`;
+  document.getElementById('missed-keywords').innerHTML = `<span style="font-size:12px; color:red">Manquant : ${suggestions.join(', ') || 'Aucun'}</span>`;
+}
+</script>
 </body>
 </html>
