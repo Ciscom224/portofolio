@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portail des Candidatures</title>
+  <style>
+    /* Style de la page principale pour masquer les bordures */
+    body { 
+      margin: 0; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background: #f8fafc; 
+      overflow: hidden; /* Empêche le double défilement */
+    }
+    
+    /* La barre de navigation en haut */
+    .topbar { 
+      background: white; 
+      padding: 10px 20px; 
+      display: flex; 
+      gap: 15px; 
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); 
+      align-items: center; 
+      justify-content: center; 
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Style des boutons */
+    .btn { 
+      padding: 10px 20px; 
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      font-size: 14px; 
+      transition: all 0.2s; 
+      background: #e2e8f0; 
+      color: #475569; 
+    }
+    
+    .btn:hover { filter: brightness(0.95); transform: translateY(-1px); }
+    
+    /* Couleurs actives pour chaque profil */
+    .btn.active-mariame { background: #0f766e; color: white; box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);}
+    .btn.active-mamadou { background: #1d4ed8; color: white; box-shadow: 0 4px 10px rgba(29, 78, 216, 0.3);}
+
+    /* La fenêtre qui affichera les CV */
+    iframe { 
+      width: 100%; 
+      height: calc(100vh - 55px); /* Prend toute la hauteur moins la barre du haut */
+      border: none; 
+      display: block; 
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <button id="btnMariame" class="btn active-mariame" onclick="loadCV('mariame.html', 'btnMariame')">
+      👩‍💼 Mariame (Compta)
+    </button>
+    <button id="btnMamadou" class="btn" onclick="loadCV('mamadou.html', 'btnMamadou')">
+      👨‍💻 Mamadou (Data)
+    </button>
+  </div>
+
+  <iframe id="cvFrame" src="mariame.html"></iframe>
+
+  <script>
+    // Fonction pour changer le fichier chargé dans l'iframe
+    function loadCV(fileName, btnId) {
+      // 1. On change la source de l'iframe
+      document.getElementById('cvFrame').src = fileName;
+      
+      // 2. On réinitialise l'apparence des boutons
+      document.getElementById('btnMariame').className = 'btn';
+      document.getElementById('btnMamadou').className = 'btn';
+      
+      // 3. On met la couleur sur le bouton cliqué
+      if(btnId === 'btnMariame') {
+        document.getElementById(btnId).classList.add('active-mariame');
+      } else {
+        document.getElementById(btnId).classList.add('active-mamadou');
+      }
+    }
+  </script>
+
+</body>
+</html>
