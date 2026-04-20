@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
-      --primary: #1d4ed8; /* Un bleu plus profond et tech */
+      --primary: #1d4ed8;
       --bg: #f8fafc;
       --text: #0f172a;
       --success: #10b981;
@@ -74,7 +74,7 @@
     .header { border-bottom: 3px solid var(--primary); padding-bottom: 12px; margin-bottom: 12px; }
     .header h1 { margin: 0; font-size: 26px; color: var(--text); letter-spacing: 1px;}
     .header h2 { margin: 4px 0 0 0; font-size: 17px; color: var(--primary); font-weight: 600; }
-    .contact-info { font-size: 12px; color: #64748b; margin-top: 6px; display: flex; gap: 15px; align-items: center;}
+    .contact-info { font-size: 12px; color: #64748b; margin-top: 6px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;}
     
     .cv-badge { display: inline-block; background: var(--primary); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
 
@@ -89,34 +89,24 @@
     .exp-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; color: var(--text); }
     .exp-company { font-style: italic; color: var(--primary); font-size: 12px; margin-bottom: 4px; font-weight: 600;}
     
-    /* Animation pour les mots-clés injectés */
     @keyframes pulse-bg { 0% { background-color: #fef08a; } 100% { background-color: transparent; } }
     .highlight { background-color: #fef08a; font-weight: bold; padding: 0 2px; border-radius: 2px; }
     .injected-skill { animation: pulse-bg 3s ease-out; border-left: 3px solid var(--warning); padding-left: 5px;}
 
     .project-item { margin-bottom: 10px; }
     .project-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      border-left: 3px solid var(--primary);
-      padding-left: 8px;
-      margin-bottom: 4px;
+      display: flex; justify-content: space-between; align-items: baseline;
+      border-left: 3px solid var(--primary); padding-left: 8px; margin-bottom: 4px;
     }
     .project-title { font-weight: bold; font-size: 13px; color: var(--text); }
     .project-tech { font-size: 11px; color: var(--primary); font-weight: bold; }
     .project-list { margin-top: 2px; margin-bottom: 0; }
 
     .cv-footer {
-      margin-top: auto; /* Push to bottom */
-      padding-top: 15px;
-      border-top: 1px dashed #cbd5e1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      margin-top: auto; padding-top: 15px; border-top: 1px dashed #cbd5e1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
-    .cv-footer-text { font-size: 10px; color: #64748b; margin-bottom: 4px; }
+    .cv-footer-text { font-size: 10px; color: #64748b; margin-bottom: 4px; text-align: center;}
     #qrcode { display: flex; justify-content: center; }
 
     #lm-container { display: none; font-size: 13px; line-height: 1.6; color: #1e293b; }
@@ -126,6 +116,71 @@
     .lm-subject { font-weight: bold; margin-bottom: 25px; }
     .lm-body p { margin-bottom: 15px; text-align: justify; }
     .lm-signature { margin-top: 30px; text-align: right; font-weight: bold; }
+
+    /* ========================================================= */
+    /* --- ADAPTATION RESPONSIVE (MOBILES ET TABLETTES) ---      */
+    /* ========================================================= */
+    
+    .input-row { display: flex; gap: 10px; }
+
+    @media screen and (max-width: 1024px) {
+      body {
+        flex-direction: column; /* Empile les panneaux verticalement */
+        height: auto;
+        min-height: 100vh;
+        padding: 10px;
+      }
+      .panel {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .controls {
+        overflow-y: visible; /* Empêche le double défilement */
+      }
+      .preview {
+        overflow-x: auto; /* Active le défilement horizontal pour le document A4 */
+        align-items: flex-start; /* Force l'alignement à gauche pour faciliter le défilement */
+        padding: 15px;
+      }
+      .view-switcher {
+        width: 210mm; /* S'aligne sur la largeur du CV A4 */
+      }
+      
+      /* Personnalisation de la barre de scroll sur mobile pour la rendre évidente */
+      .preview::-webkit-scrollbar {
+        height: 8px;
+      }
+      .preview::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 10px;
+      }
+      .preview::-webkit-scrollbar-track {
+        background-color: #cbd5e1;
+        border-radius: 10px;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .input-row {
+        flex-direction: column; /* Les champs de saisie passent les uns sous les autres */
+      }
+      .btn-group {
+        flex-direction: column;
+      }
+      .view-switcher {
+        width: 100%; /* Les boutons de navigation prennent toute la largeur */
+        flex-direction: column;
+      }
+      .view-switcher button {
+        padding: 15px;
+        font-size: 1rem;
+      }
+      /* Pour mobile, si on utilise flex dans l'en-tête du CV, on s'assure que ça s'empile bien */
+      .project-header {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
@@ -143,7 +198,7 @@
     <label for="profileTextEdit">2. Texte du profil (Personnalisable)</label>
     <textarea id="profileTextEdit" rows="5" oninput="updateProfileText()"></textarea>
 
-    <div style="display: flex; gap: 10px;">
+    <div class="input-row">
       <div style="flex: 1;">
         <label for="companyName">3. Entreprise cible</label>
         <input type="text" id="companyName" placeholder="Ex: Thales, LVMH..." oninput="updateCoverLetter()">
@@ -268,7 +323,7 @@ document.getElementById('lm-date').innerText = "Fait à Paris, le " + new Date()
 
 let currentView = 'cv';
 let qrCodeInstance = null; 
-let pendingKeywordsToInject = []; // Stockage des mots-clés manquants
+let pendingKeywordsToInject = []; 
 
 const allProjectsData = `
   <div class="project-item cv-exp">
@@ -407,7 +462,6 @@ function loadProfile() {
   document.getElementById('jobTitle').value = data.title;
   document.getElementById('cv-title').innerText = data.title;
   
-  // Set default text in textarea
   document.getElementById('profileTextEdit').value = data.profil;
   updateProfileText();
 
@@ -461,23 +515,23 @@ function analyzeAndHighlight() {
   const keywordsMap = {
     "python": ["python", "pandas", "numpy", "matplotlib", "seaborn"],
     "sql": ["sql", "postgres", "mysql", "nosql", "bigquery"],
-    "dev logiciel": ["developpement logiciel", "software engineering", "poo", "api", "rest", "fastapi", "clean code"],
-    "versioning": ["git", "github", "gitlab", "bitbucket", "versioning"],
-    "gestion de projet": ["jira", "trello", "confluence", "agile", "scrum", "gestion de projet"],
+    "dev logiciel": ["developpement", "software", "poo", "api", "rest", "fastapi"],
+    "versioning": ["git", "github", "gitlab", "bitbucket"],
+    "gestion de projet": ["jira", "trello", "agile", "scrum"],
     "docker": ["docker", "kubernetes", "container"],
-    "azure": ["azure", "microsoft azure", "azure data factory", "adf", "synapse"],
+    "azure": ["azure", "azure data factory", "adf", "synapse"],
     "gcp": ["gcp", "google cloud", "cloud"],
     "aws": ["aws", "amazon web services"],
-    "calcul distribue": ["spark", "pyspark", "databricks", "calcul distribue", "hadoop", "hdfs"],
-    "streaming": ["kafka", "streaming", "temps reel", "real-time"],
-    "etl & pipelines": ["etl", "elt", "pipeline", "data engineering", "airflow", "dbt"],
-    "data science": ["data science", "analyse de donnees", "series temporelles", "time series"],
-    "statistiques": ["statistiques", "modelisation statistique", "tests statistiques", "a/b testing"],
-    "machine learning": ["machine learning", "ml", "predictif", "scikit-learn", "pytorch", "algorithmes"],
-    "ia & genai": ["ia generative", "generative ai", "genai", "llm", "intelligence artificielle", "nlp", "hugging face", "transformers"],
-    "rag": ["rag", "langchain", "neo4j", "vector search"],
-    "dataviz": ["dataviz", "visualisation", "power bi", "tableau", "dashboard", "reporting", "kpi", "kibana"],
-    "excel": ["excel", "vba", "power query", "tcd", "macros"]
+    "calcul distribue": ["spark", "pyspark", "databricks", "hadoop", "hdfs"],
+    "streaming": ["kafka", "streaming", "temps reel"],
+    "etl & pipelines": ["etl", "elt", "pipeline", "data engineering", "airflow"],
+    "data science": ["data science", "analyse de donnees", "series temporelles"],
+    "statistiques": ["statistiques", "modelisation", "a/b testing"],
+    "machine learning": ["machine learning", "ml", "predictif", "scikit-learn", "pytorch"],
+    "ia & genai": ["ia generative", "genai", "llm", "nlp", "hugging face", "transformers"],
+    "rag": ["rag", "langchain", "neo4j"],
+    "dataviz": ["dataviz", "visualisation", "power bi", "tableau", "kibana"],
+    "excel": ["excel", "vba", "power query", "tcd"]
   };
 
   let matchedKeywords = [];
@@ -492,13 +546,7 @@ function analyzeAndHighlight() {
   
   const score = matchedKeywords.length === 0 ? 0 : (matchedInCV.length / matchedKeywords.length) * 100;
 
-  // Reload clean profile before highlighting
-  const profileKey = document.getElementById('profileSelect').value;
-  const data = profilesData[profileKey];
-  document.getElementById('cv-skills').innerHTML = data.skills;
-  document.getElementById('cv-experiences').innerHTML = data.experiences;
-  document.getElementById('cv-projects').innerHTML = data.projects;
-  updateProfileText(); 
+  loadProfile(); 
   
   ['cv-profil', 'cv-skills', 'cv-projects', 'cv-experiences'].forEach(id => {
     let el = document.getElementById(id);

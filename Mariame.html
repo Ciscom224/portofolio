@@ -115,6 +115,66 @@
     .lm-subject { font-weight: bold; margin-bottom: 30px; }
     .lm-body p { margin-bottom: 15px; text-align: justify; }
     .lm-signature { margin-top: 35px; text-align: right; font-weight: bold; }
+
+    /* ========================================================= */
+    /* --- ADAPTATION RESPONSIVE (MOBILES ET TABLETTES) ---      */
+    /* ========================================================= */
+    
+    .input-row { display: flex; gap: 10px; }
+
+    @media screen and (max-width: 1024px) {
+      body {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        padding: 10px;
+      }
+      .panel {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .controls {
+        overflow-y: visible;
+      }
+      .preview {
+        overflow-x: auto;
+        align-items: flex-start;
+        padding: 15px;
+      }
+      .view-switcher {
+        width: 210mm;
+      }
+      
+      .preview::-webkit-scrollbar {
+        height: 8px;
+      }
+      .preview::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 10px;
+      }
+      .preview::-webkit-scrollbar-track {
+        background-color: #cbd5e1;
+        border-radius: 10px;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .input-row {
+        flex-direction: column;
+      }
+      .btn-group {
+        flex-direction: column;
+      }
+      .view-switcher {
+        width: 100%;
+        flex-direction: column;
+      }
+      .view-switcher button {
+        padding: 15px;
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -139,7 +199,7 @@
     <label for="profileTextEdit">3. Texte du profil (Personnalisable)</label>
     <textarea id="profileTextEdit" rows="5" oninput="updateProfileText()"></textarea>
 
-    <div style="display: flex; gap: 10px;">
+    <div class="input-row">
       <div style="flex: 1;">
         <label for="companyName">4. Entreprise/Cabinet</label>
         <input type="text" id="companyName" placeholder="Ex: KPMG, L'Oréal..." oninput="updateCoverLetter()">
@@ -252,7 +312,6 @@ let currentView = 'cv';
 let qrCodeInstance = null; 
 let pendingKeywordsToInject = []; 
 
-// Les balises <span class='duree-text'> ont été retirées des profils pour que le textarea soit propre pour l'utilisateur.
 const profilesData = {
   assistante: {
     title: "Assistante Comptable en Alternance (DCG)",
@@ -321,7 +380,6 @@ function switchView(view) {
   document.getElementById('lm-container').style.display = view === 'lm' ? 'block' : 'none';
 }
 
-// Fonction pour synchroniser le textarea avec le CV visuel
 function updateProfileText() {
   document.getElementById('cv-profil').innerText = document.getElementById('profileTextEdit').value;
 }
@@ -335,11 +393,9 @@ function loadProfile() {
   document.getElementById('jobTitle').value = data.title;
   document.getElementById('cv-title').innerText = data.title;
   
-  // Met le texte par défaut dans le textarea en adaptant la durée choisie
   let plainProfil = data.profil.replace(/\b(12|24) mois\b/g, shortText);
   document.getElementById('profileTextEdit').value = plainProfil;
   
-  // Pousse le contenu du textarea vers le CV
   updateProfileText();
 
   document.getElementById('cv-skills').innerHTML = data.skills;
@@ -348,7 +404,7 @@ function loadProfile() {
   document.getElementById('lm-specialty-paragraph').innerHTML = data.lmParagraph;
 
   updateCoverLetter();
-  updateDuration(); // Met à jour les autres éléments (LM, badges)
+  updateDuration(); 
   document.getElementById('analysis-card').style.display = 'none';
 }
 
@@ -382,18 +438,15 @@ function updateDuration() {
   const durationValue = document.getElementById('durationSelect').value;
   const shortText = durationValue + " mois";
   
-  // Mise à jour du badge CV
   document.getElementById('cv-duration-badge').innerText = `Durée : ${shortText}`;
   
-  // Mise à jour de la lettre de motivation
   document.querySelectorAll('.duree-text').forEach(el => {
     el.innerText = shortText;
   });
 
-  // Mise à jour magique à l'intérieur du Textarea édité par l'utilisateur
   let textarea = document.getElementById('profileTextEdit');
   textarea.value = textarea.value.replace(/\b(12|24) mois\b/g, shortText);
-  updateProfileText(); // Synchronise le visuel du CV
+  updateProfileText(); 
 }
 
 function normalizeText(text) { return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
@@ -434,12 +487,11 @@ function analyzeAndHighlight() {
   
   const score = matchedKeywords.length === 0 ? 0 : (matchedInCV.length / matchedKeywords.length) * 100;
 
-  // Recharge un profil propre avant surlignage
   const profileKey = document.getElementById('profileSelect').value;
   const data = profilesData[profileKey];
   document.getElementById('cv-skills').innerHTML = data.skills;
   document.getElementById('cv-experiences').innerHTML = data.experiences;
-  updateProfileText(); // Réinjecte le texte propre du textarea
+  updateProfileText(); 
   
   ['cv-profil', 'cv-skills', 'cv-experiences'].forEach(id => {
     let el = document.getElementById(id);
@@ -527,4 +579,4 @@ function generatePDF() {
 }
 </script>
 </body>
-</html>x
+</html>
