@@ -1,581 +1,823 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Générateur de Candidature - Mariame Condé</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <style>
-    :root {
-      --primary: #0f766e;
-      --bg: #f8fafc;
-      --text: #1e293b;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --action: #3b82f6;
-    }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      gap: 20px;
-      height: 100vh;
-      box-sizing: border-box;
-    }
-    .panel {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-    }
-    .controls { flex: 1; max-width: 450px; overflow-y: auto; }
-    .preview { flex: 2; background: #e2e8f0; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center;}
-    
-    h3 { margin-top: 0; color: var(--text); border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;}
-    label { font-weight: 600; font-size: 13px; margin-top: 15px; display: block; color: #475569; }
-    textarea, input, select {
-      width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1;
-      border-radius: 6px; box-sizing: border-box; font-family: inherit; transition: border-color 0.2s;
-    }
-    textarea:focus, input:focus, select:focus { border-color: var(--primary); outline: none; }
-    
-    .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;}
-    button {
-      flex: 1; background-color: var(--primary); color: white; border: none;
-      padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: opacity 0.2s;
-    }
-    button:hover { opacity: 0.9; }
-    .btn-success { background-color: var(--success); }
-    .btn-action { background-color: var(--action); width: 100%; margin-top: 10px;}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV ATS — Mariame CONDÉ</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0d1117;
+  --ink2: #3d4451;
+  --ink3: #6b7280;
+  --paper: #ffffff;
+  --bg: #f0f2f5;
+  --accent: #1d6fa4;
+  --accent2: #e8f2fa;
+  --accent3: #0a3d5c;
+  --gold: #c9a84c;
+  --green: #14a86b;
+  --red: #e03131;
+  --warn: #f08c00;
+  --border: #dde1e7;
+  --radius: 10px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
 
-    .view-switcher { display: flex; gap: 10px; margin-bottom: 20px; width: 210mm; }
-    .view-btn { background: white; color: var(--text); border: 1px solid #cbd5e1; }
-    .view-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .a4-page {
-      background: white; 
-      width: 210mm; 
-      min-height: 297mm; 
-      box-sizing: border-box;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
-      padding: 40px 45px; 
-      position: relative;
-      display: flex; flex-direction: column; 
-    }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0;
+}
 
-    .cv-content { flex: 1; }
+/* ── TOPBAR ── */
+.topbar {
+  grid-column: 1 / -1;
+  background: var(--ink);
+  color: white;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.topbar-brand { display: flex; align-items: center; gap: 10px; }
+.topbar-brand .logo {
+  width: 32px; height: 32px; background: var(--accent);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; letter-spacing: -0.5px; color: white;
+}
+.topbar-brand span { font-weight: 600; font-size: 15px; letter-spacing: 0.3px; }
+.topbar-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  padding: 9px 18px; border-radius: 8px; font-family: inherit;
+  font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+  transition: all 0.18s ease; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-ghost { background: rgba(255,255,255,0.1); color: white; }
+.btn-ghost:hover { background: rgba(255,255,255,0.18); }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent); filter: brightness(1.1); }
+.btn-success { background: var(--green); color: white; }
+.btn-success:hover { filter: brightness(1.1); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .header { border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin-bottom: 15px; }
-    .header h1 { margin: 0; font-size: 26px; color: var(--text); letter-spacing: 1px;}
-    .header h2 { margin: 4px 0 0 0; font-size: 17px; color: var(--primary); font-weight: 600; }
-    
-    .badges { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;}
-    .cv-badge { display: inline-block; background: var(--warning); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-    .cv-badge.success { background: var(--success); }
-    .cv-badge.info { background: var(--primary); }
-    
-    .contact-info { font-size: 11.5px; color: #64748b; margin-top: 8px; }
-    
-    .section-title { font-size: 15px; color: var(--primary); border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; margin-top: 15px; text-transform: uppercase; font-weight: bold; }
-    .about-text { font-size: 12.5px; line-height: 1.5; text-align: justify; color: #334155; margin-bottom: 10px; white-space: pre-line; }
-    
-    ul { padding-left: 20px; margin: 8px 0; font-size: 12.5px; color: #334155; }
-    li { margin-bottom: 5px; line-height: 1.45; }
-    
-    .exp-item { margin-bottom: 15px; page-break-inside: avoid; }
-    .exp-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 13.5px; color: var(--text); }
-    .exp-company { font-style: italic; color: var(--primary); font-size: 12.5px; margin-bottom: 4px; font-weight: 600;}
-    
-    /* Animation pour les mots-clés injectés */
-    @keyframes pulse-bg { 0% { background-color: #fef08a; } 100% { background-color: transparent; } }
-    .highlight { font-weight: bold; color: var(--primary); }
-    .injected-skill { animation: pulse-bg 3s ease-out; border-left: 3px solid var(--warning); padding-left: 5px;}
+/* ── SIDEBAR CONTROLS ── */
+.sidebar {
+  background: var(--paper);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    .cv-footer {
-      margin-top: auto; 
-      padding-top: 20px; 
-      border-top: 1px dashed #cbd5e1;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      page-break-inside: avoid;
-    }
-    .cv-footer-text { font-size: 11px; color: #64748b; margin-bottom: 4px; }
-    #qrcode { display: flex; justify-content: center; }
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 10px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12px; font-weight: 600; color: var(--ink2); }
+.field input, .field select, .field textarea {
+  padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
+  background: #f8f9fb; transition: border-color 0.15s, box-shadow 0.15s;
+  resize: vertical;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(29,111,164,0.12);
+  background: white;
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    #lm-container { display: none; font-size: 13.5px; line-height: 1.6; color: #1e293b; }
-    .lm-header-sender { margin-bottom: 30px; }
-    .lm-header-recipient { text-align: right; margin-bottom: 30px; font-weight: bold; }
-    .lm-date { text-align: right; margin-bottom: 30px; font-style: italic; }
-    .lm-subject { font-weight: bold; margin-bottom: 30px; }
-    .lm-body p { margin-bottom: 15px; text-align: justify; }
-    .lm-signature { margin-top: 35px; text-align: right; font-weight: bold; }
+.card {
+  background: var(--paper); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+}
 
-    /* ========================================================= */
-    /* --- ADAPTATION RESPONSIVE (MOBILES ET TABLETTES) ---      */
-    /* ========================================================= */
-    
-    .input-row { display: flex; gap: 10px; }
+/* Score ATS */
+.score-card { background: var(--accent2); border-color: rgba(29,111,164,0.2); }
+.score-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.score-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 800; }
+.score-bar-bg { height: 8px; background: rgba(0,0,0,0.08); border-radius: 99px; overflow: hidden; margin-bottom: 12px; }
+.score-bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+.kw-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.kw-chip {
+  font-size: 11px; padding: 3px 8px; border-radius: 99px; font-weight: 500;
+  font-family: 'DM Mono', monospace;
+}
+.kw-found { background: #d3f9e8; color: #0a6640; }
+.kw-miss { background: #ffe3e3; color: #9b2020; }
 
-    @media screen and (max-width: 1024px) {
-      body {
-        flex-direction: column;
-        height: auto;
-        min-height: 100vh;
-        padding: 10px;
-      }
-      .panel {
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-      }
-      .controls {
-        overflow-y: visible;
-      }
-      .preview {
-        overflow-x: auto;
-        align-items: flex-start;
-        padding: 15px;
-      }
-      .view-switcher {
-        width: 210mm;
-      }
-      
-      .preview::-webkit-scrollbar {
-        height: 8px;
-      }
-      .preview::-webkit-scrollbar-thumb {
-        background-color: var(--primary);
-        border-radius: 10px;
-      }
-      .preview::-webkit-scrollbar-track {
-        background-color: #cbd5e1;
-        border-radius: 10px;
-      }
-    }
+/* ── MAIN: aperçu + onglets ── */
+.main-area {
+  display: flex; flex-direction: column; overflow: hidden;
+}
 
-    @media screen and (max-width: 600px) {
-      .input-row {
-        flex-direction: column;
-      }
-      .btn-group {
-        flex-direction: column;
-      }
-      .view-switcher {
-        width: 100%;
-        flex-direction: column;
-      }
-      .view-switcher button {
-        padding: 15px;
-        font-size: 1rem;
-      }
-    }
-  </style>
+.tabs {
+  display: flex; gap: 2px; padding: 16px 24px 0;
+  background: var(--bg); border-bottom: 2px solid var(--border);
+}
+.tab {
+  padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+  border-radius: 8px 8px 0 0; border: none; background: transparent;
+  color: var(--ink3); transition: all 0.15s; position: relative; bottom: -2px;
+  border-bottom: 2px solid transparent;
+}
+.tab.active { background: var(--paper); color: var(--accent); border-color: var(--accent); border-bottom-color: var(--paper); }
+.tab:hover:not(.active) { color: var(--ink); background: rgba(255,255,255,0.6); }
+
+.preview-area {
+  flex: 1; overflow-y: auto; overflow-x: auto;
+  background: var(--bg); padding: 28px;
+  display: flex; justify-content: center;
+}
+.preview-area::-webkit-scrollbar { width: 6px; height: 6px; }
+.preview-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── PAGES A4 ── */
+.a4 {
+  background: white;
+  width: 210mm;
+  min-height: 297mm;
+  max-height: 297mm;
+  overflow: hidden;
+  /* Marges internes optimisées pour laisser la place aux polices plus grandes */
+  padding: 15mm 16mm 14mm 16mm;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.13);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Barre décorative gauche */
+.a4::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 6px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent3) 100%);
+}
+
+/* ── CV STYLES (POLICES OPTIMISÉES ATS) ── */
+.cv-header { margin-bottom: 12px; }
+.cv-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 800;
+  color: var(--ink); line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+.cv-title-line {
+  font-size: 13px; font-weight: 600; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px;
+}
+.cv-contact {
+  display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px;
+  padding-top: 8px; border-top: 1.5px solid var(--accent);
+  font-size: 11.5px; color: var(--ink2);
+}
+.cv-contact span { display: flex; align-items: center; gap: 4px; }
+.cv-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.badge {
+  font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+.badge-blue { background: var(--accent2); color: var(--accent3); }
+.badge-gold { background: #fff8e6; color: #7a5c10; }
+.badge-green { background: #e9faf2; color: #0a5e3a; }
+
+.cv-body { display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; flex: 1; }
+.cv-section { margin-top: 12px; }
+.cv-section:first-child { margin-top: 0; }
+.cv-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent);
+  border-bottom: 1px solid var(--accent2); padding-bottom: 4px; margin-bottom: 8px;
+}
+.cv-text { font-size: 12px; line-height: 1.55; color: var(--ink2); text-align: justify; }
+
+.cv-skill-row { display: flex; flex-direction: column; gap: 5px; }
+.cv-skill-item { font-size: 11.5px; color: var(--ink2); line-height: 1.45; }
+.cv-skill-item strong { color: var(--ink); }
+
+.edu-item { margin-bottom: 8px; }
+.edu-date { font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--accent); font-weight: 500; }
+.edu-degree { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 2px;}
+.edu-school { font-size: 11.5px; color: var(--ink3); font-style: italic; }
+
+.exp-item { margin-bottom: 12px; }
+.exp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.exp-role { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+.exp-date { font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--ink3); white-space: nowrap; }
+.exp-company { font-size: 11.5px; color: var(--accent); font-weight: 600; font-style: italic; margin: 2px 0 4px; }
+.exp-ul { padding-left: 12px; list-style: none; }
+.exp-ul li {
+  font-size: 11.5px; color: var(--ink2); line-height: 1.45; margin-bottom: 3px;
+  position: relative; padding-left: 12px;
+}
+.exp-ul li::before {
+  content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 9px; top: 2px;
+}
+
+.cv-lang-row { display: flex; flex-direction: column; gap: 5px; }
+.cv-lang { font-size: 11.5px; color: var(--ink2); }
+.cv-lang strong { color: var(--ink); }
+
+/* Footer CV avec QR Code réparé */
+.cv-footer {
+  margin-top: auto; padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  display: flex; align-items: center; justify-content: flex-start; gap: 15px;
+}
+#qrcode { width: 55px; height: 55px; flex-shrink: 0; }
+#qrcode img { display: block; border-radius: 4px; }
+.cv-footer-text { font-size: 10px; color: var(--ink3); margin-bottom: 3px;}
+.cv-footer-link { font-size: 10.5px; font-weight: 700; color: var(--accent); }
+
+/* Highlight ATS */
+.hl { background: rgba(29,111,164,0.12); color: var(--accent3); font-weight: 700; border-radius: 2px; padding: 0 2px; }
+.kw-injected { border-left: 3px solid var(--gold); padding-left: 6px; }
+
+/* ── LETTRE ── */
+.lm-page { font-size: 13px; line-height: 1.65; color: var(--ink); }
+.lm-sender { margin-bottom: 24px; font-size: 12px; }
+.lm-recipient { text-align: right; margin-bottom: 24px; font-size: 12px; font-weight: 600; }
+.lm-date { text-align: right; margin-bottom: 24px; font-size: 11.5px; color: var(--ink3); font-style: italic; }
+.lm-subject { font-weight: 700; margin-bottom: 24px; padding-bottom: 8px; border-bottom: 1.5px solid var(--accent2); font-size: 12.5px; }
+.lm-body p { margin-bottom: 14px; text-align: justify; font-size: 12px; }
+.lm-sign { margin-top: 32px; text-align: right; font-weight: 700; font-size: 14px; font-family: 'Playfair Display', serif; }
+
+/* Toast */
+#toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(60px);
+  padding: 12px 22px; border-radius: 10px; font-weight: 600; font-size: 13.5px;
+  color: white; z-index: 9999; opacity: 0; pointer-events: none;
+  transition: all 0.35s cubic-bezier(.4,0,.2,1);
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  body { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr; }
+  .sidebar { max-height: 50vh; }
+  .preview-area { padding: 16px; }
+}
+@media (max-width: 600px) {
+  .cv-body { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+}
+
+/* ========================================================= */
+/* --- MODE IMPRESSION (GÉNÉRATION PDF ATS-FRIENDLY) ---     */
+/* ========================================================= */
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  body { background: white; padding: 0; margin: 0; display: block; }
+  .topbar, .sidebar, .tabs, #toast { display: none !important; }
+  .main-area { display: block; }
+  .preview-area { background: transparent; padding: 0; display: block; overflow: visible; }
+  .a4 {
+    box-shadow: none !important; margin: 0 !important;
+    padding: 15mm 16mm 14mm 16mm !important; 
+    width: 100%; height: 100%; max-height: none; page-break-after: always;
+  }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
 </head>
 <body>
 
-  <div class="panel controls">
-    <h3>Configuration Candidature</h3>
-    
-    <label for="profileSelect">1. Profil Ciblé (Métier & Secteur)</label>
-    <select id="profileSelect" onchange="loadProfile()">
-      <option value="assistante">Assistante Comptable (Entreprise)</option>
-      <option value="junior">Comptable Junior (Entreprise)</option>
-      <option value="apprentie">Apprentie Comptable (Cabinet d'Expertise)</option>
-      <option value="aide">Aide Comptable (PME / Polyvalence)</option>
-    </select>
+<div id="toast"></div>
 
-    <label for="durationSelect">2. Durée du contrat souhaitée</label>
-    <select id="durationSelect" onchange="updateDuration()">
-      <option value="12">12 mois (1 an)</option>
-      <option value="24">24 mois (2 ans)</option>
-    </select>
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="logo">MC</div>
+    <span>Générateur CV ATS — Mariame CONDÉ</span>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost" onclick="analyzeATS()">🔍 Analyser ATS</button>
+    <button class="btn btn-primary" id="btn-export" onclick="generatePDF()">📥 Exporter PDF</button>
+  </div>
+</header>
 
-    <label for="profileTextEdit">3. Texte du profil (Personnalisable)</label>
-    <textarea id="profileTextEdit" rows="5" oninput="updateProfileText()"></textarea>
+<aside class="sidebar">
 
-    <div class="input-row">
-      <div style="flex: 1;">
-        <label for="companyName">4. Entreprise/Cabinet</label>
-        <input type="text" id="companyName" placeholder="Ex: KPMG, L'Oréal..." oninput="updateCoverLetter()">
-      </div>
-      <div style="flex: 1;">
-        <label for="recruiterName">5. Recruteur (Optionnel)</label>
-        <input type="text" id="recruiterName" placeholder="Mme/M. Dupont" oninput="updateCoverLetter()">
-      </div>
+  <div>
+    <div class="section-label">Ciblage</div>
+    <div class="field">
+      <label>Profil / Poste</label>
+      <select id="profileSelect" onchange="loadProfile()">
+        <option value="cabinet">Cabinet Expertise / Audit</option>
+        <option value="entreprise">Contrôle de Gestion / Finance</option>
+        <option value="junior">Comptable Junior</option>
+        <option value="assistante">Assistante Comptable PME</option>
+      </select>
     </div>
-
-    <label for="jobTitle">6. Titre exact de l'offre</label>
-    <input type="text" id="jobTitle" oninput="updateTitle()">
-    
-    <label for="jobDesc">7. Description de l'offre (Pour le Matching)</label>
-    <textarea id="jobDesc" rows="3" placeholder="Collez le texte de l'offre ici pour extraire les mots-clés..."></textarea>
-    
-    <div class="btn-group">
-      <button onclick="analyzeAndHighlight()">🔍 Analyser l'Offre</button>
-      <button class="btn-success" onclick="generatePDF()">📥 Exporter PDF</button>
-    </div>
-
-    <div id="analysis-card" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0;">
-      <h4 style="margin: 0 0 10px 0;">Compatibilité avec l'offre : <span id="score-text">0%</span></h4>
-      <div style="background: #e2e8f0; border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 10px;">
-        <div id="score-bar" style="height: 100%; width: 0%; background-color: var(--primary); transition: width 0.5s;"></div>
-      </div>
-      <div id="found-keywords" style="margin-bottom: 5px;"></div>
-      <div id="missed-keywords"></div>
-      <button id="btn-inject" class="btn-action" style="display:none;" onclick="injectMissingKeywords()">✨ Intégrer les mots-clés manquants au CV</button>
+    <div class="field" style="margin-top:10px;">
+      <label>Durée alternance</label>
+      <select id="durationSelect" onchange="updateDuration()">
+        <option value="12 à 24">12 à 24 mois (Flexible)</option>
+        <option value="12">12 mois</option>
+        <option value="24">24 mois</option>
+      </select>
     </div>
   </div>
 
-  <div class="panel preview">
-    <div class="view-switcher">
-      <button id="btn-cv" class="view-btn active" onclick="switchView('cv')">📄 Voir le CV</button>
-      <button id="btn-lm" class="view-btn" onclick="switchView('lm')">✉️ Voir la Lettre</button>
+  <div>
+    <div class="section-label">Personnalisation</div>
+    <div class="field">
+      <label>Entreprise ciblée</label>
+      <input type="text" id="companyName" placeholder="Ex : KPMG, Deloitte…" oninput="updateLM()">
     </div>
+    <div class="field" style="margin-top:10px;">
+      <label>Nom du recruteur (optionnel)</label>
+      <input type="text" id="recruiterName" placeholder="Mme Dupont" oninput="updateLM()">
+    </div>
+    <div class="field" style="margin-top:10px;">
+      <label>Titre du poste (offre)</label>
+      <input type="text" id="jobTitle" oninput="updateTitle()">
+    </div>
+    <div class="field" style="margin-top:10px;">
+      <label>Accroche CV</label>
+      <textarea id="profileText" rows="5" oninput="updateProfil()"></textarea>
+    </div>
+  </div>
 
-    <div id="cv-container" class="a4-page">
-      <div class="cv-content">
-        <div class="header">
-          <h1>Mariame CONDÉ</h1>
-          <h2 id="cv-title"></h2>
-          <div class="badges">
-            <span class="cv-badge">Rythme : 3 j. entreprise / 2 j. école</span>
-            <span class="cv-badge info" id="cv-duration-badge">Durée : 12 mois</span>
-            <span class="cv-badge success">Disponible : 14 sept. 2026</span>
+  <div>
+    <div class="section-label">Analyse ATS</div>
+    <div class="field">
+      <label>Offre d'emploi (texte brut)</label>
+      <textarea id="jobDesc" rows="5" placeholder="Collez l'annonce ici…"></textarea>
+    </div>
+    <button class="btn btn-primary" style="margin-top:8px;width:100%;justify-content:center;" onclick="analyzeATS()">🔍 Lancer l'analyse</button>
+
+    <div id="score-block" style="display:none;margin-top:14px;">
+      <div class="card score-card">
+        <div class="score-header">
+          <div>
+            <div class="section-label" style="margin-bottom:2px;">Score ATS</div>
+            <div class="score-num" id="score-num">0%</div>
           </div>
-          <div class="contact-info">📍 Aubervilliers (93300) | 📱 06 52 63 53 40 | ✉️ mariamakorela@gmail.com</div>
+          <div id="score-emoji" style="font-size:32px;">🤔</div>
         </div>
-        
-        <h3 class="section-title">Profil</h3>
-        <p class="about-text" id="cv-profil"></p>
-        
-        <h3 class="section-title">Compétences Techniques & Outils</h3>
-        <ul id="cv-skills"></ul>
-            
-        <h3 class="section-title">Expériences Professionnelles</h3>
-        <div id="cv-experiences"></div>
-        
-        <h3 class="section-title">Formation Académique</h3>
-        <ul>
-          <li><strong>2025 - 2026</strong> : Préparation intensive au DCG (9 Unités d'Enseignement) - <em>Institut F2i, Vincennes</em></li>
-          <li><strong>2022 - 2025</strong> : Licence AES (Administration Économique et Sociale) - <em>Université de Haute-Alsace, Mulhouse</em></li>
-          <li><strong>2019 - 2022</strong> : Licence Comptabilité de Gestion - <em>Université Générale Lansana Conté, Guinée</em></li>
-        </ul>
-
-        <h3 class="section-title">Langues & Soft Skills</h3>
-        <ul>
-          <li><strong>Savoir-être :</strong> Rigueur, esprit d'analyse, sens de la confidentialité.</li>
-          <li><strong>Anglais :</strong> Niveau B1 - Séjour linguistique d'immersion prévu à l'été 2026.</li>
-          <li><strong>Français :</strong> Courant.</li>
-        </ul>
+        <div class="score-bar-bg">
+          <div class="score-bar-fill" id="score-bar" style="width:0%;background:var(--accent);"></div>
+        </div>
+        <div style="font-size:11px;color:var(--ink2);margin-bottom:6px;font-weight:600;">✅ Trouvés dans le CV</div>
+        <div class="kw-list" id="kw-found"></div>
+        <div style="font-size:11px;color:var(--ink2);margin-top:10px;margin-bottom:6px;font-weight:600;">❌ Manquants</div>
+        <div class="kw-list" id="kw-miss"></div>
+        <button id="btn-inject" class="btn btn-success" style="margin-top:12px;width:100%;justify-content:center;display:none;" onclick="injectKeywords()">✨ Intégrer les mots-clés manquants</button>
       </div>
-      
-      <div class="cv-footer">
-        <span class="cv-footer-text">Pour en savoir plus sur mon parcours, consultez mon profil LinkedIn :</span>
-        <div id="qrcode"></div>
-        <span class="cv-footer-text" style="margin-top: 4px; font-weight: bold;">linkedin.com/in/mariame-condé-024545277</span>
-      </div>
-    </div>
-
-    <div id="lm-container" class="a4-page">
-      <div class="lm-header-sender">
-        <strong>Mariame CONDÉ</strong><br>Aubervilliers (93300)<br>06 52 63 53 40<br>mariamakorela@gmail.com
-      </div>
-      <div class="lm-header-recipient" id="lm-recipient">À l'attention de l'équipe recrutement<br>[Entreprise]</div>
-      <div class="lm-date" id="lm-date"></div>
-      
-      <div class="lm-subject">Objet : Candidature au poste de <span id="lm-subject-title"></span> (Alternance <span class="duree-text">12 mois</span>)</div>
-      
-      <div class="lm-body">
-        <p id="lm-salutation">Madame, Monsieur,</p>
-        <p>Titulaire de deux licences (Comptabilité de Gestion et AES) et actuellement en préparation intensive de 9 UE du DCG à l'Institut F2i, je suis à la recherche d'une alternance d'une durée de <strong class="duree-text">12 mois</strong> pour consolider mon expertise financière. Particulièrement motivée par l'excellence opérationnelle, je souhaite intégrer les équipes de <strong class="lm-company-name">[Entreprise]</strong> à partir du 14 septembre 2026 (rythme 3 jours entreprise / 2 jours école).</p>
-        
-        <p id="lm-specialty-paragraph"></p>
-        
-        <p>Outre mes compétences techniques (SAGE 100, EBP, Excel Avancé) et mon niveau d'anglais que je pars perfectionner cet été en immersion, mes expériences variées m'ont permis de développer une grande rigueur, un esprit d'analyse et un sens aigu de la confidentialité. Rejoindre <strong class="lm-company-name">[Entreprise]</strong> représente l'opportunité de m'investir pleinement dans vos missions tout en apportant mon dynamisme.</p>
-        <p>Je serais ravie de vous rencontrer afin de vous détailler mon parcours et mes motivations. Dans l'attente d'un échange, je vous prie d'agréer, <span id="lm-salutation-end">Madame, Monsieur</span>, l'expression de mes salutations respectueuses.</p>
-      </div>
-      <div class="lm-signature">Mariame CONDÉ</div>
     </div>
   </div>
+
+</aside>
+
+<main class="main-area">
+  <div class="tabs">
+    <button class="tab active" id="tab-cv" onclick="switchTab('cv')">📄 CV</button>
+    <button class="tab" id="tab-lm" onclick="switchTab('lm')">✉️ Lettre</button>
+  </div>
+
+  <div class="preview-area">
+
+    <div class="a4" id="cv-page">
+
+      <div class="cv-header">
+        <div class="cv-name">Mariame CONDÉ</div>
+        <div class="cv-title-line" id="cv-title-line">Alternance Master CCA — Audit / Expertise Comptable</div>
+        <div class="cv-contact">
+          <span>📍 Île-de-France</span>
+          <span>📱 06 52 63 53 40</span>
+          <span>✉️ mariamakorela@gmail.com</span>
+          <span>🔗 https://www.linkedin.com/in/mariame-conde/</span>
+        </div>
+        <div class="cv-badges">
+          <span class="badge badge-gold">3j entreprise / 2j école</span>
+          <span class="badge badge-blue" id="badge-dur">Alternance 12 à 24 mois</span>
+          <span class="badge badge-green">Disponibilité Sept. 2026</span>
+        </div>
+      </div>
+
+      <div class="cv-section" style="margin-top:10px;">
+        <div class="cv-section-title">Profil</div>
+        <p class="cv-text" id="cv-profil"></p>
+      </div>
+
+      <div class="cv-body">
+
+        <div>
+          <div class="cv-section">
+            <div class="cv-section-title">Compétences techniques</div>
+            <div class="cv-skill-row" id="cv-skills"></div>
+          </div>
+
+          <div class="cv-section">
+            <div class="cv-section-title">Formation</div>
+            <div class="edu-item">
+              <div class="edu-date">Sept. 2026 →</div>
+              <div class="edu-degree">Master CCA — Comptabilité, Contrôle, Audit</div>
+              <div class="edu-school">Sup'Expertise, Paris</div>
+            </div>
+            <div class="edu-item">
+              <div class="edu-date">2025 – 2026</div>
+              <div class="edu-degree">Diplôme de Comptabilité et Gestion </div>
+              <div class="edu-school">Institut F2i, Vincennes</div>
+            </div>
+             <div class="edu-item">
+              <div class="edu-date">2022 – 2025</div>
+              <div class="edu-degree">Licence Droit Économie Gestion</div>
+              <div class="edu-school">Université de Haute-Alsace</div>
+            </div>
+            <div class="edu-item">
+              <div class="edu-date">2019 – 2022</div>
+              <div class="edu-degree">Licence Comptabilité de Gestion</div>
+              <div class="edu-school">Univ. Générale Lansana Conté de Sonfonia</div>
+            </div>
+          </div>
+
+          <div class="cv-section">
+            <div class="cv-section-title">Langues &amp; Soft skills</div>
+            <div class="cv-lang-row">
+              <div class="cv-lang"><strong>Français</strong> — Courant</div>
+              <div class="cv-lang"><strong>Anglais</strong> — Niveau B1 · Immersion été 2026</div>
+              <div class="cv-lang"><strong>Soft skills</strong> — Rigueur, confidentialité, esprit d'analyse, fiabilité</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="cv-section">
+            <div class="cv-section-title">Expériences professionnelles</div>
+            <div id="cv-exps"></div>
+          </div>
+        </div>
+
+      </div><div class="cv-footer">
+        <div id="qrcode"></div>
+        <div>
+          <div class="cv-footer-text">Découvrez mon profil linkedin :</div>
+          <div class="cv-footer-link">https://www.linkedin.com/in/mariame-conde/</div>
+        </div>
+      </div>
+
+    </div><div class="a4 lm-page" id="lm-page" style="display:none;">
+      <div class="lm-sender">
+        <strong style="font-family:'Playfair Display',serif;font-size:16px;">Mariame CONDÉ</strong><br>
+        Aubervilliers (93300) · 06 52 63 53 40<br>
+        mariamakorela@gmail.com
+      </div>
+      <div class="lm-recipient" id="lm-recip">
+        À l'attention de l'équipe recrutement<br>
+        <strong>[Entreprise]</strong>
+      </div>
+      <div class="lm-date" id="lm-date"></div>
+      <div class="lm-subject">
+        Objet : Candidature — <span id="lm-job-title">Alternance Master CCA</span>
+        (<span class="dur-span">12 à 24 mois</span>)
+      </div>
+      <div class="lm-body">
+        <p id="lm-salut">Madame, Monsieur,</p>
+        <p>Admise en Master CCA à Sup'Expertise pour la rentrée de septembre 2026, je recherche une alternance de <strong class="dur-span">12 à 24 mois</strong> sur un rythme de 3 jours entreprise / 2 jours école. Motivée par l'excellence de <strong class="lm-co">[Entreprise]</strong>, je souhaite y apporter ma rigueur et consolider mon expertise financière.</p>
+        <p id="lm-para2"></p>
+        <p>Mon double diplôme et ma préparation intensive au DCG m'ont permis d'acquérir un socle technique solide : maîtrise de SAGE 100, EBP Compta et Excel Avancé (TCD, tableaux de bord). Mon expérience associative au Secours Populaire — où j'assurais la gestion quotidienne de la trésorerie et la transparence des comptes — a renforcé mon sens des responsabilités et ma discrétion. Intégrer <strong class="lm-co">[Entreprise]</strong> représente l'opportunité de mettre ces atouts au service de vos équipes tout en bénéficiant d'un encadrement formateur.</p>
+        <p>Je me tiens disponible pour un entretien à votre convenance. Dans cette attente, je vous adresse, <span id="lm-salut-end">Madame, Monsieur</span>, mes salutations respectueuses.</p>
+      </div>
+      <div class="lm-sign">Mariame CONDÉ</div>
+    </div>
+
+  </div></main>
 
 <script>
-const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-document.getElementById('lm-date').innerText = "Fait à Paris, le " + new Date().toLocaleDateString('fr-FR', dateOptions);
-
-let currentView = 'cv';
-let qrCodeInstance = null; 
-let pendingKeywordsToInject = []; 
-
-const profilesData = {
-  assistante: {
-    title: "Assistante Comptable en Alternance (DCG)",
-    profil: "Titulaire de deux licences (Comptabilité de Gestion et AES), je prépare actuellement 9 UE du DCG en un an. Forte d'une expérience concrète en comptabilité tiers et fiscalité, je recherche une alternance d'une durée de 12 mois pour soutenir vos équipes financières avec rigueur et efficacité.",
-    skills: `
-      <li><strong>Comptabilité :</strong> Saisie comptable, lettrage, rapprochement bancaire, gestion des comptes clients/fournisseurs.</li>
-      <li><strong>Fiscalité :</strong> Préparation des déclarations fiscales et sociales (TVA, taxe sur les salaires, CSG, CRDS).</li>
-      <li><strong>Outils :</strong> SAGE 100, EBP Compta, Excel Avancé (Tableaux de bord, TCD).</li>`,
-    experiences: `
-      <div class="exp-item"><div class="exp-header"><span>Stagiaire Assistante Comptable</span><span>02/2022 - 05/2022</span></div><div class="exp-company">Gui-co pres BTP SA - Conakry</div><ul class="cv-exp"><li>Gestion de la comptabilité tiers (clients/fournisseurs), réduisant les erreurs de saisie de 15%.</li><li>Préparation des déclarations fiscales et sociales (TVA, taxe sur les salaires, CSG, CRDS).</li><li>Optimisation des flux financiers pour faciliter la prise de décision.</li></ul></div>
-      <div class="exp-item"><div class="exp-header"><span>Adjointe Trésorière & Bénévole</span><span>02/2024 - 05/2024</span></div><div class="exp-company">Secours Populaire Haut-Rhin - Mulhouse</div><ul class="cv-exp"><li>Gestion de la caisse, contrôle des flux financiers et suivi de la liquidité.</li></ul></div>`,
-    lmParagraph: "Lors de mon expérience dans le BTP, j'ai optimisé la comptabilité tiers en réduisant les erreurs de saisie de 15 % et participé activement aux déclarations fiscales (TVA, CSG). Opérationnelle sur SAGE et EBP, je suis prête à vous assister efficacement dans la tenue comptable quotidienne de votre entreprise pour une durée de <span class='duree-text'>12 mois</span>."
+/* ── DATA ── */
+const PROFILES = {
+  cabinet: {
+    title: "Alternance Master CCA — Audit / Expertise Comptable",
+    profil: "Admise en Master CCA à Sup'Expertise, je possède un socle technique solide, forgé lors d'une préparation intensive au DCG. Fiable, analytique et rigoureuse, je maîtrise les outils métiers (SAGE 100, EBP Compta, Excel Avancé) et recherche une alternance de 12 à 24 mois pour consolider mon expertise en cabinet.",
+    skills: [
+      ["Comptabilité & Révision", "Saisie comptable, lettrage, rapprochement bancaire, révision des comptes, tiers."],
+      ["Fiscalité", "Déclarations fiscales et sociales : TVA, taxe sur les salaires, CSG, CRDS, liasse fiscale."],
+      ["Logiciels", "SAGE 100 · EBP Compta · Excel Avancé (TCD, formules complexes) · Pack Office."],
+    ],
+    exps: [
+      { role:"Stagiaire Assistante Comptable", date:"Fév.–Mai 2022", co:"Gui-co pres BTP SA — Conakry", bullets:["Gestion comptabilité tiers (clients/fournisseurs) — réduction des erreurs de saisie de 15 %.","Préparation déclarations fiscales et sociales (TVA, taxe sur les salaires, CSG, CRDS).","Optimisation des flux financiers facilitant la prise de décision de la direction."] },
+      { role:"Adjointe Trésorière & Bénévole", date:"Fév.–Mai 2024", co:"Secours Populaire Haut-Rhin — Mulhouse", bullets:["Gestion de la caisse, contrôle quotidien des flux financiers et suivi de la liquidité.","Contribution à la transparence financière et à la gestion globale des comptes."] },
+    ],
+    lmP2: "Consciente de l'exigence requise en cabinet, je souhaite mettre à profit ma pratique de la comptabilité tiers et des déclarations fiscales acquise en stage. Opérationnelle sur SAGE et EBP, je suis prête à accompagner vos collaborateurs sur la tenue des dossiers et les missions de révision pour une durée de <strong class='dur-span'>12 à 24 mois</strong>."
+  },
+  entreprise: {
+    title: "Alternance Master CCA — Contrôle de Gestion / Finance",
+    profil: "Admise en Master CCA à Sup'Expertise, je maîtrise l'analyse financière, le suivi de trésorerie et les outils de reporting (Excel Avancé, SAGE 100). Rigoureuse et analytique, je recherche une alternance de 12 à 24 mois pour accompagner le pilotage financier de votre entreprise.",
+    skills: [
+      ["Analyse & Trésorerie", "Suivi de la liquidité, optimisation des flux financiers, contrôle de gestion, reporting."],
+      ["Comptabilité", "Saisie, rapprochement bancaire, gestion des comptes clients/fournisseurs, clôtures."],
+      ["Logiciels", "Excel Avancé (TCD, tableaux de bord) · SAGE 100 · EBP Compta · Pack Office."],
+    ],
+    exps: [
+      { role:"Adjointe Trésorière & Bénévole", date:"Fév.–Mai 2024", co:"Secours Populaire Haut-Rhin — Mulhouse", bullets:["Gestion de la caisse, contrôle quotidien des flux financiers et suivi rigoureux de la liquidité.","Élaboration de reportings pour assurer la transparence des comptes vis-à-vis de la direction."] },
+      { role:"Stagiaire Assistante Comptable", date:"Fév.–Mai 2022", co:"Gui-co pres BTP SA — Conakry", bullets:["Optimisation des flux financiers facilitant la prise de décision stratégique.","Gestion de la comptabilité tiers et préparation des déclarations fiscales."] },
+    ],
+    lmP2: "Mon expérience de trésorerie au Secours Populaire m'a permis d'assurer le suivi rigoureux de la liquidité et la production de reportings fiables. Ma maîtrise d'Excel Avancé (TCD, tableaux de bord) me permettra d'apporter une réelle valeur ajoutée à votre pilotage financier pendant les <strong class='dur-span'>12 à 24 mois</strong> de cette alternance."
   },
   junior: {
-    title: "Comptable Junior en Alternance (DCG)",
-    profil: "Dotée d'une double licence et préparant intensivement 9 UE du DCG, je possède de solides bases techniques et analytiques. Habituée à la gestion de trésorerie et à la comptabilité tiers, je souhaite mettre mon esprit d'analyse au profit de la croissance de votre entreprise pour un contrat de 12 mois.",
-    skills: `
-      <li><strong>Analyse & Finance :</strong> Contrôle des flux, élaboration et suivi rigoureux de budgets prévisionnels.</li>
-      <li><strong>Comptabilité Générale :</strong> Saisie, rapprochement bancaire, préparation de déclarations fiscales.</li>
-      <li><strong>Informatique :</strong> Maîtrise d'Excel Avancé (TCD, rapports d'analyse) et SAGE 100.</li>`,
-    experiences: `
-      <div class="exp-item"><div class="exp-header"><span>Adjointe Trésorière & Bénévole</span><span>02/2024 - 05/2024</span></div><div class="exp-company">Secours Populaire Haut-Rhin - Mulhouse</div><ul class="cv-exp"><li>Préparation et suivi rigoureux des budgets prévisionnels.</li><li>Rédaction de rapports et d'analyses financières de la structure.</li></ul></div>
-      <div class="exp-item"><div class="exp-header"><span>Stagiaire Assistante Comptable</span><span>02/2022 - 05/2022</span></div><div class="exp-company">Gui-co pres BTP SA - Conakry</div><ul class="cv-exp"><li>Optimisation de la trésorerie et fiabilisation des comptes (réduction de 15% des erreurs).</li></ul></div>`,
-    lmParagraph: "Mon parcours académique solide (double licence) couplé à mes expériences pratiques me permet d'avoir une vision globale du cycle financier. Très impliquée dans l'analyse budgétaire et l'optimisation des flux lors de mon passage au Secours Populaire, je souhaite particulièrement m'investir sur les volets d'analyse financière de votre entreprise pour les <span class='duree-text'>12 mois</span> à venir."
+    title: "Comptable Junior — Alternance Master CCA",
+    profil: "Admise en Master CCA à Sup'Expertise, je suis immédiatement opérationnelle en comptabilité générale : saisie, lettrage, rapprochement bancaire, déclarations fiscales. Je recherche une alternance de 12 mois pour épauler votre service comptable.",
+    skills: [
+      ["Comptabilité Générale", "Saisie comptable, lettrage, rapprochement bancaire, écritures d'inventaire, clôtures."],
+      ["Fiscalité", "Préparation déclarations fiscales et sociales (TVA, taxe sur les salaires, CSG, CRDS)."],
+      ["Logiciels", "SAGE 100 · EBP Compta · Excel Avancé · ERP · Pack Office."],
+    ],
+    exps: [
+      { role:"Stagiaire Assistante Comptable", date:"Fév.–Mai 2022", co:"Gui-co pres BTP SA — Conakry", bullets:["Gestion autonome de la comptabilité tiers — réduction des erreurs de saisie de 15 %.","Préparation déclarations fiscales et sociales (TVA, taxe sur les salaires, CSG, CRDS).","Optimisation des flux financiers pour la prise de décision de la direction."] },
+      { role:"Adjointe Trésorière & Bénévole", date:"Fév.–Mai 2024", co:"Secours Populaire Haut-Rhin — Mulhouse", bullets:["Gestion de la caisse et contrôle quotidien des flux financiers.","Suivi de la liquidité et contribution à la transparence des comptes."] },
+    ],
+    lmP2: "Lors de mon stage en cabinet BTP, j'ai géré la comptabilité tiers en autonomie, réduit les erreurs de saisie de 15 % et participé aux déclarations fiscales. Maîtrisant SAGE et EBP, je serai opérationnelle dès le premier jour pour votre service comptable pendant <strong class='dur-span'>12 mois</strong>."
   },
-  apprentie: {
-    title: "Apprentie Comptable (Cabinet d'Expertise)",
-    profil: "En préparation de 9 UE du DCG, je souhaite intégrer un cabinet d'expertise comptable pour une alternance de 12 mois afin de mettre à profit ma rigueur et ma capacité d'adaptation. Formée à la saisie, aux déclarations de TVA et dotée d'un fort sens client, je suis prête à gérer un portefeuille diversifié.",
-    skills: `
-      <li><strong>Tenue de dossiers :</strong> Saisie de masse, lettrage, préparation des déclarations (TVA, taxes salariales).</li>
-      <li><strong>Relation Client :</strong> Accueil, résolution de problèmes dans des environnements exigeants.</li>
-      <li><strong>Logiciels métiers :</strong> SAGE 100, EBP Compta, Excel Avancé.</li>`,
-    experiences: `
-      <div class="exp-item"><div class="exp-header"><span>Stagiaire Assistante Comptable</span><span>02/2022 - 05/2022</span></div><div class="exp-company">Gui-co pres BTP SA - Conakry</div><ul class="cv-exp"><li>Saisie comptable rigoureuse et préparation des déclarations fiscales/sociales.</li></ul></div>
-      <div class="exp-item"><div class="exp-header"><span>Employée Polyvalente</span><span>05/2024 - 09/2025</span></div><div class="exp-company">Burger King - Illzach</div><ul class="cv-exp"><li>Relation client et travail d'équipe : encaissement et résolution de problèmes sous forte pression.</li></ul></div>`,
-    lmParagraph: "Consciente de l'exigence inhérente au travail en cabinet, j'allie une solide base technique en comptabilité (saisie, fiscalité) à un grand sens du service client développé dans la restauration rapide. Rigoureuse et dotée d'une forte capacité d'adaptation, je m'intégrerai rapidement pour accompagner vos collaborateurs sur la tenue des dossiers lors de ma formation de <span class='duree-text'>12 mois</span>."
-  },
-  aide: {
-    title: "Aide Comptable / Polyvalence (Alternance DCG)",
-    profil: "Étudiante polyvalente préparant le DCG, je recherche une alternance de 12 mois alliant tâches administratives et tenue comptable. Habituée à l'encaissement, au contrôle de caisse et à la saisie fournisseur, je m'adapte rapidement pour fluidifier l'organisation de votre entreprise.",
-    skills: `
-      <li><strong>Opérations courantes :</strong> Gestion de la caisse, encaissements, suivi de la liquidité.</li>
-      <li><strong>Comptabilité de base :</strong> Saisie des factures, lettrage, contrôle des écarts.</li>
-      <li><strong>Soft Skills :</strong> Résolution de problèmes, travail en équipe, gestion du stress.</li>`,
-    experiences: `
-      <div class="exp-item"><div class="exp-header"><span>Employée Polyvalente</span><span>05/2024 - 09/2025</span></div><div class="exp-company">Burger King - Illzach</div><ul class="cv-exp"><li>Gestion rigoureuse des encaissements et accueil client dans un environnement soutenu.</li></ul></div>
-      <div class="exp-item"><div class="exp-header"><span>Adjointe Trésorière & Bénévole</span><span>02/2024 - 05/2024</span></div><div class="exp-company">Secours Populaire Haut-Rhin - Mulhouse</div><ul class="cv-exp"><li>Contrôle de la caisse, suivi des liquidités et gestion des flux financiers quotidiens.</li></ul></div>
-      <div class="exp-item"><div class="exp-header"><span>Stagiaire Assistante Comptable</span><span>02/2022 - 05/2022</span></div><div class="exp-company">Gui-co pres BTP SA - Conakry</div><ul class="cv-exp"><li>Suivi des fournisseurs et clients, fiabilisation de la saisie comptable.</li></ul></div>`,
-    lmParagraph: "Mon parcours démontre ma grande polyvalence. Qu'il s'agisse de gérer rigoureusement une caisse au Burger King et au Secours Populaire, ou d'assurer la saisie comptable en entreprise, je suis reconnue pour ma fiabilité et mon esprit d'équipe. Lors de ce contrat de <span class='duree-text'>12 mois</span>, je saurai être un support efficace pour vos tâches administratives et financières courantes."
+  assistante: {
+    title: "Assistante Comptable Polyvalente — Alternance",
+    profil: "Admise en Master CCA à Sup'Expertise, je suis polyvalente, fiable et organisée. Mon expérience couvre la gestion de trésorerie, la saisie comptable et les tâches administratives. Je recherche une alternance de 12 à 24 mois au sein d'une structure à taille humaine.",
+    skills: [
+      ["Opérations courantes", "Gestion de caisse, contrôle des flux financiers, suivi de liquidité, saisie de factures."],
+      ["Comptabilité", "Gestion clients/fournisseurs, rapprochement bancaire, préparation TVA."],
+      ["Bureautique", "Excel Avancé · SAGE 100 · EBP Compta · Rédaction administrative."],
+    ],
+    exps: [
+      { role:"Adjointe Trésorière & Bénévole", date:"Fév.–Mai 2024", co:"Secours Populaire Haut-Rhin — Mulhouse", bullets:["Gestion de la caisse, contrôle quotidien des flux financiers et suivi de la liquidité.","Contribution à la gestion financière globale et à la transparence des comptes."] },
+      { role:"Stagiaire Assistante Comptable", date:"Fév.–Mai 2022", co:"Gui-co pres BTP SA — Conakry", bullets:["Gestion de la comptabilité tiers — réduction des erreurs de saisie de 15 %.","Préparation déclarations fiscales et sociales (TVA, taxe sur les salaires)."] },
+    ],
+    lmP2: "Ma polyvalence est éprouvée : gestion rigoureuse de la trésorerie au Secours Populaire, saisie comptable et déclarations fiscales en entreprise. Je serai un support de confiance pour fluidifier vos tâches administratives et financières pendant les <strong class='dur-span'>12 à 24 mois</strong> de cette alternance."
   }
 };
 
-window.onload = function() { 
-  loadProfile(); 
-  qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
-    text: "https://www.linkedin.com/in/mariame-condé-024545277", 
-    width: 60, height: 60, colorDark : "#1e293b", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.L
+const ATS_KEYWORDS = {
+  "saisie comptable":      ["saisie","enregistrement","saisir"],
+  "rapprochement bancaire":["rapprochement","bancaire","banque"],
+  "lettrage":              ["lettrage","lettrer"],
+  "fournisseurs":          ["fournisseur","fournisseurs","achats"],
+  "clients":               ["client","clients","recouvrement"],
+  "tva":                   ["tva","taxes","déclaration fiscale","declaration fiscale"],
+  "liasse fiscale":        ["liasse","bilan","clôture","cloture","inventaire"],
+  "sage":                  ["sage","sage 100"],
+  "ebp":                   ["ebp","ebp compta"],
+  "excel":                 ["excel","tcd","tableau de bord","tableaux de bord"],
+  "rigueur":               ["rigueur","rigoureux","rigoureuse","précision","precision"],
+  "confidentialité":       ["confidentialité","confidentialite","discrétion","discretion"],
+  "cabinet":               ["cabinet","dossiers","portefeuille","collaborateur"]
+};
+
+/* ── ÉTAT ── */
+let currentTab = 'cv';
+let pendingKW = [];
+
+/* ── INIT ── */
+window.onload = () => {
+  const d = new Date();
+  document.getElementById('lm-date').innerText = "Aubervilliers, le " + d.toLocaleDateString('fr-FR',{year:'numeric',month:'long',day:'numeric'});
+  loadProfile();
+  
+  // Génération du QR Code fonctionnel
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://www.linkedin.com/in/mariame-conde/",
+    width: 55,
+    height: 55,
+    colorDark : "#0d1117",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.M
   });
 };
 
-function switchView(view) {
-  currentView = view;
-  document.getElementById('btn-cv').classList.toggle('active', view === 'cv');
-  document.getElementById('btn-lm').classList.toggle('active', view === 'lm');
-  document.getElementById('cv-container').style.display = view === 'cv' ? 'flex' : 'none';
-  document.getElementById('lm-container').style.display = view === 'lm' ? 'block' : 'none';
+/* ── TABS ── */
+function switchTab(t) {
+  currentTab = t;
+  document.getElementById('tab-cv').classList.toggle('active', t==='cv');
+  document.getElementById('tab-lm').classList.toggle('active', t==='lm');
+  document.getElementById('cv-page').style.display  = t==='cv' ? 'flex' : 'none';
+  document.getElementById('lm-page').style.display  = t==='lm' ? 'flex' : 'none';
 }
 
-function updateProfileText() {
-  document.getElementById('cv-profil').innerText = document.getElementById('profileTextEdit').value;
-}
-
+/* ── CHARGER PROFIL ── */
 function loadProfile() {
-  const profileKey = document.getElementById('profileSelect').value;
-  const data = profilesData[profileKey];
-  const durationValue = document.getElementById('durationSelect').value;
-  const shortText = durationValue + " mois";
+  const key  = document.getElementById('profileSelect').value;
+  const data = PROFILES[key];
+  const dur  = getDur();
 
-  document.getElementById('jobTitle').value = data.title;
-  document.getElementById('cv-title').innerText = data.title;
-  
-  let plainProfil = data.profil.replace(/\b(12|24) mois\b/g, shortText);
-  document.getElementById('profileTextEdit').value = plainProfil;
-  
-  updateProfileText();
+  // Titre
+  document.getElementById('cv-title-line').innerText = data.title;
+  document.getElementById('lm-job-title').innerText  = data.title;
+  document.getElementById('jobTitle').value          = data.title;
 
-  document.getElementById('cv-skills').innerHTML = data.skills;
-  document.getElementById('cv-experiences').innerHTML = data.experiences;
-  document.getElementById('lm-subject-title').innerText = data.title;
-  document.getElementById('lm-specialty-paragraph').innerHTML = data.lmParagraph;
+  // Profil texte
+  let profil = data.profil.replace(/\b(12|24|12 à 24) mois\b/g, dur);
+  document.getElementById('profileText').value = profil;
+  document.getElementById('cv-profil').innerText = profil;
 
-  updateCoverLetter();
-  updateDuration(); 
-  document.getElementById('analysis-card').style.display = 'none';
+  // Compétences
+  const sk = document.getElementById('cv-skills');
+  sk.innerHTML = data.skills.map(([cat, desc]) =>
+    `<div class="cv-skill-item"><strong>${cat} :</strong> ${desc}</div>`
+  ).join('');
+
+  // Expériences
+  const ex = document.getElementById('cv-exps');
+  ex.innerHTML = data.exps.map(e => `
+    <div class="exp-item">
+      <div class="exp-head">
+        <span class="exp-role">${e.role}</span>
+        <span class="exp-date">${e.date}</span>
+      </div>
+      <div class="exp-company">${e.co}</div>
+      <ul class="exp-ul">${e.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+
+  // LM para 2
+  document.getElementById('lm-para2').innerHTML = data.lmP2.replace(/\b(12|24|12 à 24) mois\b/g, dur);
+
+  updateDuration();
+  updateLM();
+  document.getElementById('score-block').style.display = 'none';
 }
 
-function updateTitle() {
-  const title = document.getElementById('jobTitle').value;
-  document.getElementById('cv-title').innerText = title;
-  document.getElementById('lm-subject-title').innerText = title;
-}
-
-function updateCoverLetter() {
-  const company = document.getElementById('companyName').value || "[Entreprise]";
-  const recruiter = document.getElementById('recruiterName').value;
-  document.querySelectorAll('.lm-company-name').forEach(el => el.innerText = company);
-
-  const recipientDiv = document.getElementById('lm-recipient');
-  const salutation = document.getElementById('lm-salutation');
-  const salutationEnd = document.getElementById('lm-salutation-end');
-
-  if(recruiter) {
-    recipientDiv.innerHTML = `À l'attention de ${recruiter}<br><strong>${company}</strong>`;
-    salutation.innerText = `Bonjour ${recruiter},`;
-    salutationEnd.innerText = `Bonjour ${recruiter}`;
-  } else {
-    recipientDiv.innerHTML = `À l'attention de l'équipe recrutement<br><strong>${company}</strong>`;
-    salutation.innerText = `Madame, Monsieur,`;
-    salutationEnd.innerText = `Madame, Monsieur`;
-  }
+function getDur() {
+  const v = document.getElementById('durationSelect').value;
+  return v === "12 à 24" ? "12 à 24 mois" : v + " mois";
 }
 
 function updateDuration() {
-  const durationValue = document.getElementById('durationSelect').value;
-  const shortText = durationValue + " mois";
-  
-  document.getElementById('cv-duration-badge').innerText = `Durée : ${shortText}`;
-  
-  document.querySelectorAll('.duree-text').forEach(el => {
-    el.innerText = shortText;
-  });
-
-  let textarea = document.getElementById('profileTextEdit');
-  textarea.value = textarea.value.replace(/\b(12|24) mois\b/g, shortText);
-  updateProfileText(); 
+  const dur = getDur();
+  document.getElementById('badge-dur').innerText = `Alternance ${dur}`;
+  document.querySelectorAll('.dur-span').forEach(el => el.innerText = dur);
+  // Met à jour textarea
+  const ta = document.getElementById('profileText');
+  ta.value = ta.value.replace(/\b(12|24|12 à 24) mois\b/g, dur);
+  document.getElementById('cv-profil').innerText = ta.value;
 }
 
-function normalizeText(text) { return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
-function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function updateTitle() {
+  const t = document.getElementById('jobTitle').value;
+  document.getElementById('cv-title-line').innerText = t;
+  document.getElementById('lm-job-title').innerText  = t;
+}
 
-function analyzeAndHighlight() {
-  switchView('cv'); 
-  const rawJobDesc = document.getElementById('jobDesc').value;
-  if (!rawJobDesc.trim()) { alert("Collez une offre d'emploi pour lancer l'analyse."); return; }
+function updateProfil() {
+  document.getElementById('cv-profil').innerText = document.getElementById('profileText').value;
+}
 
-  const jobDesc = normalizeText(rawJobDesc);
-  
-  const keywordsMap = {
-    "saisie comptable": ["saisie", "enregistrement"],
-    "rapprochement bancaire": ["rapprochement", "banque", "bancaires"],
-    "lettrage": ["lettrage", "lettrer"],
-    "factures fournisseurs": ["fournisseur", "achats", "fournisseurs"],
-    "factures clients": ["client", "ventes", "clients", "recouvrement"],
-    "tva": ["tva", "taxes", "declaration"],
-    "liasse fiscale": ["liasse", "bilan", "cloture", "écritures d'inventaire"],
-    "sage": ["sage", "sage 100", "sage paie"],
-    "ebp": ["ebp", "ebp compta"],
-    "excel": ["excel", "tcd", "recherche v", "croises dynamiques"],
-    "rigueur": ["rigueur", "rigoureux", "rigoureuse", "precision"],
-    "polyvalence": ["polyvalent", "polyvalence", "autonomie"],
-    "cabinet d'expertise": ["cabinet", "dossiers", "multidosiers", "portefeuille"]
-  };
+function updateLM() {
+  const co  = document.getElementById('companyName').value  || "[Entreprise]";
+  const rec = document.getElementById('recruiterName').value;
+  document.querySelectorAll('.lm-co').forEach(el => el.innerText = co);
+  const recip = document.getElementById('lm-recip');
+  const sal   = document.getElementById('lm-salut');
+  const salE  = document.getElementById('lm-salut-end');
+  if (rec) {
+    recip.innerHTML = `À l'attention de ${rec}<br><strong>${co}</strong>`;
+    sal.innerText   = `Bonjour ${rec},`;
+    salE.innerText  = rec;
+  } else {
+    recip.innerHTML = `À l'attention de l'équipe recrutement<br><strong>${co}</strong>`;
+    sal.innerText   = 'Madame, Monsieur,';
+    salE.innerText  = 'Madame, Monsieur';
+  }
+}
 
-  let matchedKeywords = [];
-  Object.keys(keywordsMap).forEach(key => {
-    if (keywordsMap[key].some(v => new RegExp('\\b' + escapeRegExp(v) + '\\b').test(jobDesc))) matchedKeywords.push(key);
-  });
+/* ── ATS ── */
+function norm(t) { return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+function esc(s)  { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function matchAny(variants, text) { return variants.some(v => new RegExp('\\b'+esc(v)+'\\b').test(text)); }
 
-  const cvText = normalizeText(document.getElementById('cv-container').innerText);
-  let matchedInCV = matchedKeywords.filter(kw => keywordsMap[kw].some(v => new RegExp('\\b' + escapeRegExp(v) + '\\b').test(cvText)));
-  
-  pendingKeywordsToInject = matchedKeywords.filter(kw => !matchedInCV.includes(kw));
-  
-  const score = matchedKeywords.length === 0 ? 0 : (matchedInCV.length / matchedKeywords.length) * 100;
+function analyzeATS() {
+  const raw = document.getElementById('jobDesc').value.trim();
+  if (!raw) { toast("Collez une offre d'emploi pour analyser.", 'warn'); return; }
 
-  const profileKey = document.getElementById('profileSelect').value;
-  const data = profilesData[profileKey];
-  document.getElementById('cv-skills').innerHTML = data.skills;
-  document.getElementById('cv-experiences').innerHTML = data.experiences;
-  updateProfileText(); 
-  
-  ['cv-profil', 'cv-skills', 'cv-experiences'].forEach(id => {
-    let el = document.getElementById(id);
+  switchTab('cv');
+  loadProfile(); // reset highlights
+
+  const jobNorm = norm(raw);
+  const cvNorm  = norm(document.getElementById('cv-page').innerText);
+
+  const found = [], missing = [];
+  for (const [kw, vars] of Object.entries(ATS_KEYWORDS)) {
+    if (!matchAny(vars.map(norm), jobNorm)) continue;
+    if (matchAny(vars.map(norm), cvNorm)) found.push(kw);
+    else missing.push(kw);
+  }
+  pendingKW = [...missing];
+
+  // Surligner dans le CV
+  ['cv-profil','cv-skills','cv-exps'].forEach(id => {
+    const el = document.getElementById(id);
     if (!el) return;
-    let text = el.innerHTML;
-    matchedInCV.forEach(kw => {
-      keywordsMap[kw].forEach(v => { 
-        text = text.replace(new RegExp('(\\b' + escapeRegExp(v) + '\\b)', 'gi'), '<span class="highlight">$1</span>'); 
+    let h = el.innerHTML;
+    found.forEach(kw => {
+      ATS_KEYWORDS[kw].forEach(v => {
+        h = h.replace(new RegExp('('+esc(v)+')', 'gi'), '<span class="hl">$1</span>');
       });
     });
-    el.innerHTML = text;
+    el.innerHTML = h;
   });
 
-  const card = document.getElementById('analysis-card');
-  card.style.display = 'block';
-  document.getElementById('score-text').innerText = `${score.toFixed(0)}%`;
-  document.getElementById('score-bar').style.width = `${score}%`;
-  
-  if (score >= 80) document.getElementById('score-bar').style.backgroundColor = 'var(--success)';
-  else if (score >= 50) document.getElementById('score-bar').style.backgroundColor = 'var(--warning)';
-  else document.getElementById('score-bar').style.backgroundColor = 'var(--danger)';
+  // Score
+  const total = found.length + missing.length;
+  const pct   = total === 0 ? 0 : Math.round((found.length / total) * 100);
+  document.getElementById('score-block').style.display = 'block';
+  document.getElementById('score-num').innerText = pct + '%';
+  document.getElementById('score-num').style.color = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--warn)' : 'var(--red)';
+  document.getElementById('score-emoji').innerText = pct >= 80 ? '🎉' : pct >= 50 ? '😊' : '😬';
 
-  document.getElementById('found-keywords').innerHTML = `<span style="font-size:12px; color:var(--success)">✅ Déjà dans le CV : ${matchedInCV.join(', ') || 'Aucun'}</span>`;
-  document.getElementById('missed-keywords').innerHTML = `<span style="font-size:12px; color:var(--danger)">❌ Manquant : ${pendingKeywordsToInject.join(', ') || 'Aucun'}</span>`;
+  const bar = document.getElementById('score-bar');
+  setTimeout(() => { bar.style.width = pct + '%'; }, 80);
+  bar.style.background = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--warn)' : 'var(--red)';
 
-  const injectBtn = document.getElementById('btn-inject');
-  if(pendingKeywordsToInject.length > 0) {
-      injectBtn.style.display = 'block';
-  } else {
-      injectBtn.style.display = 'none';
-  }
+  document.getElementById('kw-found').innerHTML = found.map(k=>`<span class="kw-chip kw-found">${k}</span>`).join('') || '<span style="font-size:11px;color:var(--ink3);">Aucun</span>';
+  document.getElementById('kw-miss').innerHTML  = missing.map(k=>`<span class="kw-chip kw-miss">${k}</span>`).join('')  || '<span style="font-size:11px;color:var(--green);">Complet ✓</span>';
+  document.getElementById('btn-inject').style.display = missing.length ? 'flex' : 'none';
 }
 
-function injectMissingKeywords() {
-  if (pendingKeywordsToInject.length === 0) return;
+function injectKeywords() {
+  if (!pendingKW.length) return;
+  const sk = document.getElementById('cv-skills');
+  const li = document.createElement('div');
+  li.className = 'cv-skill-item kw-injected';
+  li.innerHTML = `<strong>Mots-clés offre :</strong> ${pendingKW.map(k=>k.charAt(0).toUpperCase()+k.slice(1)).join(', ')}.`;
+  sk.appendChild(li);
 
-  const skillsUl = document.getElementById('cv-skills');
-  const newLi = document.createElement('li');
-  
-  const formattedKeywords = pendingKeywordsToInject.map(k => k.charAt(0).toUpperCase() + k.slice(1)).join(', ');
-  
-  newLi.innerHTML = `<strong>Compétences ciblées :</strong> ${formattedKeywords}.`;
-  newLi.className = 'injected-skill'; 
-  
-  skillsUl.appendChild(newLi);
-
-  document.getElementById('score-text').innerText = `100% (Optimisé !)`;
-  document.getElementById('score-bar').style.width = `100%`;
-  document.getElementById('score-bar').style.backgroundColor = 'var(--success)';
-  document.getElementById('missed-keywords').innerHTML = `<span style="font-size:12px; color:var(--success)">✨ Tous les mots-clés de l'offre ont été intégrés.</span>`;
+  document.getElementById('score-num').innerText  = '100%';
+  document.getElementById('score-num').style.color= 'var(--green)';
+  document.getElementById('score-emoji').innerText= '🎉';
+  document.getElementById('score-bar').style.width = '100%';
+  document.getElementById('score-bar').style.background = 'var(--green)';
+  document.getElementById('kw-miss').innerHTML = '<span style="font-size:11px;color:var(--green);">✨ Tous intégrés !</span>';
   document.getElementById('btn-inject').style.display = 'none';
-  
-  pendingKeywordsToInject = [];
+  pendingKW = [];
 }
 
+/* ── EXPORT PDF NATIVE (ATS-Friendly) ── */
 function generatePDF() {
-  const containerId = currentView === 'cv' ? 'cv-container' : 'lm-container';
+  const containerId = currentTab === 'cv' ? 'cv-page' : 'lm-page';
   const container = document.getElementById(containerId);
-  const prefix = currentView === 'cv' ? 'CV_' : 'LM_';
-  const company = document.getElementById('companyName').value.replace(/\s+/g, '_') || 'Entreprise';
-  const filename = `${prefix}Mariame_CONDE_${company}.pdf`;
-
+  
+  // 1. Nettoyer temporairement le HTML pour l'export
   const originalHTML = container.innerHTML;
-  if(currentView === 'cv') {
-      container.innerHTML = container.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/gi, '<strong>$1</strong>');
+  if(currentTab === 'cv') {
+      container.innerHTML = container.innerHTML.replace(/<span class="hl">(.*?)<\/span>/gi, '<strong>$1</strong>');
   }
 
-  const opt = {
-    margin: [0, 0, 10, 0],
-    filename: filename,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true }, 
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } 
-  };
+  // 2. Cacher la vue non sélectionnée
+  const cvView = document.getElementById('cv-page');
+  const lmView = document.getElementById('lm-page');
+  
+  if (currentTab === 'cv') {
+    lmView.style.display = 'none';
+  } else {
+    cvView.style.display = 'none';
+  }
 
-  const btn = document.querySelector('.btn-success');
-  const originalText = btn.innerText;
-  btn.innerText = "⏳ Génération...";
+  // 3. Modifier le titre de la page temporairement
+  const originalTitle = document.title;
+  const company = document.getElementById('companyName').value.replace(/\s+/g, '_') || 'Entreprise';
+  const prefix = currentTab === 'cv' ? 'CV_' : 'LM_';
+  document.title = `${prefix}Mariame_CONDE_${company}`;
 
-  html2pdf().set(opt).from(container).save().then(() => {
-    container.innerHTML = originalHTML; 
-    btn.innerText = originalText;
-  });
+  // 4. Lancer l'impression native du navigateur
+  window.print();
+
+  // 5. Tout restaurer après l'impression
+  document.title = originalTitle;
+  container.innerHTML = originalHTML; 
+  
+  if (currentTab === 'cv') {
+    lmView.style.display = 'none';
+    cvView.style.display = 'flex'; 
+  } else {
+    cvView.style.display = 'none';
+    lmView.style.display = 'flex'; 
+  }
+}
+
+/* ── TOAST ── */
+function toast(msg, type) {
+  const el = document.getElementById('toast');
+  el.innerText = msg;
+  el.style.background = type==='ok' ? '#14a86b' : type==='warn' ? '#f08c00' : '#e03131';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3500);
 }
 </script>
 </body>
