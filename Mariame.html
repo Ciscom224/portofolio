@@ -141,6 +141,7 @@ body {
   box-shadow: 0 8px 40px rgba(0,0,0,0.13);
   display: flex;
   flex-direction: column;
+  justify-content: space-between; /* <-- C'EST ICI QUE TOUTE LA PAGE SE REMPLIT */
   flex-shrink: 0;
   font-family: 'DM Sans', Arial, sans-serif;
 }
@@ -148,61 +149,60 @@ body {
 /* En-tête centré type DOCX */
 .cv-header-classic {
   text-align: center;
-  margin-bottom: 20px;
 }
 .cv-title-classic {
-  font-size: 15px;
+  font-size: 18px; /* <-- TAILLE IDENTIQUE AUX SECTIONS */
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 1px;
-  margin-bottom: 6px;
-  color: var(--ink);
-}
-.cv-name-classic {
-  font-size: 26px;
-  font-weight: 800;
   margin-bottom: 8px;
   color: var(--ink);
 }
+.cv-name-classic {
+  font-size: 32px; /* Nom très grand pour ressortir */
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
 .cv-contact-classic {
-  font-size: 13px;
+  font-size: 14px; /* Agrandit les infos de contact */
   color: var(--ink2);
   line-height: 1.6;
 }
 
 /* Titres de sections */
 .cv-section-classic {
-  margin-bottom: 14px;
+  margin-bottom: 0px; /* Géré par le space-between global */
 }
 .cv-section-title-classic {
-  font-size: 15px;
+  font-size: 18px; /* <-- TAILLE IDENTIQUE AU TITRE DU POSTE */
   font-weight: 700;
-  color: var(--accent); /* Un bleu ou gris foncé pro */
+  color: var(--accent);
   text-transform: uppercase;
-  border-bottom: 1.5px solid var(--border);
-  padding-bottom: 3px;
-  margin-bottom: 8px;
+  border-bottom: 2px solid var(--border); /* Trait un peu plus épais */
+  padding-bottom: 5px;
+  margin-bottom: 12px;
   letter-spacing: 0.5px;
 }
 
 /* Texte standard */
 .cv-text {
-  font-size: 14.5px;
-  line-height: 1.5;
+  font-size: 14px; /* Agrandit pour remplir l'espace */
+  line-height: 1.6;
   color: var(--ink);
   text-align: justify;
 }
 
 /* Lignes d'expérience et formation */
 .cv-line-item {
-  margin-bottom: 8px;
+  margin-bottom: 12px; /* Plus d'espace entre les expériences */
 }
 .cv-line-header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-size: 13px;
-  margin-bottom: 3px;
+  font-size: 15px; /* Les sous-titres d'expériences bien visibles */
+  margin-bottom: 5px;
 }
 .cv-line-title {
   font-weight: 700;
@@ -213,9 +213,9 @@ body {
   color: var(--ink3);
 }
 .cv-line-desc {
-  font-size: 11px;
+  font-size: 14px; /* Les descriptions agrandies (11px -> 14px) */
   color: var(--ink2);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 /* Highlight ATS */
@@ -223,13 +223,18 @@ body {
 .kw-injected { color: var(--accent); font-weight: 600; }
 
 /* ── LETTRE ── */
-.lm-page { font-size: 12px; line-height: 1.65; color: var(--ink); }
-.lm-sender { margin-bottom: 24px; font-size: 11.5px; }
-.lm-recipient { text-align: right; margin-bottom: 24px; font-size: 11.5px; font-weight: 600; }
-.lm-date { text-align: right; margin-bottom: 24px; font-size: 11px; color: var(--ink3); font-style: italic; }
-.lm-subject { font-weight: 700; margin-bottom: 24px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-size: 12px; }
-.lm-body p { margin-bottom: 14px; text-align: justify; font-size: 11.5px; }
-.lm-sign { margin-top: 32px; text-align: right; font-weight: 700; font-size: 13px; }
+.lm-page { 
+  font-size: 14px; /* Lettré agrandie également */
+  line-height: 1.7; 
+  color: var(--ink); 
+  justify-content: flex-start !important; /* Pour ne pas étirer la signature tout en bas */
+}
+.lm-sender { margin-bottom: 30px; font-size: 14px; }
+.lm-recipient { text-align: right; margin-bottom: 30px; font-size: 14px; font-weight: 600; }
+.lm-date { text-align: right; margin-bottom: 30px; font-size: 13px; color: var(--ink3); font-style: italic; }
+.lm-subject { font-weight: 700; margin-bottom: 30px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-size: 15px; }
+.lm-body p { margin-bottom: 18px; text-align: justify; font-size: 14px; }
+.lm-sign { margin-top: 40px; text-align: right; font-weight: 700; font-size: 16px; }
 
 /* Toast */
 #toast {
@@ -382,7 +387,7 @@ body {
         
         <div class="cv-line-item">
           <div class="cv-line-header">
-            <span class="cv-line-title">Master CCA (Comptabilité, Contrôle, Audit) – Sup'Expertise (Paris)</span>
+            <span class="cv-line-title">Master CCA  – Sup'Expertise (Paris)</span>
             <span class="cv-line-date">À partir de Sept. 2026</span>
           </div>
           <div class="cv-line-desc">Finance | Management & Contrôle de gestion | Anglais des affaires |... </div>
@@ -405,8 +410,8 @@ body {
 
         <div class="cv-line-item">
           <div class="cv-line-header">
-            <span class="cv-line-title">Licence Comptabilité de Gestion - Univ. Générale Lansana Conté de Sonfonia</span>
-            <span class="cv-line-date">2019 – 2022</span>
+            <span class="cv-line-title">Licence Comptabilité de Gestion - Univ. Générale Lansana Conté Sonfonia</span>
+            <span class="cv-line-date">2019–2022</span>
           </div>
         </div>
       </div>
@@ -485,7 +490,7 @@ const PROFILES = {
       { role: "Stagiaire Assistante Comptable", co: "Gui-co pres BTP SA", date: "Mars 2022 – Mai 2022", 
         desc: "Optimisation des flux financiers facilitant la prise de décision stratégique | Gestion autonome de la comptabilité tiers | Préparation des éléments pour les déclarations fiscales" }
     ],
-    lmP2: "Mon expérience de trésorerie au Secours Populaire m'a permis d'assurer le suivi rigoureux de la liquidité et la production de reportings fiables. Ma maîtrise d'Excel Avancé (TCD, tableaux de bord) me permettra d'apporter une réelle valeur ajoutée à votre pilotage financier pendant les <strong class='dur-span'>12 à 24 mois</strong> de cette alternance."
+    lmP2: "Mon experience de trésorerie au Secours Populaire m'a permis d'assurer le suivi rigoureux de la liquidité et la production de reportings fiables. Ma maîtrise d'Excel Avancé (TCD, tableaux de bord) me permettra d'apporter une réelle valeur ajoutée à votre pilotage financier pendant les <strong class='dur-span'>12 à 24 mois</strong> de cette alternance."
   },
   junior: {
     title: "COMPTABLE JUNIOR – ALTERNANCE MASTER CCA",
