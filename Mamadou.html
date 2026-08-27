@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Générateur de Candidature - Mamadou Cissé</title>
+  <title>Générateur de Candidature ATS</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       /* Thème Bleu Tech (Data/IT) */
@@ -13,6 +13,9 @@
       --primary-hover: #1e3a8a;
       --bg: #f1f5f9;
       --text: #0f172a;
+      --ink: #0f172a;
+      --ink2: #334155;
+      --ink3: #64748b;
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
@@ -21,7 +24,7 @@
     }
     
     body {
-      font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       background-color: var(--bg);
       color: var(--text);
       margin: 0;
@@ -32,7 +35,7 @@
       box-sizing: border-box;
     }
 
-    /* === PANNEAU DE CONTRÔLE (GAUCHE) === */
+    /* === PANNEAU DE CONTRÔLE === */
     .panel {
       background: white;
       padding: 25px;
@@ -41,180 +44,85 @@
       display: flex;
       flex-direction: column;
     }
-    
-    .controls { 
-      flex: 1; 
-      max-width: 450px; 
-      min-width: 350px;
-      overflow-y: auto; 
-    }
-    
+    .controls { flex: 1; max-width: 450px; min-width: 350px; overflow-y: auto; }
     .controls::-webkit-scrollbar { width: 6px; }
     .controls::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 4px; }
 
-    h3 { 
-      margin-top: 0; 
-      color: var(--primary); 
-      border-bottom: 2px solid var(--bg); 
-      padding-bottom: 15px;
-      font-size: 1.2rem;
-    }
-
-    label { 
-      font-weight: 600; 
-      font-size: 0.85rem; 
-      margin-top: 15px; 
-      display: block; 
-      color: #475569; 
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    textarea, input, select {
-      width: 100%; 
-      padding: 10px 12px; 
-      margin-top: 6px; 
-      border: 1px solid var(--border);
-      border-radius: 8px; 
-      box-sizing: border-box; 
-      font-family: inherit; 
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-      background-color: #f8fafc;
-    }
-
-    textarea:focus, input:focus, select:focus { 
-      border-color: var(--primary); 
-      outline: none; 
-      background-color: white;
-      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
-    }
-    
+    h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 15px; font-size: 1.2rem; }
+    label { font-weight: 600; font-size: 0.80rem; margin-top: 15px; display: block; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+    textarea, input, select { width: 100%; padding: 10px 12px; margin-top: 6px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 0.95rem; transition: all 0.2s ease; background-color: #f8fafc; }
+    textarea:focus, input:focus, select:focus { border-color: var(--primary); outline: none; background-color: white; box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1); }
     .input-row { display: flex; gap: 15px; }
 
     .btn-group { display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap;}
-    
-    button {
-      flex: 1; 
-      background-color: var(--primary); 
-      color: white; 
-      border: none;
-      padding: 12px 15px; 
-      border-radius: 8px; 
-      cursor: pointer; 
-      font-weight: 600; 
-      font-size: 0.9rem;
-      transition: background-color 0.2s, transform 0.1s;
-    }
+    button { flex: 1; background-color: var(--primary); color: white; border: none; padding: 12px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: background-color 0.2s, transform 0.1s; }
     button:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
     button:active { transform: translateY(0); }
-    
     .btn-success { background-color: var(--success); }
     .btn-success:hover { background-color: #059669; }
     .btn-action { background-color: var(--action); width: 100%; margin-top: 15px;}
-    .btn-action:hover { background-color: #2563eb; }
+    
+    #analysis-card { display: none; margin-top: 20px; padding: 15px; border-radius: 8px; background: white; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);}
 
-    /* === PANNEAU DE PRÉVISUALISATION (DROITE) === */
+    /* === PANNEAU DE PRÉVISUALISATION === */
     .preview { 
-      flex: 2; 
-      background: #e2e8f0; 
-      overflow-y: auto; 
-      overflow-x: auto;
-      padding: 30px; 
-      display: block; /* Essentiel pour éviter le bug de décalage PDF */
-      text-align: center;
-      border-radius: 12px;
+      flex: 2; background: #e2e8f0; overflow-y: auto; overflow-x: auto;
+      padding: 30px; display: block; text-align: center; border-radius: 12px;
       box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
     }
 
     .view-switcher { 
-      display: flex; 
-      gap: 10px; 
-      margin: 0 auto 25px auto; 
-      width: 210mm; 
-      max-width: 100%;
-      background: white;
-      padding: 8px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      display: flex; gap: 10px; margin: 0 auto 25px auto; width: 210mm; max-width: 100%;
+      background: white; padding: 8px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
-    
-    .view-btn { 
-      background: transparent; 
-      color: var(--text); 
-      border: 1px solid transparent; 
-      border-radius: 6px;
-    }
-    
-    .view-btn.active { 
-      background: var(--primary); 
-      color: white; 
-      box-shadow: 0 2px 5px rgba(29, 78, 216, 0.3);
-    }
+    .view-btn { background: transparent; color: var(--text); border: 1px solid transparent; border-radius: 6px; }
+    .view-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 5px rgba(29, 78, 216, 0.3); }
 
-    /* === FORMAT A4 OPTIMISÉ === */
+    /* === FORMAT A4 OPTIMISÉ ATS (COLONNE UNIQUE) === */
     .a4-page {
-      background: white; 
-      width: 210mm; 
-      min-height: 297mm; 
-      box-sizing: border-box;
+      background: white; width: 210mm; min-height: 297mm; box-sizing: border-box;
       box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05); 
-      padding: 30px 40px; 
-      margin: 0 auto; 
-      position: relative;
-      display: flex; 
-      flex-direction: column; 
-      text-align: left;
+      padding: 18mm 20mm; /* Marges classiques Word */
+      margin: 0 auto; position: relative; display: flex; flex-direction: column; text-align: left;
     }
 
-    /* === TYPOGRAPHIE CV === */
-    .header { border-bottom: 3px solid var(--primary); padding-bottom: 12px; margin-bottom: 15px; }
-    .header h1 { margin: 0; font-size: 26px; color: var(--text); letter-spacing: 1px; font-weight: 800;}
-    .header h2 { margin: 4px 0 0 0; font-size: 16px; color: var(--primary); font-weight: 600; text-transform: uppercase;}
-    
-    .contact-info { font-size: 11.5px; color: #64748b; margin-top: 10px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;}
-    .cv-badge { display: inline-block; background: var(--primary); color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+    /* En-tête centré type DOCX */
+    .cv-header-classic { text-align: center; margin-bottom: 20px; }
+    .cv-title-classic { font-size: 13.5px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 6px; color: var(--primary); }
+    .cv-name-classic { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--ink); }
+    .cv-contact-classic { font-size: 11.5px; color: var(--ink2); line-height: 1.6; }
+    .cv-contact-classic strong { color: var(--ink); }
 
-    .section-title { font-size: 14px; color: var(--primary); border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-top: 15px; text-transform: uppercase; font-weight: 700; }
-    .about-text { font-size: 11.5px; line-height: 1.5; text-align: justify; color: #334155; margin-bottom: 10px; white-space: pre-line;}
-    
-    /* Grille 2 colonnes spécifique au CV de Mamadou */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1.1fr; gap: 25px; margin-bottom: 10px; }
-    
-    ul { padding-left: 20px; margin: 6px 0; font-size: 11.5px; color: #334155; }
-    li { margin-bottom: 5px; line-height: 1.4; }
-    
-    .exp-item { margin-bottom: 12px; page-break-inside: avoid; }
-    .exp-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 12.5px; color: var(--text); margin-bottom: 2px;}
-    .exp-company { font-style: italic; color: var(--primary); font-size: 11.5px; margin-bottom: 4px; font-weight: 600;}
-    .cv-exp { margin:0; padding-left: 15px;}
-    .cv-exp li { margin-bottom: 4px; font-size: 10.5pt;}
-
-    /* Style Projets */
-    .project-item { margin-bottom: 12px; page-break-inside: avoid; }
-    .project-header {
-      display: flex; justify-content: space-between; align-items: baseline;
-      border-left: 3px solid var(--primary); padding-left: 8px; margin-bottom: 4px;
+    /* Titres de sections */
+    .cv-section-classic { margin-bottom: 15px; }
+    .cv-section-title-classic {
+      font-size: 13px; font-weight: 800; color: var(--primary); text-transform: uppercase;
+      border-bottom: 1.5px solid var(--border); padding-bottom: 3px; margin-bottom: 8px; letter-spacing: 0.5px;
     }
-    .project-title { font-weight: bold; font-size: 12.5px; color: var(--text); }
-    .project-tech { font-size: 11px; color: var(--primary); font-weight: bold; }
-    .project-list { margin-top: 2px; margin-bottom: 0; padding-left: 15px; }
+
+    /* Texte standard */
+    .cv-text { font-size: 11.5px; line-height: 1.5; color: var(--ink); text-align: justify; }
+
+    /* Lignes d'expérience, projets, formation */
+    .cv-line-item { margin-bottom: 9px; }
+    .cv-line-header { display: flex; justify-content: space-between; align-items: baseline; font-size: 11.5px; margin-bottom: 3px; }
+    .cv-line-title { font-weight: 700; color: var(--ink); }
+    .cv-line-date { font-weight: 600; color: var(--ink3); font-size: 11px;}
+    .cv-line-desc { font-size: 11px; color: var(--ink2); line-height: 1.5; }
     
-    /* === ANIMATIONS ATS === */
+    /* Footer CV */
+    .cv-footer { margin-top: auto; padding-top: 15px; border-top: 1px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; gap: 15px;}
+    .cv-footer-text { font-size: 10px; color: #64748b; text-align: left;}
+    #qrcode { flex-shrink: 0; }
+    #qrcode img { width: 50px; height: 50px; }
+
+    /* Animations ATS */
     @keyframes pulse-bg { 0% { background-color: #fef08a; } 100% { background-color: transparent; } }
-    .highlight { background-color: rgba(29, 78, 216, 0.1); color: var(--primary); font-weight: bold; padding: 0 3px; border-radius: 3px; }
-    .injected-skill { animation: pulse-bg 3s ease-out; border-left: 3px solid var(--warning); padding-left: 6px;}
-
-    .cv-footer {
-      margin-top: auto; padding-top: 15px; border-top: 1px dashed #cbd5e1;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      page-break-inside: avoid;
-    }
-    .cv-footer-text { font-size: 10px; color: #64748b; margin-bottom: 4px; text-align: center;}
-    #qrcode { display: flex; justify-content: center; margin-bottom: 5px;}
+    .highlight { background-color: rgba(29, 78, 216, 0.15); color: var(--ink); font-weight: 700; padding: 0 3px; border-radius: 3px; }
+    .injected-skill { color: var(--primary); font-weight: 600; animation: pulse-bg 3s ease-out; }
 
     /* === LETTRE DE MOTIVATION === */
-    #lm-container { display: none; font-size: 12.5px; line-height: 1.6; color: #1e293b; }
+    #lm-container { display: none; font-size: 12.5px; line-height: 1.6; color: var(--ink); }
     .lm-header-sender { margin-bottom: 30px; }
     .lm-header-recipient { text-align: right; margin-bottom: 30px; font-weight: bold; }
     .lm-date { text-align: right; margin-bottom: 30px; font-style: italic; color: #64748b;}
@@ -222,12 +130,7 @@
     .lm-body p { margin-bottom: 15px; text-align: justify; }
     .lm-signature { margin-top: 40px; text-align: right; font-weight: bold; font-size: 13px;}
 
-    #analysis-card { display: none; margin-top: 20px; padding: 15px; border-radius: 8px; background: white; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);}
-
-    /* ========================================================= */
-    /* --- RESPONSIVE --- */
-    /* ========================================================= */
-    
+    /* === RESPONSIVE ET IMPRESSION === */
     @media screen and (max-width: 1024px) {
       body { flex-direction: column; height: auto; min-height: 100vh; padding: 10px; }
       .panel { width: 100%; max-width: 100%; box-sizing: border-box; }
@@ -235,108 +138,82 @@
       .preview { overflow-x: auto; text-align: left; padding: 15px; }
       .view-switcher { width: 210mm; margin: 0 0 20px 0; }
       .a4-page { margin: 0; }
-      
-      .preview::-webkit-scrollbar { height: 8px; }
-      .preview::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 10px; }
-      .preview::-webkit-scrollbar-track { background-color: #cbd5e1; border-radius: 10px; }
     }
-
     @media screen and (max-width: 600px) {
       .input-row { flex-direction: column; gap: 0;}
       .btn-group { flex-direction: column; }
       .view-switcher { width: 100%; flex-direction: column; }
-      .view-switcher button { padding: 15px; font-size: 1rem; }
-      .project-header { flex-direction: column; }
-      .grid-2 { grid-template-columns: 1fr; } /* La grille passe sur 1 colonne sur très petit écran */
+      .view-switcher button { padding: 15px; }
     }
 
-    /* ========================================================= */
-    /* --- MODE IMPRESSION (GÉNÉRATION PDF ATS-FRIENDLY) ---     */
-    /* ========================================================= */
     @media print {
-      @page {
-        size: A4 portrait;
-        margin: 0; /* Enlève les marges par défaut du navigateur */
-      }
-      
-      body {
-        background: white;
-        padding: 0;
-        margin: 0;
-        display: block; /* Désactive le flexbox du body */
-      }
-
-      /* On cache tout ce qui ne doit pas apparaître sur le PDF */
-      .panel.controls, 
-      .view-switcher, 
-      #analysis-card, 
-      button {
-        display: none !important;
-      }
-
-      /* On nettoie le fond de la prévisualisation */
-      .panel.preview {
-        background: transparent;
-        padding: 0;
-        box-shadow: none;
-        display: block;
-      }
-
-      /* On ajuste la page A4 pour l'impression parfaite */
-      .a4-page {
-        box-shadow: none !important;
-        margin: 0 !important;
-        padding: 15mm 20mm !important; /* Marges internes du PDF */
-        width: 100%;
-        height: 100%;
-        page-break-after: always; /* Force une seule page */
-      }
-
-      /* Force les navigateurs à imprimer les couleurs de fond (les badges, etc.) */
-      * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
+      @page { size: A4 portrait; margin: 0; }
+      body { background: white; padding: 0; margin: 0; display: block; }
+      .panel.controls, .view-switcher, #analysis-card, button { display: none !important; }
+      .panel.preview { background: transparent; padding: 0; box-shadow: none; display: block; }
+      .a4-page { box-shadow: none !important; margin: 0 !important; padding: 18mm 20mm !important; width: 100%; height: 100%; page-break-after: always; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
   </style>
 </head>
 <body>
 
+  <!-- PANNEAU DE CONTRÔLE -->
   <div class="panel controls">
     <h3>⚙️ Configuration Candidature</h3>
     
-    <label for="profileSelect">1. Spécialité du Profil</label>
+    <!-- IDENTITÉ ÉDITABLE -->
+    <label>1. Informations Personnelles (Éditable)</label>
+    <div class="input-row">
+      <div style="flex: 1;">
+        <input type="text" id="userFullName" value="Mamadou CISSÉ" placeholder="Prénom NOM" oninput="updateIdentity()">
+      </div>
+      <div style="flex: 1;">
+        <input type="text" id="userPhone" value="06 52 63 53 40" placeholder="Téléphone" oninput="updateIdentity()">
+      </div>
+    </div>
+    <div class="input-row">
+      <div style="flex: 1;">
+        <input type="text" id="userEmail" value="mamadouciss224e@gmail.com" placeholder="Email" oninput="updateIdentity()">
+      </div>
+      <div style="flex: 1;">
+        <input type="text" id="userLinkedin" value="linkedin.com/in/cissemamadou" placeholder="Lien LinkedIn" oninput="updateIdentity()">
+      </div>
+    </div>
+
+    <label for="profileSelect">2. Spécialité du Profil</label>
     <select id="profileSelect" onchange="loadProfile()">
       <option value="engineer">Data Engineer / Architecte Big Data</option>
       <option value="scientist">Data Scientist / IA Engineer</option>
       <option value="analyst">Data Analyst / BI Analyst</option>
     </select>
 
-    <label for="profileTextEdit">2. Accroche du CV (Personnalisable)</label>
-    <textarea id="profileTextEdit" rows="5" oninput="updateProfileText()"></textarea>
+    <label for="profileTextEdit">3. Accroche du CV (INFORMATIONS)</label>
+    <textarea id="profileTextEdit" rows="7" oninput="updateProfileText()"></textarea>
 
     <div class="input-row">
       <div style="flex: 1;">
-        <label for="companyName">3. Entreprise cible</label>
+        <label for="companyName">4. Entreprise cible</label>
         <input type="text" id="companyName" placeholder="Ex: Thales, LVMH..." oninput="updateCoverLetter()">
       </div>
       <div style="flex: 1;">
-        <label for="recruiterName">4. Recruteur (Optionnel)</label>
+        <label for="recruiterName">5. Recruteur (LM)</label>
         <input type="text" id="recruiterName" placeholder="Mme/M. Dupont" oninput="updateCoverLetter()">
       </div>
     </div>
 
-    <label for="jobTitle">5. Titre de l'offre</label>
+    <label for="jobTitle">6. Titre de l'offre (En-tête CV)</label>
     <input type="text" id="jobTitle" oninput="updateTitle()">
     
-    <label for="jobDesc">6. Description de l'offre (Analyse ATS)</label>
-    <textarea id="jobDesc" rows="4" placeholder="Collez le texte pour extraire les mots-clés et vérifier le matching..."></textarea>
+    <label for="jobDesc">7. Description de l'offre (Analyse ATS)</label>
+    <textarea id="jobDesc" rows="4" placeholder="Collez le texte pour extraire les mots-clés et vérifier le matching ATS..."></textarea>
     
     <div class="btn-group">
-      <button onclick="analyzeAndHighlight()">🔍 Analyser l'Offre</button>
-      <button class="btn-success" onclick="generatePDF()">📥 Exporter PDF</button>
+      <button onclick="analyzeAndHighlight()">🔍 Analyser ATS</button>
+      <button class="btn-success" onclick="generatePDF()">📥 Imprimer / PDF</button>
     </div>
 
+    <!-- RÉSULTAT ANALYSE ATS -->
     <div id="analysis-card">
       <h4 style="margin: 0 0 10px 0; color: var(--text);">Score de compatibilité : <span id="score-text">0%</span></h4>
       <div style="background: #e2e8f0; border-radius: 999px; height: 10px; overflow: hidden; margin-bottom: 15px;">
@@ -348,62 +225,74 @@
     </div>
   </div>
 
+  <!-- PANNEAU DE PRÉVISUALISATION -->
   <div class="panel preview">
     
     <div class="view-switcher">
-      <button id="btn-cv" class="view-btn active" onclick="switchView('cv')">📄 Aperçu CV</button>
+      <button id="btn-cv" class="view-btn active" onclick="switchView('cv')">📄 Aperçu CV (Format ATS)</button>
       <button id="btn-lm" class="view-btn" onclick="switchView('lm')">✉️ Aperçu Lettre</button>
     </div>
 
+    <!-- PAGE CV (FORMAT CLASSIQUE COLONNE UNIQUE) -->
     <div id="cv-container" class="a4-page">
-      <div>
-        <div class="header">
-          <h1>Mamadou CISSÉ</h1>
-          <h2 id="cv-title"></h2>
-          <div class="contact-info">
-            <span>📍 Île-de-France</span> 
-            <span>✉️ mamadouciss224e@gmail.com</span> 
-            <span class="cv-badge">🎓 M2 DataScale</span>
-          </div>
+      
+      <!-- EN-TÊTE -->
+      <div class="cv-header-classic">
+        <div class="cv-title-classic" id="cv-title-line">DATA ENGINEER / ARCHITECTE DATA</div>
+        <div class="cv-name-classic" id="cv-name-display">Mamadou CISSÉ</div>
+        <div class="cv-contact-classic">
+          Île-de-France | <span id="cv-phone-display">06 52 63 53 40</span> | <span id="cv-email-display">mamadouciss224e@gmail.com</span> | <span id="cv-linkedin-display">linkedin.com/in/cissemamadou</span> | <strong>Disponible : Déc. 2026 (Recherche CDI)</strong>
         </div>
-        
-        <h3 class="section-title">Profil</h3>
-        <p class="about-text" id="cv-profil"></p>
-        
-        <div class="grid-2">
-          <div>
-            <h3 class="section-title">Compétences Techniques</h3>
-            <ul id="cv-skills"></ul>
-            
-            <h3 class="section-title">Formation Académique</h3>
-            <ul>
-              <li><strong>2026 (En cours)</strong><br>Master 2 DataScale (Big Data & IA)<br><em>Université Paris-Saclay</em></li>
-              <li><strong>2023</strong><br>Master Bio-informatique & Data Science<br><em>ENSA Tanger, Maroc</em></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="section-title">Expériences Professionnelles</h3>
-            <div id="cv-experiences"></div>
-          </div>
-        </div>
+      </div>
 
-        <h3 class="section-title" style="margin-top: 5px;">Projets Académiques & Architectures</h3>
+      <!-- INFORMATIONS (PROFIL) -->
+      <div class="cv-section-classic">
+        <div class="cv-section-title-classic">INFORMATIONS</div>
+        <p class="cv-text" id="cv-profil"></p>
+      </div>
+
+      <!-- COMPÉTENCES -->
+      <div class="cv-section-classic">
+        <div class="cv-section-title-classic">COMPÉTENCES</div>
+        <div id="cv-skills" class="cv-text"></div>
+      </div>
+
+      <!-- EXPÉRIENCES PROFESSIONNELLES -->
+      <div class="cv-section-classic">
+        <div class="cv-section-title-classic">EXPÉRIENCES PROFESSIONNELLES</div>
+        <div id="cv-experiences"></div>
+      </div>
+
+      <!-- PROJETS -->
+      <div class="cv-section-classic">
+        <div class="cv-section-title-classic">PROJETS ACADÉMIQUES & ARCHITECTURES</div>
         <div id="cv-projects"></div>
       </div>
-      
-      <div class="cv-footer">
-        <span class="cv-footer-text">Découvrez l'intégralité de mes projets, codes sources et architectures sur mon portfolio interactif :</span>
-        <div id="qrcode"></div>
-        <span class="cv-footer-text" style="font-weight: bold; color: var(--primary);">ciscom224.github.io/portofolio</span>
+
+      <!-- FORMATION -->
+      <div class="cv-section-classic">
+        <div class="cv-section-title-classic">FORMATION</div>
+        <div id="cv-education"></div>
       </div>
+      
+      <!-- FOOTER -->
+      <div class="cv-footer">
+        <div id="qrcode"></div>
+        <div class="cv-footer-text">
+          <strong>Découvrez mes projets complets, codes sources et architectures sur mon portfolio interactif :</strong><br>
+          <span style="color: var(--primary); font-weight: 600;">ciscom224.github.io/portofolio</span>
+        </div>
+      </div>
+
     </div>
 
-    <div id="lm-container" class="a4-page">
+    <!-- PAGE LETTRE DE MOTIVATION -->
+    <div id="lm-container" class="a4-page" style="display:none;">
       <div class="lm-header-sender">
-        <strong>Mamadou CISSÉ</strong><br>
+        <strong id="lm-name-display">Mamadou CISSÉ</strong><br>
         Île-de-France<br>
-        mamadouciss224e@gmail.com<br>
-        Portfolio : ciscom224.github.io/portofolio
+        <span id="lm-email-display">mamadouciss224e@gmail.com</span><br>
+        <span id="lm-phone-display">06 52 63 53 40</span>
       </div>
       
       <div class="lm-header-recipient" id="lm-recipient">
@@ -411,25 +300,24 @@
         <strong>[Entreprise]</strong>
       </div>
 
+      <!-- DATE AUTOMATIQUE -->
       <div class="lm-date" id="lm-date"></div>
 
-      <div class="lm-subject">Objet : Candidature au poste de <span id="lm-subject-title"></span> (Stage 6 mois)</div>
+      <div class="lm-subject">Objet : Candidature au poste de <span id="lm-subject-title"></span> (Recherche de CDI)</div>
 
       <div class="lm-body">
         <p id="lm-salutation">Madame, Monsieur,</p>
         
-        <p>Actuellement étudiant en dernière année du Master DataScale (Ingénierie des Données et Big Data) à l'Université Paris-Saclay, je suis à la recherche d'un stage de fin d'études de 6 mois à partir d'avril 2026. Souhaitant évoluer dans un environnement technique exigeant, j'aimerais mettre mon expertise en traitement de données au service des équipes de <strong class="lm-company-name">[Entreprise]</strong>.</p>
+        <p>Bientôt diplômé du Master DataScale (Ingénierie des Données et Big Data) à l'Université Paris-Saclay, je suis à la recherche d'un premier poste en CDI à partir de décembre 2026. Souhaitant évoluer dans un environnement technique exigeant, j'aimerais mettre l'expertise acquise lors de mon stage de fin d'études au service des équipes de <strong class="lm-company-name">[Entreprise]</strong>.</p>
         
         <p id="lm-specialty-paragraph"></p>
         
-        <p>Au-delà de ma maîtrise technique, je suis reconnu pour ma rigueur scientifique, ma capacité à vulgariser des concepts complexes et mon esprit d'équipe. Rejoindre <strong class="lm-company-name">[Entreprise]</strong> représente pour moi l'opportunité de collaborer sur des problématiques à forte valeur ajoutée, tout en vous apportant mon dynamisme et ma capacité d'adaptation.</p>
+        <p>Au-delà de ma maîtrise technique, je suis reconnu pour ma rigueur scientifique, ma capacité à structurer des projets complexes et mon esprit d'équipe. Rejoindre <strong class="lm-company-name">[Entreprise]</strong> représente pour moi l'opportunité d'industrialiser des solutions à forte valeur ajoutée, tout en vous apportant mon dynamisme et mon exigence de qualité.</p>
         
-        <p>Je me tiens à votre entière disposition pour un entretien afin d'échanger plus en détail sur la manière dont mon profil répond à vos besoins. Dans cette attente, je vous prie d'agréer, <span id="lm-salutation-end">Madame, Monsieur</span>, l'expression de mes salutations distinguées.</p>
+        <p>Je me tiens à votre entière disposition pour un entretien afin d'échanger plus en détail sur la manière dont mon profil répond à vos enjeux technologiques. Dans cette attente, je vous prie d'agréer, <span id="lm-salutation-end">Madame, Monsieur</span>, l'expression de mes salutations distinguées.</p>
       </div>
 
-      <div class="lm-signature">
-        Mamadou CISSÉ
-      </div>
+      <div class="lm-signature" id="lm-signature-display">Mamadou CISSÉ</div>
     </div>
 
   </div>
@@ -437,131 +325,173 @@
 <script>
 // --- INITIALISATION ---
 const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-document.getElementById('lm-date').innerText = "Fait à Paris, le " + new Date().toLocaleDateString('fr-FR', dateOptions);
+document.getElementById('lm-date').innerText = "Fait en Île-de-France, le " + new Date().toLocaleDateString('fr-FR', dateOptions);
 
 let currentView = 'cv';
 let qrCodeInstance = null; 
 let pendingKeywordsToInject = []; 
 
-// --- DONNÉES COMMUNES ---
-const allProjectsData = `
-  <div class="project-item cv-exp">
-    <div class="project-header">
-      <span class="project-title">Analyse Financière Temps Réel</span>
-      <span class="project-tech">Kafka, Spark, Kibana | 2026</span>
+// --- DONNÉES COMMUNES (Format PIPE pour ATS) ---
+const educationData = `
+  <div class="cv-line-item">
+    <div class="cv-line-header">
+      <span class="cv-line-title">Master 2 DataScale (Ingénierie des Données, Big Data & IA) – Université Paris-Saclay</span>
+      <span class="cv-line-date">2024 – 2026</span>
     </div>
-    <ul class="project-list">
-      <li><strong>Data Pipeline (ETL) :</strong> Mise en place d’une architecture de streaming pour collecter des données à haute fréquence.</li>
-      <li><strong>Processing & Dataviz :</strong> Calcul d’indicateurs financiers en temps réel (Spark) et exploration via Kibana.</li>
-    </ul>
   </div>
-
-  <div class="project-item cv-exp">
-    <div class="project-header">
-      <span class="project-title">Smart Grid Graph RAG Architecture</span>
-      <span class="project-tech">Neo4j, GPT-4, LangChain | 2026</span>
+  <div class="cv-line-item">
+    <div class="cv-line-header">
+      <span class="cv-line-title">Master Bio-informatique & Science de Données – ENSA Tanger (Maroc)</span>
+      <span class="cv-line-date">2021 – 2023</span>
     </div>
-    <ul class="project-list">
-      <li><strong>GenAI :</strong> Développement d’une architecture RAG couplant graphes de connaissances (Neo4j) et LLM.</li>
-      <li><strong>Impact :</strong> Réduction des hallucinations grâce à l’ancrage dans des données réelles et structurées.</li>
-    </ul>
   </div>
-
-  <div class="project-item cv-exp" style="margin-bottom:0;">
-    <div class="project-header">
-      <span class="project-title">Fine-tuning & Benchmarking QA</span>
-      <span class="project-tech">Hugging Face, Python | 2026</span>
+  <div class="cv-line-item">
+    <div class="cv-line-header">
+      <span class="cv-line-title">Licence Fondamentale Mathématiques & Informatique – Université Cadi Ayyad (Maroc)</span>
+      <span class="cv-line-date">2019 – 2021</span>
     </div>
-    <ul class="project-list">
-      <li><strong>NLP :</strong> Entraînement de 3 architectures, évaluation via métriques standards (F1-score, ROC).</li>
-      <li><strong>Déploiement :</strong> Mise en production via une interface utilisateur sur Hugging Face Spaces.</li>
-    </ul>
   </div>
 `;
 
-// --- DONNÉES DES PROFILS ---
+const allProjectsData = `
+  <div class="cv-line-item">
+    <div class="cv-line-header">
+      <span class="cv-line-title">Smart Grid Graph RAG Architecture</span>
+      <span class="cv-line-date">Projet 2026</span>
+    </div>
+    <div class="cv-line-desc">Neo4j | GPT-4 | LangChain | Python — Architecture RAG couplant graphes de connaissances et LLM pour réduire les hallucinations grâce à l’ancrage dans des données réelles.</div>
+  </div>
+  <div class="cv-line-item">
+    <div class="cv-line-header">
+      <span class="cv-line-title">Analyse Financière Temps Réel</span>
+      <span class="cv-line-date">Projet 2026</span>
+    </div>
+    <div class="cv-line-desc">Kafka | Spark | Kibana — Architecture de streaming (ETL) pour la collecte de données à haute fréquence et calcul d’indicateurs financiers en temps réel.</div>
+  </div>
+  <div class="cv-line-item">
+    <div class="cv-line-header">
+      <span class="cv-line-title">NLP & Vision Transformers</span>
+      <span class="cv-line-date">Projet 2026</span>
+    </div>
+    <div class="cv-line-desc">Hugging Face | SQuAD | Python — Fine-tuning de modèles d'IA générative pour du Question-Answering et optimisation de pipeline OCR.</div>
+  </div>
+`;
+
+// --- DONNÉES DES PROFILS (Orientés Stage de fin d'études -> Recherche CDI) ---
 const profilesData = {
   engineer: {
-    title: "Data Engineer / Architecte Big Data (Stage 6 mois)",
-    profil: "Étudiant en M2 DataScale (Université Paris-Saclay), je conçois des architectures Big Data robustes et scalables. Fort d'une expérience de traitement de données massives (+1 TB/jour), je maîtrise l'écosystème Hadoop/Spark, les pipelines ETL/ELT et le streaming temps réel. Orienté résultats, j'industrialise les flux pour fiabiliser la donnée.",
-    skills: `
-      <li><strong>Big Data & Cloud :</strong> PySpark, Kafka, Hadoop, GCP.</li>
-      <li><strong>Architecture & Outils :</strong> Docker, CI/CD, SQL, Microservices, Git/GitHub, Jira.</li>
-      <li><strong>Pipelines de Données :</strong> Architecture ETL/ELT, Indexation (Elasticsearch).</li>`,
-    experiences: `
-      <div class="exp-item">
-        <div class="exp-header"><span>Data Engineer (Stage)</span><span>2023</span></div>
-        <div class="exp-company">OCP Group</div>
-        <ul class="cv-exp"><li>Ingestion IoT (+1 TB/jour) via PySpark et Hadoop.</li><li>Industrialisation MLOps (Docker, API) des flux.</li></ul>
+    title: "DATA ENGINEER / ARCHITECTE DATA",
+    profil: "Futur diplômé du Master DataScale (Paris-Saclay), j'effectue actuellement mon stage de fin d'études en tant que Data Engineer chez BoursoBank. Dans le cadre de l'amélioration d'une offre Master Data Management (MDM), je déploie mon expertise en gouvernance, ingestion (Kafka) et traitement distribué (Spark/Scala, Airflow). Je recherche un premier CDI à partir de décembre 2026 pour industrialiser vos pipelines et garantir la Data Quality de vos référentiels stratégiques.",
+    skills: [
+      { cat: "Big Data & Cloud", items: "PySpark | Scala | Kafka | Hadoop | GCP | HDFS" },
+      { cat: "Gouvernance & MDM", items: "Data Quality | Data Contracts | MDM | Kibana | Elastic Stack" },
+      { cat: "Architecture & Ops", items: "Airflow | Docker | CI/CD | SQL | Microservices | Git" }
+    ],
+    exps: `
+      <div class="cv-line-item">
+        <div class="cv-line-header">
+          <span class="cv-line-title">BoursoBank (DSI) – Data Engineer (Stage de fin d'études)</span>
+          <span class="cv-line-date">2025 - Présent</span>
+        </div>
+        <div class="cv-line-desc">Amélioration de l'offre Master Data Management (MDM) | Mise en place de l'architecture DaaS | Automatisation des règles de Data Quality via Spark (Scala) | Orchestration des pipelines sous Airflow | Monitoring proactif (score qualité, alerting) sur Elastic Stack (Kibana).</div>
       </div>
-      <div class="exp-item">
-        <div class="exp-header"><span>Analyste de Données</span><span>2022</span></div>
-        <div class="exp-company">CHU de Tanger</div>
-        <ul class="cv-exp"><li>Nettoyage et structuration via pipelines ETL Python.</li><li>Mise en place de contrôles de qualité automatisés.</li></ul>
-      </div>`,
-    projects: allProjectsData,
-    lmParagraph: "Fort de 6 mois d'expérience pratique au sein du groupe OCP où j'ai conçu des pipelines d'ingestion de flux massifs (+1 TB/jour) via PySpark sur des environnements Hadoop, j'ai développé une solide expertise dans la construction d'architectures de données. Qu'il s'agisse de streaming temps réel (Kafka), d'architectures Cloud (GCP) ou d'industrialisation ETL/ELT, je suis prêt à m'investir pour optimiser vos infrastructures."
+      <div class="cv-line-item">
+        <div class="cv-line-header">
+          <span class="cv-line-title">OCP Group – Data Engineer (Stage)</span>
+          <span class="cv-line-date">Févr. 2023 - Juin 2023</span>
+        </div>
+        <div class="cv-line-desc">Ingestion IoT massive (+1 TB/jour) via PySpark et l'écosystème Hadoop | Industrialisation de flux MLOps via Docker | Conception d'API robustes.</div>
+      </div>
+    `,
+    lmParagraph: "Mon stage de fin d'études actuel au sein de la DSI de BoursoBank m'a permis de participer activement à l'amélioration technique d'une offre Master Data Management (MDM). J'y ai conçu des architectures Data as a Service (DaaS) fluides, automatisé des règles de Data Quality complexes et industrialisé le traitement de données certifiées via Spark (Scala), Airflow et Kafka. Fort de ces acquis, je suis prêt à m'investir en CDI pour fiabiliser et scaler vos propres infrastructures."
   },
   scientist: {
-    title: "Data Scientist / Ingénieur IA (Stage 6 mois)",
-    profil: "Étudiant en M2 DataScale (Université Paris-Saclay), je conçois des modèles prédictifs et des solutions d'IA performantes. Combinant mathématiques appliquées et maîtrise des architectures complexes (Graph RAG, Transformers, ETL), j'interviens sur tout le cycle de la donnée pour créer de la valeur métier.",
-    skills: `
-      <li><strong>Machine Learning :</strong> Python (Scikit-learn, PyTorch), LSTM.</li>
-      <li><strong>GenAI & NLP :</strong> Graph RAG, LangChain, Neo4j, Hugging Face.</li>
-      <li><strong>MLOps & Outils :</strong> Déploiement d'API, Cloud GCP, Git/GitLab, Jira.</li>`,
-    experiences: `
-      <div class="exp-item">
-        <div class="exp-header"><span>Data Scientist (Stage)</span><span>2023</span></div>
-        <div class="exp-company">OCP Group</div>
-        <ul class="cv-exp"><li>Modèles de maintenance prédictive (LSTM) à 94% de précision.</li><li>Anticipation fine des pannes industrielles historiques.</li></ul>
+    title: "DATA SCIENTIST / INGÉNIEUR IA",
+    profil: "Futur diplômé du Master DataScale (Paris-Saclay) et actuellement Data Scientist en stage de fin d'études chez BoursoBank, j'allie la modélisation mathématique à l'ingénierie de la donnée. J'y consolide ma conviction qu'il n'y a pas d'IA performante sans données fiables (MDM, Data Quality). Spécialiste des modèles prédictifs, du NLP (Graph RAG) et du traitement distribué, je recherche un CDI dès décembre 2026 pour concevoir et déployer vos solutions d'IA.",
+    skills: [
+      { cat: "Machine Learning", items: "Python (Scikit-learn, PyTorch) | Modèles prédictifs | LSTM | Séries temporelles" },
+      { cat: "GenAI & NLP", items: "Graph RAG | LangChain | Neo4j | Hugging Face | LLMs" },
+      { cat: "Data & Ops", items: "Data Quality | MDM | Spark (Scala) | Airflow | API Rest | Docker" }
+    ],
+    exps: `
+      <div class="cv-line-item">
+        <div class="cv-line-header">
+          <span class="cv-line-title">BoursoBank (DSI) – Data Scientist (Stage de fin d'études)</span>
+          <span class="cv-line-date">2025 - Présent</span>
+        </div>
+        <div class="cv-line-desc">Fiabilisation des données sources (MDM) garantissant la pertinence des algorithmes d'IA | Automatisation des règles de Data Quality avec monitoring Kibana | Traitement distribué des référentiels via Spark (Scala) et Airflow.</div>
       </div>
-      <div class="exp-item">
-        <div class="exp-header"><span>Analyste Données</span><span>2022</span></div>
-        <div class="exp-company">CHU de Tanger</div>
-        <ul class="cv-exp"><li>Modélisation et analyse statistique sur données complexes.</li></ul>
-      </div>`,
-    projects: allProjectsData,
-    lmParagraph: "Mon parcours, alliant mathématiques appliquées et ingénierie de la donnée, m'a permis de développer une expertise forte en Machine Learning et en IA générative. Lors de ma précédente expérience, j'ai conçu et mis en production des modèles prédictifs complexes ayant permis d'anticiper des pannes industrielles critiques. Fortement impliqué sur les sujets de NLP, de Fine-Tuning de Transformers et d'architectures RAG, je souhaite concevoir pour vous des algorithmes innovants."
+      <div class="cv-line-item">
+        <div class="cv-line-header">
+          <span class="cv-line-title">OCP Group – Data Scientist (Stage)</span>
+          <span class="cv-line-date">Févr. 2023 - Juin 2023</span>
+        </div>
+        <div class="cv-line-desc">Conception de modèles de maintenance prédictive (LSTM) avec 94% de précision | Optimisation de l'exploitation industrielle via l'analyse de données complexes | Business Intelligence.</div>
+      </div>
+    `,
+    lmParagraph: "Mon parcours allie mathématiques appliquées et ingénierie de la donnée. Lors de mon stage de fin d'études actuel chez BoursoBank autour d'une offre Master Data Management (MDM), j'ai appris que la performance d'une IA dépend avant tout de la qualité et de la gouvernance des données sources. Ayant automatisé des règles de Data Quality complexes (Spark, Airflow) et mené à bien des projets prédictifs et GenAI (Graph RAG), je souhaite concevoir pour vous des algorithmes innovants en CDI."
   },
   analyst: {
-    title: "Data Analyst / BI Analyst (Stage 6 mois)",
-    profil: "Étudiant en M2 DataScale (Université Paris-Saclay) avec un profil analytique pointu, je transforme des données brutes en informations stratégiques. Rigoureux, je maîtrise l'extraction complexe (SQL), la préparation (ETL, GCP) et la restitution visuelle (Power BI, Excel/VBA). Mon objectif : éclairer vos prises de décision.",
-    skills: `
-      <li><strong>Analyse & Cloud :</strong> SQL avancé, Python (Pandas), Cloud GCP.</li>
-      <li><strong>Dataviz & Tableurs :</strong> Power BI, Kibana, Excel Avancé (VBA, Power Query).</li>
-      <li><strong>Modélisation & Outils :</strong> Conception ETL/ELT, KPIs, Git/GitHub, Jira.</li>`,
-    experiences: `
-      <div class="exp-item">
-        <div class="exp-header"><span>Analyste BI & Données (Stage)</span><span>2023</span></div>
-        <div class="exp-company">OCP Group</div>
-        <ul class="cv-exp">
-          <li>Création de tableaux de bord interactifs (Power BI) et suivi de KPIs.</li>
-          <li>Automatisation des reportings hebdomadaires via macros VBA.</li>
-        </ul>
+    title: "DATA ANALYST / BI ANALYST",
+    profil: "Data Analyst en stage de fin d'études chez BoursoBank et futur diplômé du Master DataScale (Paris-Saclay), je transforme des référentiels complexes en informations stratégiques. Mon rôle actuel se concentre sur l'audit, la Data Quality et la gouvernance (MDM). Maîtrisant le SQL avancé, la modélisation et la Dataviz (Power BI, Kibana), je recherche un CDI à partir de décembre 2026 pour fiabiliser votre patrimoine de données et éclairer vos prises de décision.",
+    skills: [
+      { cat: "Analyse & Modélisation", items: "SQL avancé | Python (Pandas, Numpy) | Statistiques | A/B Testing" },
+      { cat: "Gouvernance", items: "Data Quality | Master Data Management (MDM) | Data Contracts | Traçabilité" },
+      { cat: "Dataviz & Outils", items: "Power BI | Kibana | Airflow | Excel Avancé (VBA) | GCP" }
+    ],
+    exps: `
+      <div class="cv-line-item">
+        <div class="cv-line-header">
+          <span class="cv-line-title">BoursoBank (DSI) – Data Analyst (Stage de fin d'études)</span>
+          <span class="cv-line-date">2025 - Présent</span>
+        </div>
+        <div class="cv-line-desc">Cartographie des données et définition des règles de gouvernance (Data Contracts) | Automatisation des KPIs de qualité et monitoring proactif via Kibana | Évaluation d'un pilote métier pour structurer l'onboarding de référentiels.</div>
       </div>
-      <div class="exp-item">
-        <div class="exp-header"><span>Analyste Bio-Statistiques</span><span>2022</span></div>
-        <div class="exp-company">CHU de Tanger</div>
-        <ul class="cv-exp">
-          <li>Analyse statistique et vulgarisation de données complexes.</li>
-        </ul>
-      </div>`,
-    projects: allProjectsData,
-    lmParagraph: "Issu d'une formation exigeante croisant l'informatique et l'analyse statistique, je suis passionné par l'art de faire parler les données. Lors de mes précédentes missions, j'ai transformé des données brutes hétérogènes en tableaux de bord décisionnels interactifs clairs. Maîtrisant le requêtage SQL complexe, l'automatisation via VBA/Python et la restitution via Power BI, je souhaite vous accompagner activement dans le suivi de vos KPIs et l'extraction d'insights stratégiques."
+      <div class="cv-line-item">
+        <div class="cv-line-header">
+          <span class="cv-line-title">OCP Group – Analyste BI & Données (Stage)</span>
+          <span class="cv-line-date">Févr. 2023 - Juin 2023</span>
+        </div>
+        <div class="cv-line-desc">Création de tableaux de bord interactifs sous Power BI | Suivi de KPIs de performance | Automatisation des reportings hebdomadaires via scripts Python et macros VBA.</div>
+      </div>
+    `,
+    lmParagraph: "Issu d'une formation croisant l'informatique et l'analyse statistique, je suis passionné par l'art de faire parler des données fiables. Mon stage de fin d'études actuel au sein de la DSI de BoursoBank m'a plongé au cœur des enjeux de Master Data Management (MDM) et de gouvernance. J'y ai conçu des indicateurs de Data Quality automatisés et assuré le monitoring via Kibana. Maîtrisant le SQL complexe et les outils de Dataviz, je souhaite vous accompagner durablement dans la certification de vos données en tant que salarié."
   }
 };
 
 window.onload = function() { 
+  updateIdentity();
+  document.getElementById('cv-education').innerHTML = educationData;
   loadProfile(); 
   qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
     text: encodeURI("https://ciscom224.github.io/portofolio/"),
-    width: 55,
-    height: 55,
+    width: 50,
+    height: 50,
     colorDark : "#0f172a",
     colorLight : "#ffffff",
     correctLevel : QRCode.CorrectLevel.L
   });
 };
+
+// --- LOGIQUE IDENTITÉ ÉDITABLE ---
+function updateIdentity() {
+  const name = document.getElementById('userFullName').value || "Prénom NOM";
+  const phone = document.getElementById('userPhone').value || "Téléphone";
+  const email = document.getElementById('userEmail').value || "Email";
+  const linkedin = document.getElementById('userLinkedin').value || "LinkedIn";
+
+  // Mise à jour CV
+  document.getElementById('cv-name-display').innerText = name;
+  document.getElementById('cv-phone-display').innerText = phone;
+  document.getElementById('cv-email-display').innerText = email;
+  document.getElementById('cv-linkedin-display').innerText = linkedin;
+
+  // Mise à jour Lettre de motivation
+  document.getElementById('lm-name-display').innerText = name;
+  document.getElementById('lm-phone-display').innerText = phone;
+  document.getElementById('lm-email-display').innerText = email;
+  document.getElementById('lm-signature-display').innerText = name;
+}
 
 // --- LOGIQUE DE L'INTERFACE ---
 function switchView(view) {
@@ -581,15 +511,19 @@ function loadProfile() {
   const data = profilesData[profileKey];
 
   document.getElementById('jobTitle').value = data.title;
-  document.getElementById('cv-title').innerText = data.title;
+  document.getElementById('cv-title-line').innerText = data.title;
+  document.getElementById('lm-subject-title').innerText = data.title;
   
   document.getElementById('profileTextEdit').value = data.profil;
   updateProfileText();
 
-  document.getElementById('cv-skills').innerHTML = data.skills;
-  document.getElementById('cv-experiences').innerHTML = data.experiences;
-  document.getElementById('cv-projects').innerHTML = data.projects;
-  document.getElementById('lm-subject-title').innerText = data.title;
+  const sk = document.getElementById('cv-skills');
+  sk.innerHTML = data.skills.map(skill =>
+    `<div style="margin-bottom: 4px;"><strong>${skill.cat} : </strong> ${skill.items}</div>`
+  ).join('');
+
+  document.getElementById('cv-experiences').innerHTML = data.exps;
+  document.getElementById('cv-projects').innerHTML = data.projects || allProjectsData;
   document.getElementById('lm-specialty-paragraph').innerHTML = data.lmParagraph;
 
   updateCoverLetter();
@@ -598,7 +532,7 @@ function loadProfile() {
 
 function updateTitle() {
   const title = document.getElementById('jobTitle').value;
-  document.getElementById('cv-title').innerText = title;
+  document.getElementById('cv-title-line').innerText = title;
   document.getElementById('lm-subject-title').innerText = title;
 }
 
@@ -637,23 +571,19 @@ function analyzeAndHighlight() {
   const keywordsMap = {
     "python": ["python", "pandas", "numpy", "matplotlib", "seaborn"],
     "sql": ["sql", "postgres", "mysql", "nosql", "bigquery"],
-    "dev logiciel": ["developpement", "software", "poo", "api", "rest", "fastapi"],
+    "scala": ["scala"],
     "versioning": ["git", "github", "gitlab", "bitbucket"],
-    "gestion de projet": ["jira", "trello", "agile", "scrum"],
     "docker": ["docker", "kubernetes", "container"],
-    "azure": ["azure", "azure data factory", "adf", "synapse"],
-    "gcp": ["gcp", "google cloud", "cloud"],
-    "aws": ["aws", "amazon web services"],
-    "calcul distribue": ["spark", "pyspark", "databricks", "hadoop", "hdfs"],
+    "gcp": ["gcp", "google cloud", "cloud", "aws", "azure"],
+    "calcul distribue": ["spark", "pyspark", "hadoop", "hdfs"],
     "streaming": ["kafka", "streaming", "temps reel"],
-    "etl & pipelines": ["etl", "elt", "pipeline", "data engineering", "airflow"],
-    "data science": ["data science", "analyse de donnees", "series temporelles"],
-    "statistiques": ["statistiques", "modelisation", "a/b testing"],
+    "etl & pipelines": ["etl", "elt", "pipeline", "data engineering"],
+    "airflow": ["airflow", "orchestration"],
+    "mdm & gouvernance": ["mdm", "master data management", "gouvernance", "data steward", "data owner", "data contract"],
+    "data quality": ["data quality", "qualite des donnees", "dq"],
     "machine learning": ["machine learning", "ml", "predictif", "scikit-learn", "pytorch"],
-    "ia & genai": ["ia generative", "genai", "llm", "nlp", "hugging face", "transformers"],
-    "rag": ["rag", "langchain", "neo4j"],
-    "dataviz": ["dataviz", "visualisation", "power bi", "tableau", "kibana"],
-    "excel": ["excel", "vba", "power query", "tcd"]
+    "ia & genai": ["ia generative", "genai", "llm", "nlp", "hugging face", "rag", "neo4j"],
+    "dataviz": ["dataviz", "visualisation", "power bi", "kibana", "elastic stack"]
   };
 
   let matchedKeywords = [];
@@ -670,7 +600,7 @@ function analyzeAndHighlight() {
 
   loadProfile(); 
   
-  ['cv-profil', 'cv-skills', 'cv-projects', 'cv-experiences'].forEach(id => {
+  ['cv-profil', 'cv-skills', 'cv-projects', 'cv-experiences', 'cv-education'].forEach(id => {
     let el = document.getElementById(id);
     if (!el) return;
     let text = el.innerHTML;
@@ -717,14 +647,14 @@ function injectMissingKeywords() {
   if (pendingKeywordsToInject.length === 0) return;
 
   const skillsUl = document.getElementById('cv-skills');
-  const newLi = document.createElement('li');
+  const div = document.createElement('div');
+  div.style.marginBottom = "4px";
+  div.className = "injected-skill";
   
-  const formattedKeywords = pendingKeywordsToInject.map(k => k.charAt(0).toUpperCase() + k.slice(1)).join(', ');
+  const formattedKeywords = pendingKeywordsToInject.map(k => k.charAt(0).toUpperCase() + k.slice(1)).join(' | ');
   
-  newLi.innerHTML = `<strong>Compétences requises :</strong> ${formattedKeywords}.`;
-  newLi.className = 'injected-skill'; 
-  
-  skillsUl.appendChild(newLi);
+  div.innerHTML = `<strong>Mots-clés ciblés : </strong> ${formattedKeywords}`;
+  skillsUl.appendChild(div);
 
   document.getElementById('score-text').innerText = `100% (Optimisé !)`;
   document.getElementById('score-text').style.color = 'var(--success)';
@@ -741,13 +671,13 @@ function generatePDF() {
   const containerId = currentView === 'cv' ? 'cv-container' : 'lm-container';
   const container = document.getElementById(containerId);
   
-  // 1. Nettoyer temporairement le HTML pour l'export (enlever le surlignage ATS)
+  // Nettoyer temporairement le HTML pour l'export (enlever le surlignage ATS)
   const originalHTML = container.innerHTML;
   if(currentView === 'cv') {
       container.innerHTML = container.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/gi, '<strong>$1</strong>');
   }
 
-  // 2. Cacher la vue non sélectionnée 
+  // Cacher la vue non sélectionnée 
   const cvView = document.getElementById('cv-container');
   const lmView = document.getElementById('lm-container');
   
@@ -757,16 +687,17 @@ function generatePDF() {
     cvView.style.display = 'none';
   }
 
-  // 3. Modifier le titre de la page temporairement pour le nom de fichier PDF
+  // Modifier le titre de la page temporairement pour le nom de fichier PDF
   const originalTitle = document.title;
   const company = document.getElementById('companyName').value.replace(/\s+/g, '_') || 'Entreprise';
+  const userName = document.getElementById('userFullName').value.replace(/\s+/g, '_') || 'Candidat';
   const prefix = currentView === 'cv' ? 'CV_' : 'LM_';
-  document.title = `${prefix}Mamadou_CISSE_${company}`;
+  document.title = `${prefix}${userName}_${company}`;
 
-  // 4. Lancer l'impression native du navigateur
+  // Lancer l'impression native du navigateur
   window.print();
 
-  // 5. Tout restaurer après l'impression
+  // Tout restaurer après l'impression
   document.title = originalTitle;
   container.innerHTML = originalHTML; 
   

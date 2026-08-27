@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Portfolio de Mamadou Cissé. Profil hybride : Data Scientist, Data Engineer & Data Architect Junior. Expert GenAI, Big Data et Cloud."
+      content="Portfolio de Mamadou Cissé. Profil hybride : Data Scientist, Data Engineer & Data Architect Junior. Actuellement Data Engineer chez BoursoBank."
     />
     <link rel="icon" href="images/logo.ico" />
 
@@ -16,12 +16,21 @@
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
       rel="stylesheet"
     />
+
+    <style>
+      /* Fix pour éviter le scroll horizontal avec AOS */
+      body {
+        overflow-x: hidden;
+      }
+    </style>
 
     <script
       async
@@ -40,7 +49,7 @@
   <body>
     <section id="accueil">
       <div class="container">
-        <nav>
+        <nav data-aos="fade-down" data-aos-duration="1000">
           <a href="#" class="logo">Mamadou Cissé</a>
           <ul id="sidemenu">
             <li>
@@ -70,7 +79,7 @@
         </nav>
 
         <div class="home">
-          <div class="home-info">
+          <div class="home-info" data-aos="fade-up" data-aos-duration="1200">
             <h2>
               <span style="--i: 5" data-text="Data Scientist"
                 >Data Scientist</span
@@ -91,7 +100,7 @@
             <p class="intro-text">
               Je transforme la complexité des données en systèmes intelligents.
               <br />
-              Actuellement en Master 2
+              Actuellement <strong>Data Engineer stagiaire chez BoursoBank</strong> et en Master 2
               <strong>DataScale à Paris-Saclay</strong>, j'interviens sur
               l'ensemble de la chaîne de valeur : de la conception d'<strong
                 >Architectures Big Data</strong
@@ -125,16 +134,16 @@
   <section id="about">
     <div class="container">
       <div class="row">
-        <div class="about-col-1">
+        <div class="about-col-1" data-aos="fade-right" data-aos-duration="1000">
           <img src="images/about.png" alt="Mamadou Cissé" />
         </div>
         
-        <div class="about-col-2">
+        <div class="about-col-2" data-aos="fade-left" data-aos-duration="1000">
           <h2 class="sub-title">À propos de moi</h2>
           
           <div class="about-text">
             <p>
-              Aujourd'hui en fin de cursus du <strong>Master 2 DataScale (Université Paris-Saclay)</strong>, je me spécialise dans la convergence entre l'ingénierie Big Data et l'Intelligence Artificielle de pointe.
+              Aujourd'hui <strong>Data Engineer stagiaire chez BoursoBank</strong> et en fin de cursus du <strong>Master 2 DataScale (Université Paris-Saclay)</strong>, je me spécialise dans la convergence entre l'ingénierie Big Data et l'Intelligence Artificielle de pointe.
             </p>
             <p>
               Ma double formation m'a forgé une forte rigueur analytique et une curiosité technique qui me permettent d'intervenir sur tout le cycle de la donnée :
@@ -143,7 +152,7 @@
             <ul class="about-list">
               <li>
                 <i class="bx bx-check-circle"></i>
-                <span><strong>Data Engineering :</strong> Architectures robustes, pipelines ETL, traitement distribué (Hadoop, Spark, Kafka).</span>
+                <span><strong>Data Engineering :</strong> Architectures robustes, pipelines ETL, traitement distribué (Hadoop, Spark, Scala, Kafka).</span>
               </li>
               <li>
                 <i class="bx bx-check-circle"></i>
@@ -151,7 +160,7 @@
               </li>
               <li>
                 <i class="bx bx-check-circle"></i>
-                <span><strong>Développement / Ops :</strong> Mise en production, requêtage BDD, Python, SQL.</span>
+                <span><strong>Gouvernance & Qualité :</strong> Master Data Management (MDM), automatisation de Data Quality, orchestration (Airflow).</span>
               </li>
             </ul>
 
@@ -159,12 +168,12 @@
               Je suis capable de naviguer de la tuyauterie des données jusqu'à la mise en place d'outils d'IA actionnables pour les métiers.
             </p>
 
-            <div class="availability-box">
+            <div class="availability-box" data-aos="zoom-in" data-aos-delay="300">
               <div class="avail-header">
-                <i class="bx bx-rocket"></i> Disponibilité immédiate
+                <i class="bx bx-rocket"></i> Disponibilité : Décembre 2026
               </div>
               <p>
-                Je suis actuellement à la recherche d'un stage de fin d'études de 6 mois (Data Engineer / ML Engineer) en <strong>Île-de-France</strong> pour valider mon diplôme. N'hésitez pas à me contacter !
+                Je serai disponible pour de nouvelles opportunités en <strong>CDI (Data Engineer / ML Engineer)</strong> en <strong>Île-de-France</strong> à partir de <strong>décembre 2026</strong>. N'hésitez pas à me contacter !
               </p>
             </div>
           </div>
@@ -182,21 +191,32 @@
             <ul>
               <li>
                 <span class="ski-title-1">DATA ENGINEERING (Build)</span> <br />
-                PySpark | Elasticsearch | Hadoop | SQL | Docker | Kafka | Pentaho
+                PySpark | Scala | Hadoop | Airflow | Docker | Kafka | SQL
               </li>
               <li>
                 <span class="ski-title-2">DATA SCIENCE & AI (Analyze)</span> <br />
                 Python | <strong>Graph RAG</strong> | Neo4j | LangChain | Hugging Face | NLP
               </li>
               <li>
-                <span class="ski-title-3">ARCHITECTURE & DEV (Design)</span> <br />
-                AWS/Azure | Microservices | CI/CD | Laravel | Vue 3 | MongoDB
+                <span class="ski-title-3">ARCHITECTURE & GOUVERNANCE</span> <br />
+                MDM | Data Quality | Elasticsearch | Kibana | CI/CD | AWS/GCP
               </li>
             </ul>
           </div>
 
           <div class="tab-contents" id="experience">
             <ul>
+               <li>
+                <span class="exp-date-0">En cours</span> <br />
+                <div class="exp-role-0">Data Engineer (Stagiaire) - BoursoBank</div>
+                <em>
+                  <ul class="exp-desc-0">
+                    <li>Amélioration d'une offre Master Data Management (MDM) et mise en place de l'architecture DaaS.</li>
+                    <li>Automatisation des règles de Data Quality via Spark (Scala) et orchestration sous Airflow.</li>
+                    <li>Mise en place de monitoring proactif (score qualité, alerting) sur Elastic Stack (Kibana).</li>
+                  </ul>
+                </em>
+              </li>
               <li>
                 <span class="exp-date-1">FÉVR 2023 – JUIN 2023</span> <br />
                 <div class="exp-role-1">Data Scientist - OCP Group (Maroc)</div>
@@ -272,9 +292,9 @@
 
     <section id="projets">
       <div class="container">
-        <h1 class="sub-title">Mes Projets R&D & Engineering</h1>
+        <h1 class="sub-title" data-aos="fade-up">Mes Projets R&D & Engineering</h1>
         <div class="work-list">
-          <div class="work">
+          <div class="work" data-aos="zoom-in" data-aos-delay="100">
             <img src="images/p1.png" alt="Smart Grid Graph RAG" />
             <div class="layer">
               <h3 class="proj-title-1">Data GRID & Graph RAG</h3>
@@ -289,7 +309,7 @@
             </div>
           </div>
 
-          <div class="work">
+          <div class="work" data-aos="zoom-in" data-aos-delay="200">
             <img src="images/p2.png" alt="Data Pipeline Lambda" />
             <div class="layer">
               <h3 class="proj-title-2">Data Pipeline Temps Réel (Lambda)</h3>
@@ -304,7 +324,7 @@
             </div>
           </div>
 
-          <div class="work">
+          <div class="work" data-aos="zoom-in" data-aos-delay="300">
             <img src="images/p3.jpg" alt="Data Quality" />
             <div class="layer">
               <h3 class="proj-title-3">Qualité de Données (ETL)</h3>
@@ -320,7 +340,7 @@
             </div>
           </div>
 
-          <div class="work">
+          <div class="work" data-aos="zoom-in" data-aos-delay="100">
             <img src="images/p4.jpg" alt="NLP Fine Tuning" />
             <div class="layer">
               <h3 class="proj-title-4">NLP & Vision Transformers</h3>
@@ -335,7 +355,7 @@
             </div>
           </div>
 
-          <div class="work">
+          <div class="work" data-aos="zoom-in" data-aos-delay="200">
             <img src="images/p3.jpg" alt="Profly SaaS" />
             <div class="layer">
               <h3 class="proj-title-5">SaaS Profly (Afrilab)</h3>
@@ -349,7 +369,7 @@
             </div>
           </div>
 
-          <div class="work">
+          <div class="work" data-aos="zoom-in" data-aos-delay="300">
             <img src="images/p4.jpg" alt="QR Code Generator" />
             <div class="layer">
               <h3 class="proj-title-6">QR4You Tool</h3>
@@ -373,12 +393,13 @@
           href="https://github.com/Ciscom224?tab=repositories"
           class="btn"
           target="_blank"
+          data-aos="fade-up"
           >Voir GitHub</a
         >
       </div>
     </section>
 
-    <section id="qrcode-section">
+    <section id="qrcode-section" data-aos="fade-up">
       <div class="container">
         <h1 class="sub-title" style="text-align: center">🔗 QR4You</h1>
         <p class="section-desc">
@@ -422,7 +443,7 @@
     <section id="contact">
       <div class="container">
         <div class="row">
-          <div class="contact-left">
+          <div class="contact-left" data-aos="fade-right" data-aos-duration="1000">
             <h1 class="sub-title contact-title">Contactez Moi</h1>
             <p><i class="bx bx-envelope"></i> mamadouciss224e@gmail.com</p>
             <p><i class="bx bx-map"></i> Ris-Orangis, Île-de-France</p>
@@ -435,7 +456,7 @@
               ></a>
             </div>
           </div>
-          <div class="contact-right">
+          <div class="contact-right" data-aos="fade-left" data-aos-duration="1000">
             <form name="submit-to-google-sheet">
               <input
                 type="text"
@@ -467,6 +488,16 @@
         <p>&copy; 2026 Mamadou Cissé. All rights reserved.</p>
       </footer>
     </section>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100,
+      });
+    </script>
 
     <script>
       var tablinks = document.getElementsByClassName("tab-links");
@@ -530,10 +561,10 @@
           nav_projets: "Projets",
           nav_contact: "Contact",
           intro_desc:
-            "Je transforme la complexité des données en systèmes intelligents. <br/>Actuellement en Master 2 <strong>DataScale à Paris-Saclay</strong>, j'interviens sur l'ensemble de la chaîne de valeur : de la conception d'<strong>Architectures Big Data</strong> robustes au déploiement d'<strong>IA Génératives</strong> (LLM, Graph RAG).",
+            "Je transforme la complexité des données en systèmes intelligents. <br/>Actuellement <strong>Data Engineer stagiaire chez BoursoBank</strong> et en Master 2 <strong>DataScale à Paris-Saclay</strong>, j'interviens sur l'ensemble de la chaîne de valeur : de la conception d'<strong>Architectures Big Data</strong> robustes au déploiement d'<strong>IA Génératives</strong> (LLM, Graph RAG).",
           btn_cv: "Télécharger mon CV",
           about_text:
-            "Profil polyvalent issu de la Bio-informatique et spécialisé en Big Data à l'Université Paris-Saclay. Mon approche combine la vision du <strong>Data Architect</strong> (Modélisation), la robustesse du <strong>Data Engineer</strong> (Spark/CI-CD) et l'innovation du <strong>Data Scientist</strong> (IA/RAG). Recherche : Stage de fin d'études (6 mois) à partir de <strong>avril 2026</strong>.",
+            "<p>Aujourd'hui <strong>Data Engineer stagiaire chez BoursoBank</strong> et en fin de cursus du <strong>Master 2 DataScale (Université Paris-Saclay)</strong>, je me spécialise dans la convergence entre l'ingénierie Big Data et l'Intelligence Artificielle de pointe.</p><p>Ma double formation m'a forgé une forte rigueur analytique et une curiosité technique qui me permettent d'intervenir sur tout le cycle de la donnée :</p><ul class='about-list'><li><i class='bx bx-check-circle'></i> <span><strong>Data Engineering :</strong> Architectures robustes, pipelines ETL, traitement distribué (Hadoop, Spark, Scala, Kafka).</span></li><li><i class='bx bx-check-circle'></i> <span><strong>Data Science & GenAI :</strong> Modélisation prédictive, LLMs, architectures avancées (Graph RAG, Neo4j, LangChain).</span></li><li><i class='bx bx-check-circle'></i> <span><strong>Gouvernance & Qualité :</strong> Master Data Management (MDM), automatisation de Data Quality, orchestration (Airflow).</span></li></ul><p>Je suis capable de naviguer de la tuyauterie des données jusqu'à la mise en place d'outils d'IA actionnables pour les métiers.</p><div class='availability-box' data-aos='zoom-in'><div class='avail-header'><i class='bx bx-rocket'></i> Disponibilité : Décembre 2026</div><p>Je serai disponible pour de nouvelles opportunités en <strong>CDI (Data Engineer / ML Engineer)</strong> en <strong>Île-de-France</strong> à partir de <strong>décembre 2026</strong>. N'hésitez pas à me contacter !</p></div>",
           skills_title: "Compétences",
           exp_title: "Expériences",
           edu_title: "Formation",
@@ -541,10 +572,13 @@
 
           ski_title_1: "DATA ENGINEERING (Build)",
           ski_title_2: "DATA SCIENCE & AI (Analyze)",
-          ski_title_3: "ARCHITECTURE & DEV (Design)",
+          ski_title_3: "ARCHITECTURE & GOUVERNANCE",
 
-          // Expériences
-          exp_role_1: "Data Scientist - OCP Group (Maroc)",
+          exp_role_0: "Data Engineer (Stagiaire) - BoursoBank",
+          exp_desc_0:
+            "<li>Amélioration d'une offre Master Data Management (MDM) et mise en place de l'architecture DaaS.</li><li>Automatisation des règles de Data Quality via Spark (Scala) et orchestration sous Airflow.</li><li>Mise en place de monitoring proactif (score qualité, alerting) sur Elastic Stack (Kibana).</li>",
+
+          exp_role_1: "Data Scientist (Stage) - OCP Group (Maroc)",
           exp_desc_1:
             "<li>Business Intelligence (BI) et Data Visualization pour le pilotage industriel.</li><li>Modélisation de données complexes et optimisation de l'exploitation.</li>",
 
@@ -556,21 +590,18 @@
           exp_desc_3:
             "<li>Conception de l'architecture logicielle et de la base de données (SQL Server).</li><li>Développement full-stack (Laravel, ReactJS) et déploiement via Docker.</li>",
 
-          // Formations
           edu_name_1: "Master 2 DataScale (Big Data & IA)",
           edu_place_1: "Université Paris-Saclay (UVSQ)",
-          edu_name_2: "Master Bio-informatique & Science de Données",
-          edu_place_2: "ENSA Tanger, Maroc",
-          edu_name_3: "Licence Fondamentale Mathématiques & Informatique",
-          edu_place_3: "Université Cadi Ayyad, Maroc",
+          edu_name_3: "Master Bio-informatique & Science de Données",
+          edu_place_3: "ENSA Tanger, Maroc",
+          edu_name_5: "Licence Fondamentale Mathématiques & Informatique",
+          edu_place_5: "Université Cadi Ayyad, Maroc",
 
-          // Distinctions
           awa_name_1: "4e Place - Concours VALBIOM INNOV DAYS 2.0",
           awa_desc_1: "Valbiom Maroc Cluster (Startup Interrupteur Augmenté)",
           awa_name_2: "Lauréat du Baccalauréat Unique (Guinée)",
           awa_desc_2: "Service National des bourses Extérieures de la Guinée",
 
-          // Projets
           proj_title_1: "Data GRID & Graph RAG",
           proj_desc_1:
             "Jumeau Numérique pour l'optimisation énergétique. Modélisation <strong>Neo4j</strong>, cartographie 3D, et RAG LLM pour interroger le réseau. <br><em>(Python, Neo4j, Streamlit)</em>",
@@ -602,10 +633,10 @@
           nav_projets: "Projects",
           nav_contact: "Contact",
           intro_desc:
-            "I transform complex data into intelligent systems. <br/>Currently pursuing a Master 2 <strong>DataScale at Paris-Saclay</strong>, I cover the entire value chain: from designing robust <strong>Big Data Architectures</strong> to deploying <strong>Generative AI</strong> (LLM, Graph RAG).",
+            "I transform complex data into intelligent systems. <br/>Currently working as a <strong>Data Engineer Intern at BoursoBank</strong> and pursuing a Master 2 <strong>DataScale at Paris-Saclay</strong>, I cover the entire value chain: from designing robust <strong>Big Data Architectures</strong> to deploying <strong>Generative AI</strong> (LLM, Graph RAG).",
           btn_cv: "Download my CV",
           about_text:
-            "Hybrid profile with a background in Bioinformatics, specializing in Big Data at Paris-Saclay. My approach combines the vision of a <strong>Data Architect</strong> (Modeling), the robustness of a <strong>Data Engineer</strong> (Spark/CI-CD), and the innovation of a <strong>Data Scientist</strong> (AI/RAG). Seeking: 6-month internship starting <strong>April 2026</strong>.",
+            "<p>Currently working as a <strong>Data Engineer Intern at BoursoBank</strong> and finishing my <strong>Master 2 DataScale (Paris-Saclay University)</strong>, I specialize in the convergence of Big Data engineering and advanced Artificial Intelligence.</p><p>My dual background has forged strong analytical rigor and technical curiosity, allowing me to intervene across the entire data lifecycle:</p><ul class='about-list'><li><i class='bx bx-check-circle'></i> <span><strong>Data Engineering:</strong> Robust architectures, ETL pipelines, distributed processing (Hadoop, Spark, Scala, Kafka).</span></li><li><i class='bx bx-check-circle'></i> <span><strong>Data Science & GenAI:</strong> Predictive modeling, LLMs, advanced architectures (Graph RAG, Neo4j, LangChain).</span></li><li><i class='bx bx-check-circle'></i> <span><strong>Governance & Quality:</strong> Master Data Management (MDM), Data Quality automation, orchestration (Airflow).</span></li></ul><p>I am able to navigate from data plumbing to the implementation of actionable AI tools for business needs.</p><div class='availability-box' data-aos='zoom-in'><div class='avail-header'><i class='bx bx-rocket'></i> Availability : December 2026</div><p>I will be available for full-time opportunities (CDI Data Engineer / ML Engineer) in the <strong>Île-de-France region</strong> starting <strong>December 2026</strong>. Feel free to contact me!</p></div>",
           skills_title: "Skills",
           exp_title: "Experience",
           edu_title: "Education",
@@ -613,9 +644,13 @@
 
           ski_title_1: "DATA ENGINEERING (Build)",
           ski_title_2: "DATA SCIENCE & AI (Analyze)",
-          ski_title_3: "ARCHITECTURE & DEV (Design)",
+          ski_title_3: "ARCHITECTURE & GOVERNANCE",
 
-          exp_role_1: "Data Scientist - OCP Group (Morocco)",
+          exp_role_0: "Data Engineer Intern - BoursoBank",
+          exp_desc_0:
+            "<li>Improvement of a Master Data Management (MDM) offer and setup of DaaS architecture.</li><li>Automation of Data Quality rules via Spark (Scala) and orchestration under Airflow.</li><li>Proactive monitoring implementation (quality scoring, alerting) using Elastic Stack (Kibana).</li>",
+
+          exp_role_1: "Data Scientist (Intern) - OCP Group (Morocco)",
           exp_desc_1:
             "<li>Business Intelligence (BI) and Data Visualization for industrial management.</li><li>Complex data modeling and operations optimization.</li>",
 
@@ -629,10 +664,10 @@
 
           edu_name_1: "Master 2 DataScale (Big Data & AI)",
           edu_place_1: "Paris-Saclay University (UVSQ)",
-          edu_name_2: "Master Bioinformatics & Data Science",
-          edu_place_2: "ENSA Tangier, Morocco",
-          edu_name_3: "Bachelor Mathematics & Computer Science",
-          edu_place_3: "Cadi Ayyad University, Morocco",
+          edu_name_3: "Master Bioinformatics & Data Science",
+          edu_place_3: "ENSA Tangier, Morocco",
+          edu_name_5: "Bachelor Mathematics & Computer Science",
+          edu_place_5: "Cadi Ayyad University, Morocco",
 
           awa_name_1: "4th Place - VALBIOM INNOV DAYS 2.0",
           awa_desc_1: "Valbiom Maroc Cluster (Augmented Switch Startup)",
@@ -690,6 +725,8 @@
         document.querySelector(".ski-title-2").innerText = t.ski_title_2;
         document.querySelector(".ski-title-3").innerText = t.ski_title_3;
 
+        document.querySelector(".exp-role-0").innerText = t.exp_role_0;
+        document.querySelector(".exp-desc-0").innerHTML = t.exp_desc_0;
         document.querySelector(".exp-role-1").innerText = t.exp_role_1;
         document.querySelector(".exp-desc-1").innerHTML = t.exp_desc_1;
         document.querySelector(".exp-role-2").innerText = t.exp_role_2;
@@ -699,12 +736,8 @@
 
         document.querySelector(".edu-name-1").innerText = t.edu_name_1;
         document.querySelector(".edu-place-1").innerText = t.edu_place_1;
-        document.querySelector(".edu-name-2").innerText = t.edu_name_2;
-        document.querySelector(".edu-place-2").innerText = t.edu_place_2;
         document.querySelector(".edu-name-3").innerText = t.edu_name_3;
         document.querySelector(".edu-place-3").innerText = t.edu_place_3;
-        document.querySelector(".edu-name-4").innerText = t.edu_name_4;
-        document.querySelector(".edu-place-4").innerText = t.edu_place_4;
         document.querySelector(".edu-name-5").innerText = t.edu_name_5;
         document.querySelector(".edu-place-5").innerText = t.edu_place_5;
 
